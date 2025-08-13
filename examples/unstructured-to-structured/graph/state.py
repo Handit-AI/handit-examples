@@ -22,6 +22,8 @@ class GraphState(TypedDict, total=False):
     json_paths: List[str]
     unstructured_paths: List[str]
     structured_json_paths: List[str]
+    details_csv_path: str
+    line_items_csv_path: str
     classification_results: Dict[str, Any]
     invoices_paths: List[str]
     csv_content: str
