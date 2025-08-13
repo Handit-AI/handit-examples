@@ -1,0 +1,219 @@
+{
+  "document_type": "invoice",
+  "document_language": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.05,
+    "reason": "The document content appears to be corrupted or not in a recognizable text format.",
+    "candidates": null,
+    "evidence": "The content does not contain any readable text or recognizable invoice structure.",
+    "bbox": null
+  },
+  "invoice_id": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.1,
+    "reason": "No identifiable invoice number found in the document.",
+    "candidates": null,
+    "evidence": "The content is not readable and does not contain recognizable invoice identifiers.",
+    "bbox": null
+  },
+  "purchase_order": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.1,
+    "reason": "No purchase order number found in the document.",
+    "candidates": null,
+    "evidence": "The content is not readable and does not contain recognizable purchase order identifiers.",
+    "bbox": null
+  },
+  "issue_date": {
+    "value": null,
+    "normalized_value": null,
+    "format": null,
+    "confidence": 0.1,
+    "reason": "No issue date found in the document.",
+    "evidence": "The content is not readable and does not contain recognizable date formats.",
+    "bbox": null
+  },
+  "due_date": {
+    "value": null,
+    "normalized_value": null,
+    "format": null,
+    "confidence": 0.1,
+    "reason": "No due date found in the document.",
+    "evidence": "The content is not readable and does not contain recognizable due date formats.",
+    "bbox": null
+  },
+  "payment_terms": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.1,
+    "reason": "No payment terms found in the document.",
+    "candidates": null,
+    "evidence": "The content is not readable and does not contain recognizable payment terms.",
+    "bbox": null
+  },
+  "seller": {
+    "name": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.1,
+      "reason": "No seller information found in the document.",
+      "candidates": null,
+      "evidence": "The content is not readable and does not contain recognizable seller identifiers.",
+      "bbox": null
+    },
+    "tax_id": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.1,
+      "reason": "No seller tax ID found in the document.",
+      "candidates": null,
+      "evidence": "The content is not readable and does not contain recognizable tax ID.",
+      "bbox": null
+    },
+    "address": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.1,
+      "reason": "No seller address found in the document.",
+      "candidates": null,
+      "evidence": "The content is not readable and does not contain recognizable address information.",
+      "bbox": null
+    },
+    "email": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.1,
+      "reason": "No seller email found in the document.",
+      "candidates": null,
+      "evidence": "The content is not readable and does not contain recognizable email information.",
+      "bbox": null
+    },
+    "phone": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.1,
+      "reason": "No seller phone number found in the document.",
+      "candidates": null,
+      "evidence": "The content is not readable and does not contain recognizable phone information.",
+      "bbox": null
+    }
+  },
+  "buyer": {
+    "name": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.1,
+      "reason": "No buyer information found in the document.",
+      "candidates": null,
+      "evidence": "The content is not readable and does not contain recognizable buyer identifiers.",
+      "bbox": null
+    },
+    "tax_id": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.1,
+      "reason": "No buyer tax ID found in the document.",
+      "candidates": null,
+      "evidence": "The content is not readable and does not contain recognizable tax ID.",
+      "bbox": null
+    },
+    "address": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.1,
+      "reason": "No buyer address found in the document.",
+      "candidates": null,
+      "evidence": "The content is not readable and does not contain recognizable address information.",
+      "bbox": null
+    },
+    "email": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.1,
+      "reason": "No buyer email found in the document.",
+      "candidates": null,
+      "evidence": "The content is not readable and does not contain recognizable email information.",
+      "bbox": null
+    },
+    "phone": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.1,
+      "reason": "No buyer phone number found in the document.",
+      "candidates": null,
+      "evidence": "The content is not readable and does not contain recognizable phone information.",
+      "bbox": null
+    }
+  },
+  "currency": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.1,
+    "reason": "No currency information found in the document.",
+    "candidates": null,
+    "evidence": "The content is not readable and does not contain recognizable currency symbols.",
+    "bbox": null
+  },
+  "subtotal": {
+    "value": null,
+    "normalized_value": null,
+    "currency": null,
+    "confidence": 0.1,
+    "reason": "No subtotal found in the document.",
+    "evidence": "The content is not readable and does not contain recognizable subtotal information.",
+    "bbox": null
+  },
+  "total_tax": {
+    "value": null,
+    "normalized_value": null,
+    "currency": null,
+    "confidence": 0.1,
+    "reason": "No total tax found in the document.",
+    "evidence": "The content is not readable and does not contain recognizable tax information.",
+    "bbox": null
+  },
+  "total_discount": {
+    "value": null,
+    "normalized_value": null,
+    "currency": null,
+    "confidence": 0.1,
+    "reason": "No total discount found in the document.",
+    "evidence": "The content is not readable and does not contain recognizable discount information.",
+    "bbox": null
+  },
+  "shipping": {
+    "value": null,
+    "normalized_value": null,
+    "currency": null,
+    "confidence": 0.1,
+    "reason": "No shipping cost found in the document.",
+    "evidence": "The content is not readable and does not contain recognizable shipping information.",
+    "bbox": null
+  },
+  "grand_total": {
+    "value": null,
+    "normalized_value": null,
+    "currency": null,
+    "confidence": 0.1,
+    "reason": "No grand total found in the document.",
+    "evidence": "The content is not readable and does not contain recognizable total information.",
+    "bbox": null
+  },
+  "notes": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.1,
+    "reason": "No notes found in the document.",
+    "candidates": null,
+    "evidence": "The content is not readable and does not contain recognizable notes.",
+    "bbox": null
+  },
+  "line_items": [],
+  "parsing_warnings": [
+    "The document content appears to be corrupted or not in a recognizable text format."
+  ],
+  "checks": []
+}

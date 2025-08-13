@@ -1,0 +1,213 @@
+{
+  "document_type": "invoice",
+  "document_language": {
+    "value": "English",
+    "normalized_value": "English",
+    "confidence": 0.95,
+    "reason": "The provided top-level instruction/text is English and the visible text in the image appears to be English",
+    "candidates": [
+      "English"
+    ],
+    "evidence": "Text fragment from input: 'Extract invoice data from the following image. Analyze the visual layout and extract text and data from the invoice structure.'",
+    "bbox": null
+  },
+  "invoice_id": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.1,
+    "reason": "No explicit invoice identifier (e.g. 'Invoice #', 'Invoice No', 'Reference') was found in the provided text nor reliably readable on the image",
+    "candidates": null,
+    "evidence": "No snippet with 'Invoice', 'Invoice #', 'Invoice No', 'Ref' or similar was detected in the text or OCR'd image content",
+    "bbox": null
+  },
+  "purchase_order": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.1,
+    "reason": "No purchase order / PO number label found in the text or image OCR results",
+    "candidates": null,
+    "evidence": "No snippet with 'PO', 'Purchase Order', 'Order #', 'Order Number' was found",
+    "bbox": null
+  },
+  "invoice_date": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.1,
+    "reason": "No invoice date-like field (e.g. 'Date', 'Invoice Date', 'Issued') was found in the provided content or image OCR",
+    "candidates": null,
+    "evidence": "No date string (e.g. '2025-07-01', '01/07/2025', 'July 1, 2025') detected in the text or visible on the image",
+    "bbox": null
+  },
+  "due_date": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.1,
+    "reason": "No 'Due', 'Due Date' or payment due field was located in the supplied text or image OCR",
+    "candidates": null,
+    "evidence": "No snippet with 'Due Date', 'Payment Due', 'Net 30' etc. found",
+    "bbox": null
+  },
+  "seller": {
+    "name": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.1,
+      "reason": "No clear seller/vendor name block identified in the text or from the image",
+      "candidates": null,
+      "evidence": "No snippet with a company name near 'From', 'Vendor', 'Supplier' was found",
+      "bbox": null
+    },
+    "address": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No postal address block with street/city/state/zip was detected or readable",
+      "candidates": null,
+      "evidence": "No address-like multiline block (street, city, postal code) was found in text/OCR",
+      "bbox": null
+    },
+    "contact": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No seller phone/email/contact line found or legible",
+      "candidates": null,
+      "evidence": "No snippet with 'Phone:', 'Tel', or an email address was found",
+      "bbox": null
+    },
+    "tax_id": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No tax/VAT/registration number located for the seller",
+      "candidates": null,
+      "evidence": "No snippet with 'Tax ID', 'VAT', 'TIN' found",
+      "bbox": null
+    }
+  },
+  "buyer": {
+    "name": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.1,
+      "reason": "No buyer/customer name block identified in the provided text or image OCR",
+      "candidates": null,
+      "evidence": "No 'Bill To', 'Customer', 'Buyer' label or adjacent name detected",
+      "bbox": null
+    },
+    "address": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No billing/shipping address block was found or legible",
+      "candidates": null,
+      "evidence": "No multiline address snippet located in the text/OCR",
+      "bbox": null
+    },
+    "contact": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No buyer contact (phone/email/attn) detected",
+      "candidates": null,
+      "evidence": "No snippet containing 'Attn:', phone number or email near a 'Bill To' was found",
+      "bbox": null
+    },
+    "tax_id": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No buyer tax ID found in the content",
+      "candidates": null,
+      "evidence": "No 'Tax ID', 'VAT' or similar label found for the buyer",
+      "bbox": null
+    }
+  },
+  "subtotal": {
+    "value": null,
+    "normalized_value": null,
+    "currency": null,
+    "confidence": 0.05,
+    "reason": "No subtotal monetary value (labelled 'Subtotal', 'Total before tax', etc.) was found or reliably OCR'd",
+    "candidates": null,
+    "evidence": "No snippet like 'Subtotal: $' or 'Sub-total' detected",
+    "bbox": null
+  },
+  "tax_amount": {
+    "value": null,
+    "normalized_value": null,
+    "currency": null,
+    "confidence": 0.05,
+    "reason": "No tax/VAT amount found in the provided text or image OCR",
+    "candidates": null,
+    "evidence": "No snippet containing 'Tax:', 'VAT', 'GST' with an amount detected",
+    "bbox": null
+  },
+  "discount_amount": {
+    "value": null,
+    "normalized_value": null,
+    "currency": null,
+    "confidence": 0.05,
+    "reason": "No discount line detected",
+    "candidates": null,
+    "evidence": "No snippet with 'Discount', 'Less', 'Off' and an amount was found",
+    "bbox": null
+  },
+  "shipping_amount": {
+    "value": null,
+    "normalized_value": null,
+    "currency": null,
+    "confidence": 0.05,
+    "reason": "No shipping/delivery/freight amount found",
+    "candidates": null,
+    "evidence": "No snippet with 'Shipping' or 'Freight' plus amount detected",
+    "bbox": null
+  },
+  "grand_total": {
+    "value": null,
+    "normalized_value": null,
+    "currency": null,
+    "confidence": 0.05,
+    "reason": "No final 'Total', 'Amount Due' or 'Grand Total' amount was found in the provided content or OCR output",
+    "candidates": null,
+    "evidence": "No snippet with 'Total:' or 'Amount Due' and an amount detected",
+    "bbox": null
+  },
+  "currency": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.05,
+    "reason": "Currency not identifiable — no currency symbols or ISO codes reliably located",
+    "candidates": null,
+    "evidence": "No '$', 'USD', 'EUR', 'GBP', or other currency labels found in text/OCR",
+    "bbox": null
+  },
+  "payment_terms": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.1,
+    "reason": "No 'Payment Terms', 'Net 30' or similar instruction was found",
+    "candidates": null,
+    "evidence": "No snippet containing 'Payment Terms', 'Net' or 'Due in' located",
+    "bbox": null
+  },
+  "line_items": [],
+  "notes": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.1,
+    "reason": "No invoice notes/footer text (e.g. 'Notes', 'Thank you') was clearly found or legible",
+    "candidates": null,
+    "evidence": "No snippet clearly labelled 'Notes' or identifiable free-text message located",
+    "bbox": null
+  },
+  "parsing_warnings": [
+    "No explicit invoice fields (invoice number, dates, totals, seller/buyer blocks, currency) were found in the provided text or in OCR from the image.",
+    "The supplied image appears visually complex and OCR produced no clear invoice labels; many graphic/text blocks are present but no standard invoice structure was detected.",
+    "If this is an invoice, please provide a higher-quality crop of the header (where invoice number/date/seller appear) and the totals area (where subtotal/tax/total appear), or provide the raw text of those fields."
+  ],
+  "checks": [
+    "No monetary totals or line items were extracted, so no arithmetic checks can be performed.",
+    "All required fields are null because no recognizable invoice fields were found in the provided text or OCR of the image."
+  ]
+}

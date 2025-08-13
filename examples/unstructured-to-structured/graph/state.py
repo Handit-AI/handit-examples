@@ -9,6 +9,10 @@ class GraphState(TypedDict, total=False):
     Keys:
     - session_id: Unique identifier for a processing session
     - json_paths: List of JSON file paths produced by processing
+    - unstructured_paths: List of paths to uploaded unstructured files
+    - classification_results: Dictionary containing document classification results
+    - invoices_paths: List of paths to files classified as invoices
+    - structured_json_paths: List of paths to structured JSON files from invoice data extraction
     - csv_content: Generated CSV content as string
     - csv_path: Path where CSV was saved
     - errors: Any non-fatal errors encountered during processing
@@ -16,8 +20,13 @@ class GraphState(TypedDict, total=False):
 
     session_id: str
     json_paths: List[str]
+    unstructured_paths: List[str]
+    structured_json_paths: List[str]
+    classification_results: Dict[str, Any]
+    invoices_paths: List[str]
     csv_content: str
     csv_path: str
     errors: List[str]
+    execution_id: str
 
 

@@ -1,0 +1,386 @@
+{
+  "document_type": "invoice",
+  "document_language": {
+    "value": "English",
+    "normalized_value": "English",
+    "confidence": 0.99,
+    "reason": "All visible text is in English (labels such as 'Invoice', 'Bill To', 'Invoice date')",
+    "candidates": null,
+    "evidence": "Header and labels: 'Invoice', 'Bill To', 'Invoice date 08/01/2024', 'Due date 08/31/2024'",
+    "bbox": null
+  },
+  "invoice_id": {
+    "value": "12345",
+    "normalized_value": "12345",
+    "confidence": 0.98,
+    "reason": "Found 'Invoice # 12345' in the Invoice Details box",
+    "candidates": [
+      "12345"
+    ],
+    "evidence": "Invoice Details block: 'Invoice # 12345'",
+    "bbox": null
+  },
+  "purchase_order": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.05,
+    "reason": "No purchase order or PO number found in the document",
+    "candidates": null,
+    "evidence": "No 'PO', 'Purchase Order' or similar label present",
+    "bbox": null
+  },
+  "issue_date": {
+    "value": "08/01/2024",
+    "normalized_value": "2024-08-01",
+    "format": "MM/DD/YYYY",
+    "confidence": 0.96,
+    "reason": "Found 'Invoice date 08/01/2024' in the Invoice Details box; converted to ISO",
+    "evidence": "Invoice Details block: 'Invoice date 08/01/2024'",
+    "bbox": null
+  },
+  "due_date": {
+    "value": "08/31/2024",
+    "normalized_value": "2024-08-31",
+    "format": "MM/DD/YYYY",
+    "confidence": 0.96,
+    "reason": "Found 'Due date 08/31/2024' in the Invoice Details box; converted to ISO",
+    "evidence": "Invoice Details block: 'Due date 08/31/2024'",
+    "bbox": null
+  },
+  "payment_terms": {
+    "value": "Net 30",
+    "normalized_value": "Net 30",
+    "confidence": 0.95,
+    "reason": "Found 'Terms Net 30' in the Invoice Details box",
+    "candidates": [
+      "Net 30"
+    ],
+    "evidence": "Invoice Details block: 'Terms Net 30'",
+    "bbox": null
+  },
+  "seller": {
+    "name": {
+      "value": "Craigs' Landscaping",
+      "normalized_value": "Craigs' Landscaping",
+      "confidence": 0.98,
+      "reason": "Top-left header shows company name",
+      "candidates": [
+        "Craigs' Landscaping",
+        "Craigs Landscaping"
+      ],
+      "evidence": "Header: 'Craigs' Landscaping'",
+      "bbox": null
+    },
+    "tax_id": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No tax ID (Tax, EIN, VAT) visible for the seller",
+      "candidates": null,
+      "evidence": "No 'Tax ID', 'EIN', or similar label found under seller details",
+      "bbox": null
+    },
+    "address": {
+      "value": "123 Sierra Dr, Palo Alto, CA 94028",
+      "normalized_value": "123 Sierra Dr, Palo Alto, CA 94028",
+      "confidence": 0.95,
+      "reason": "Seller address block in top-left: street, city, state and ZIP present",
+      "candidates": [
+        "123 Sierra Dr, Palo Alto, CA 94028"
+      ],
+      "evidence": "Header: '123 Sierra Dr', 'Palo Alto, CA 94028'",
+      "bbox": null
+    },
+    "email": {
+      "value": "craigslandscaping@email.com",
+      "normalized_value": "craigslandscaping@email.com",
+      "confidence": 0.95,
+      "reason": "Email visible in header next to phone and website",
+      "candidates": [
+        "craigslandscaping@email.com"
+      ],
+      "evidence": "Header: 'craigslandscaping@email.com'",
+      "bbox": null
+    },
+    "phone": {
+      "value": "123-456-7890",
+      "normalized_value": "123-456-7890",
+      "confidence": 0.95,
+      "reason": "Phone number present in header",
+      "candidates": [
+        "123-456-7890",
+        "123.456.7890"
+      ],
+      "evidence": "Header: '123-456-7890'",
+      "bbox": null
+    }
+  },
+  "buyer": {
+    "name": {
+      "value": "Smith Enterprises",
+      "normalized_value": "Smith Enterprises",
+      "confidence": 0.97,
+      "reason": "Found 'Bill To' section listing customer name",
+      "candidates": [
+        "Smith Enterprises"
+      ],
+      "evidence": "Bill To block: 'Smith Enterprises'",
+      "bbox": null
+    },
+    "tax_id": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No buyer tax ID or VAT number present",
+      "candidates": null,
+      "evidence": "No 'Tax ID' or similar label in Bill To block",
+      "bbox": null
+    },
+    "address": {
+      "value": "456 Sierra Dr, Palo Alto, CA 94028",
+      "normalized_value": "456 Sierra Dr, Palo Alto, CA 94028",
+      "confidence": 0.96,
+      "reason": "Address found under 'Bill To' section with street, city, state and ZIP",
+      "candidates": [
+        "456 Sierra Dr, Palo Alto, CA 94028"
+      ],
+      "evidence": "Bill To block: '456 Sierra Dr', 'Palo Alto, CA 94028'",
+      "bbox": null
+    },
+    "email": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No buyer email found on the invoice",
+      "candidates": null,
+      "evidence": "Bill To block contains name and address only; no email present",
+      "bbox": null
+    },
+    "phone": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No buyer phone number found",
+      "candidates": null,
+      "evidence": "Bill To block contains name and address only; no phone present",
+      "bbox": null
+    }
+  },
+  "currency": {
+    "value": "USD",
+    "normalized_value": "USD",
+    "confidence": 0.98,
+    "reason": "Dollar sign ($) used for amounts; US address suggests USD",
+    "candidates": [
+      "USD",
+      "$"
+    ],
+    "evidence": "Amounts show '$' (e.g., '$425', '$650.00', '$634.73')",
+    "bbox": null
+  },
+  "subtotal": {
+    "value": 650.0,
+    "normalized_value": 650.0,
+    "currency": "USD",
+    "confidence": 0.98,
+    "reason": "Subtotal printed as '$650.00' in totals area",
+    "evidence": "Totals area: 'Subtotal    $650.00'",
+    "bbox": null
+  },
+  "total_tax": {
+    "value": 49.73,
+    "normalized_value": 49.73,
+    "currency": "USD",
+    "confidence": 0.97,
+    "reason": "Tax amount shown as '$49.73' with label 'Tax 8.5%'",
+    "evidence": "Totals area: 'Tax 8.5%    $49.73'",
+    "bbox": null
+  },
+  "total_discount": {
+    "value": 65.0,
+    "normalized_value": 65.0,
+    "currency": "USD",
+    "confidence": 0.97,
+    "reason": "Discount shown as '-$65.00' in totals area (reported as a 65.00 deduction)",
+    "evidence": "Totals area: 'Discount    -$65.00'",
+    "bbox": null
+  },
+  "shipping": {
+    "value": null,
+    "normalized_value": null,
+    "currency": null,
+    "confidence": 0.05,
+    "reason": "No shipping or freight line present on the invoice",
+    "evidence": "Totals section contains Subtotal, Discount, Tax, and Total only",
+    "bbox": null
+  },
+  "grand_total": {
+    "value": 634.73,
+    "normalized_value": 634.73,
+    "currency": "USD",
+    "confidence": 0.99,
+    "reason": "Total shown as '$634.73' in bold in totals area; matches calculation subtotal - discount + tax",
+    "evidence": "Totals area: 'Total    $634.73'",
+    "bbox": null
+  },
+  "notes": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.05,
+    "reason": "No notes or payment instruction block visible",
+    "candidates": null,
+    "evidence": "Bottom area contains totals only; no separate notes text found",
+    "bbox": null
+  },
+  "line_items": [
+    {
+      "description": {
+        "value": "Stone work",
+        "normalized_value": "Stone work",
+        "confidence": 0.97,
+        "reason": "Description in first product/service row",
+        "candidates": [
+          "Stone work"
+        ],
+        "evidence": "Line item row: 'Stone work' under Product/Services column",
+        "bbox": null
+      },
+      "sku": {
+        "value": null,
+        "normalized_value": null,
+        "confidence": 0.05,
+        "reason": "No SKU visible for this line item",
+        "candidates": null,
+        "evidence": "No SKU or item code present in the item row",
+        "bbox": null
+      },
+      "quantity": {
+        "value": 3.4,
+        "normalized_value": 3.4,
+        "confidence": 0.96,
+        "reason": "Qty/Hrs column shows '3.4' for Stone work",
+        "candidates": [
+          "3.4"
+        ],
+        "evidence": "Item row: '3.4' under Qty/Hrs column",
+        "bbox": null
+      },
+      "unit_price": {
+        "value": 125.0,
+        "normalized_value": 125.0,
+        "currency": "USD",
+        "confidence": 0.97,
+        "reason": "Rate column shows '$125' for Stone work",
+        "evidence": "Item row: ' $125' under Rate column",
+        "bbox": null
+      },
+      "discount": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.05,
+        "reason": "No per-line discount indicated for this item (only overall Discount shown in totals)",
+        "evidence": "Item row shows Amount $425; no discount column present per-line",
+        "bbox": null
+      },
+      "tax": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.05,
+        "reason": "No per-line tax shown; tax provided as a single total line",
+        "evidence": "Tax shown only in totals area as 'Tax 8.5% $49.73'",
+        "bbox": null
+      },
+      "line_total": {
+        "value": 425.0,
+        "normalized_value": 425.0,
+        "currency": "USD",
+        "confidence": 0.98,
+        "reason": "Amount column shows '$425' for Stone work (3.4 × $125 = $425)",
+        "evidence": "Item row Amount column: '$425'",
+        "bbox": null
+      }
+    },
+    {
+      "description": {
+        "value": "Mulching, weeding, planting",
+        "normalized_value": "Mulching, weeding, planting",
+        "confidence": 0.97,
+        "reason": "Description in second product/service row",
+        "candidates": [
+          "Mulching, weeding, planting"
+        ],
+        "evidence": "Line item row: 'Mulching, weeding, planting' under Product/Services column",
+        "bbox": null
+      },
+      "sku": {
+        "value": null,
+        "normalized_value": null,
+        "confidence": 0.05,
+        "reason": "No SKU visible for this line item",
+        "candidates": null,
+        "evidence": "No SKU or item code present in the item row",
+        "bbox": null
+      },
+      "quantity": {
+        "value": 3.0,
+        "normalized_value": 3.0,
+        "confidence": 0.96,
+        "reason": "Qty/Hrs column shows '3' for this item",
+        "candidates": [
+          "3"
+        ],
+        "evidence": "Item row: '3' under Qty/Hrs column",
+        "bbox": null
+      },
+      "unit_price": {
+        "value": 75.0,
+        "normalized_value": 75.0,
+        "currency": "USD",
+        "confidence": 0.97,
+        "reason": "Rate column shows '$75' for this item",
+        "evidence": "Item row: '$75' under Rate column",
+        "bbox": null
+      },
+      "discount": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.05,
+        "reason": "No per-line discount indicated (only overall Discount line present)",
+        "evidence": "Item row shows Amount $225; no discount column present per-line",
+        "bbox": null
+      },
+      "tax": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.05,
+        "reason": "No per-line tax shown; tax provided as a single total line",
+        "evidence": "Tax shown only in totals area as 'Tax 8.5% $49.73'",
+        "bbox": null
+      },
+      "line_total": {
+        "value": 225.0,
+        "normalized_value": 225.0,
+        "currency": "USD",
+        "confidence": 0.98,
+        "reason": "Amount column shows '$225' for Mulching, weeding, planting (3 × $75 = $225)",
+        "evidence": "Item row Amount column: '$225'",
+        "bbox": null
+      }
+    }
+  ],
+  "parsing_warnings": [
+    "No seller or buyer tax ID found in document",
+    "No buyer phone or email found in Bill To block",
+    "No shipping/freight line present (assumed not applicable)",
+    "No per-line discounts or per-line tax values provided; only overall Discount and Tax lines present"
+  ],
+  "checks": [
+    "Line items sum: $425.00 + $225.00 = $650.00 matches Subtotal $650.00",
+    "Grand total check: Subtotal $650.00 - Discount $65.00 + Tax $49.73 = $634.73 matches Total $634.73",
+    "Tax rate indicated as 8.5% producing Tax $49.73 on taxable base (calculation consistent with totals shown)"
+  ]
+}
