@@ -1,0 +1,451 @@
+{
+  "document_type": "invoice",
+  "document_language": {
+    "value": "English",
+    "normalized_value": "English",
+    "confidence": 0.95,
+    "reason": "All visible text (labels, item descriptions, totals) is in English",
+    "candidates": null,
+    "evidence": "Header and body: 'Invoice Number', 'Issue Date', 'Bill to:', 'Item', 'Quantity', 'Unit Price', 'Amount'",
+    "bbox": null
+  },
+  "invoice_id": {
+    "value": "#000009",
+    "normalized_value": "000009",
+    "confidence": 0.98,
+    "reason": "Found top-right: '#000009' next to 'Invoice Number' label",
+    "candidates": [
+      "#000009",
+      "000009"
+    ],
+    "evidence": "Top-right header: 'Invoice Number   #000009'",
+    "bbox": null
+  },
+  "purchase_order": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.05,
+    "reason": "No purchase order / PO number label or value present on the invoice",
+    "candidates": null,
+    "evidence": "No 'PO', 'Purchase Order' or similar found",
+    "bbox": null
+  },
+  "issue_date": {
+    "value": "2018-04-11",
+    "normalized_value": "2018-04-11",
+    "format": null,
+    "confidence": 0.98,
+    "reason": "Found 'Issue Date' with value '2018-04-11' in date area",
+    "evidence": "Date area (top-right): 'Issue Date 2018-04-11'",
+    "bbox": null
+  },
+  "due_date": {
+    "value": "2018-04-11",
+    "normalized_value": "2018-04-11",
+    "format": null,
+    "confidence": 0.98,
+    "reason": "Found 'Due Date' with value '2018-04-11' (same as issue date) in date area",
+    "evidence": "Date area (top-right): 'Due Date 2018-04-11'",
+    "bbox": null
+  },
+  "payment_terms": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.05,
+    "reason": "No explicit payment terms / 'Terms' or net days label found",
+    "candidates": null,
+    "evidence": "No 'Terms', 'Net', or similar payment-terms text visible",
+    "bbox": null
+  },
+  "seller": {
+    "name": {
+      "value": "Acme, Inc.",
+      "normalized_value": "Acme, Inc.",
+      "confidence": 0.95,
+      "reason": "Top-left header shows company name adjacent to logo: 'Acme, Inc.'",
+      "candidates": [
+        "Acme, Inc.",
+        "ACME"
+      ],
+      "evidence": "Top-left near logo: 'Acme, Inc.'",
+      "bbox": null
+    },
+    "tax_id": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No seller tax ID / VAT / EIN label visible",
+      "candidates": null,
+      "evidence": "No 'Tax ID', 'EIN', or equivalent found near seller info",
+      "bbox": null
+    },
+    "address": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.1,
+      "reason": "No full postal address for seller present on the invoice (only company name and phone)",
+      "candidates": null,
+      "evidence": "Top-left shows 'Acme, Inc.' and phone but no street/city/state lines",
+      "bbox": null
+    },
+    "email": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No seller email address visible",
+      "candidates": null,
+      "evidence": "No email-like text found in the seller area",
+      "bbox": null
+    },
+    "phone": {
+      "value": "555-555-1234 x137",
+      "normalized_value": "555-555-1234 x137",
+      "confidence": 0.95,
+      "reason": "Phone shown under company name in header",
+      "candidates": [
+        "555-555-1234 x137",
+        "555-555-1234"
+      ],
+      "evidence": "Top-left header: '555-555-1234 x137' (next to 'Acme, Inc.')",
+      "bbox": null
+    }
+  },
+  "buyer": {
+    "name": {
+      "value": "Marty McFly",
+      "normalized_value": "Marty McFly",
+      "confidence": 0.97,
+      "reason": "Found under 'Bill to:' label",
+      "candidates": [
+        "Marty McFly"
+      ],
+      "evidence": "Left column under 'Bill to:': 'Marty McFly'",
+      "bbox": null
+    },
+    "tax_id": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No buyer tax ID or VAT number present",
+      "candidates": null,
+      "evidence": "No tax ID label/number found in bill-to block",
+      "bbox": null
+    },
+    "address": {
+      "value": "200 Billing Rd. Suite 100, Needham, MA 02494",
+      "normalized_value": "200 Billing Rd., Suite 100, Needham, MA 02494",
+      "confidence": 0.96,
+      "reason": "Concatenated lines under 'Bill to:' showing street, suite and city/state/ZIP",
+      "candidates": [
+        "200 Billing Rd. Suite 100 Needham, MA 02494"
+      ],
+      "evidence": "Bill to block: '200 Billing Rd. Suite 100 Needham, MA 02494'",
+      "bbox": null
+    },
+    "email": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No buyer email visible on the invoice",
+      "candidates": null,
+      "evidence": "No email-like text in bill-to section",
+      "bbox": null
+    },
+    "phone": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No buyer phone number present",
+      "candidates": null,
+      "evidence": "No phone number found in bill-to block",
+      "bbox": null
+    }
+  },
+  "currency": {
+    "value": "USD",
+    "normalized_value": "USD",
+    "confidence": 0.98,
+    "reason": "Dollar sign ($) shown on all monetary values",
+    "candidates": [
+      "USD",
+      "$"
+    ],
+    "evidence": "Amounts such as '$685.35', '$761.50', '$99.00' visible",
+    "bbox": null
+  },
+  "subtotal": {
+    "value": 761.5,
+    "normalized_value": 761.5,
+    "currency": "USD",
+    "confidence": 0.97,
+    "reason": "Found 'Subtotal' in totals area with value '$761.50'",
+    "evidence": "Totals area (right): 'Subtotal $761.50'",
+    "bbox": null
+  },
+  "total_tax": {
+    "value": null,
+    "normalized_value": null,
+    "currency": null,
+    "confidence": 0.05,
+    "reason": "No tax line (Tax / VAT / Sales Tax) visible on invoice",
+    "evidence": "No 'Tax' label present in totals area",
+    "bbox": null
+  },
+  "total_discount": {
+    "value": 76.15,
+    "normalized_value": 76.15,
+    "currency": "USD",
+    "confidence": 0.98,
+    "reason": "Found discount line 'Discounts ($76.15)' and the discounts box shows '$76.15' for MULTI3 (10%)",
+    "evidence": "Totals area: 'Discounts ($76.15)'; Discounts box: '1. MULTI3 - Multi-service discount (10%) $76.15'",
+    "bbox": null
+  },
+  "shipping": {
+    "value": null,
+    "normalized_value": null,
+    "currency": null,
+    "confidence": 0.05,
+    "reason": "No shipping / freight line present in totals",
+    "evidence": "No 'Shipping' or 'Freight' label found in totals area",
+    "bbox": null
+  },
+  "grand_total": {
+    "value": 685.35,
+    "normalized_value": 685.35,
+    "currency": "USD",
+    "confidence": 0.99,
+    "reason": "Found 'Total' in totals area showing '$685.35' (also shown in paid box)",
+    "evidence": "Totals area and top-right payment badge: 'Total $685.35' and top-right badge shows '$685.35'",
+    "bbox": null
+  },
+  "notes": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.05,
+    "reason": "No separate notes or payment instructions block detected",
+    "candidates": null,
+    "evidence": "No free-text notes visible at bottom or margins",
+    "bbox": null
+  },
+  "line_items": [
+    {
+      "description": {
+        "value": "Professional Plan (04/11/2018 - 05/11/2018)",
+        "normalized_value": "Professional Plan (04/11/2018 - 05/11/2018)",
+        "confidence": 0.96,
+        "reason": "Item row shows 'Professional Plan' and date range beneath it",
+        "candidates": [
+          "Professional Plan",
+          "Professional Plan 04/11/2018 - 05/11/2018"
+        ],
+        "evidence": "Line item area: 'Professional Plan' with subline '04/11/2018 - 05/11/2018'",
+        "bbox": null
+      },
+      "sku": {
+        "value": null,
+        "normalized_value": null,
+        "confidence": 0.05,
+        "reason": "No SKU or item code visible for this line",
+        "candidates": null,
+        "evidence": "No SKU column or code shown next to this line",
+        "bbox": null
+      },
+      "quantity": {
+        "value": 1.0,
+        "normalized_value": 1.0,
+        "confidence": 0.97,
+        "reason": "Quantity column shows '1' for Professional Plan",
+        "candidates": [
+          "1"
+        ],
+        "evidence": "Quantity column (row 1): '1'",
+        "bbox": null
+      },
+      "unit_price": {
+        "value": 99.0,
+        "normalized_value": 99.0,
+        "currency": "USD",
+        "confidence": 0.97,
+        "reason": "Unit Price column shows '$99.00' for Professional Plan",
+        "evidence": "Unit Price (row 1): '$99.00'",
+        "bbox": null
+      },
+      "discount": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.1,
+        "reason": "No per-line discount shown; discount is applied globally in discount box",
+        "evidence": "Discounts listed in separate Discounts box (MULTI3) not per-line",
+        "bbox": null
+      },
+      "tax": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.05,
+        "reason": "No per-line tax shown",
+        "evidence": "No tax column or per-line tax values visible",
+        "bbox": null
+      },
+      "line_total": {
+        "value": 99.0,
+        "normalized_value": 99.0,
+        "currency": "USD",
+        "confidence": 0.97,
+        "reason": "Amount column shows '$99.00' for this line",
+        "evidence": "Amount (row 1): '$99.00'",
+        "bbox": null
+      }
+    },
+    {
+      "description": {
+        "value": "Small Instance (Hourly)",
+        "normalized_value": "Small Instance (Hourly)",
+        "confidence": 0.97,
+        "reason": "Item row text 'Small Instance (Hourly)'",
+        "candidates": [
+          "Small Instance (Hourly)"
+        ],
+        "evidence": "Line item area: 'Small Instance (Hourly)'",
+        "bbox": null
+      },
+      "sku": {
+        "value": null,
+        "normalized_value": null,
+        "confidence": 0.05,
+        "reason": "No SKU present for this line",
+        "candidates": null,
+        "evidence": "No SKU column or code visible next to this line",
+        "bbox": null
+      },
+      "quantity": {
+        "value": 764.0,
+        "normalized_value": 764.0,
+        "confidence": 0.98,
+        "reason": "Quantity column shows '764' for Small Instance (Hourly)",
+        "candidates": [
+          "764"
+        ],
+        "evidence": "Quantity (row 2): '764'",
+        "bbox": null
+      },
+      "unit_price": {
+        "value": 0.25,
+        "normalized_value": 0.25,
+        "currency": "USD",
+        "confidence": 0.98,
+        "reason": "Unit Price column shows '$0.25' for this line",
+        "evidence": "Unit Price (row 2): '$0.25'",
+        "bbox": null
+      },
+      "discount": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.1,
+        "reason": "No per-line discount visible (discount applied globally)",
+        "evidence": "Discount box separate from line items",
+        "bbox": null
+      },
+      "tax": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.05,
+        "reason": "No per-line tax shown",
+        "evidence": "No tax column visible",
+        "bbox": null
+      },
+      "line_total": {
+        "value": 191.0,
+        "normalized_value": 191.0,
+        "currency": "USD",
+        "confidence": 0.98,
+        "reason": "Amount column shows '$191.00' for this line (764 × $0.25 = $191.00)",
+        "evidence": "Amount (row 2): '$191.00'",
+        "bbox": null
+      }
+    },
+    {
+      "description": {
+        "value": "Large Instance (Hourly)",
+        "normalized_value": "Large Instance (Hourly)",
+        "confidence": 0.97,
+        "reason": "Item row text 'Large Instance (Hourly)'",
+        "candidates": [
+          "Large Instance (Hourly)"
+        ],
+        "evidence": "Line item area: 'Large Instance (Hourly)'",
+        "bbox": null
+      },
+      "sku": {
+        "value": null,
+        "normalized_value": null,
+        "confidence": 0.05,
+        "reason": "No SKU present for this line",
+        "candidates": null,
+        "evidence": "No SKU column or code visible next to this line",
+        "bbox": null
+      },
+      "quantity": {
+        "value": 943.0,
+        "normalized_value": 943.0,
+        "confidence": 0.98,
+        "reason": "Quantity column shows '943' for Large Instance (Hourly)",
+        "candidates": [
+          "943"
+        ],
+        "evidence": "Quantity (row 3): '943'",
+        "bbox": null
+      },
+      "unit_price": {
+        "value": 0.5,
+        "normalized_value": 0.5,
+        "currency": "USD",
+        "confidence": 0.98,
+        "reason": "Unit Price column shows '$0.50' for this line",
+        "evidence": "Unit Price (row 3): '$0.50'",
+        "bbox": null
+      },
+      "discount": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.1,
+        "reason": "No per-line discount visible (discount applied globally)",
+        "evidence": "Discounts listed in separate Discounts box",
+        "bbox": null
+      },
+      "tax": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.05,
+        "reason": "No per-line tax shown",
+        "evidence": "No tax column visible",
+        "bbox": null
+      },
+      "line_total": {
+        "value": 471.5,
+        "normalized_value": 471.5,
+        "currency": "USD",
+        "confidence": 0.98,
+        "reason": "Amount column shows '$471.50' for this line (943 × $0.50 = $471.50)",
+        "evidence": "Amount (row 3): '$471.50'",
+        "bbox": null
+      }
+    }
+  ],
+  "parsing_warnings": [
+    "Seller postal address and seller tax ID not found on the invoice.",
+    "No explicit payment terms label (e.g., 'Net 30') present.",
+    "No per-line taxes or shipping fees shown; taxes and shipping assumed absent."
+  ],
+  "checks": [
+    "Sum of line item amounts = 99.00 + 191.00 + 471.50 = 761.50 (matches Subtotal $761.50).",
+    "Discount $76.15 equals 10% of subtotal $761.50 (as noted 'Multi-service discount (10%)').",
+    "Grand total $685.35 = Subtotal $761.50 - Discounts $76.15 (matches displayed Total).",
+    "Paid amount $685.35 equals Grand total and Due is $0.00 (invoice marked PAID)."
+  ]
+}

@@ -1,0 +1,653 @@
+{
+  "document_type": "invoice",
+  "document_language": {
+    "value": "English",
+    "normalized_value": "English",
+    "confidence": 0.98,
+    "reason": "All visible text (labels, descriptions, totals) is in English",
+    "candidates": null,
+    "evidence": "Header and body: 'INVOICE', 'DESCRIPTION', 'SUBTOTAL', 'Tax', 'TOTAL'",
+    "bbox": null
+  },
+  "invoice_id": {
+    "value": "01234",
+    "normalized_value": "01234",
+    "confidence": 0.98,
+    "reason": "Found 'INVOICE NO: 01234' in the top-right header",
+    "candidates": [
+      "01234"
+    ],
+    "evidence": "Top-right: 'INVOICE NO: 01234'",
+    "bbox": null
+  },
+  "purchase_order": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.05,
+    "reason": "No purchase order / PO number label found on the document",
+    "candidates": null,
+    "evidence": "No 'PO', 'Purchase Order' or similar text present",
+    "bbox": null
+  },
+  "issue_date": {
+    "value": "11.02.2030",
+    "normalized_value": "2030-02-11",
+    "format": "DD.MM.YYYY",
+    "confidence": 0.96,
+    "reason": "Found 'DATE: 11.02.2030' in the header; interpreted as DD.MM.YYYY and converted to ISO",
+    "evidence": "Top-right: 'DATE: 11.02.2030'",
+    "bbox": null
+  },
+  "due_date": {
+    "value": "11.03.2030",
+    "normalized_value": "2030-03-11",
+    "format": "DD.MM.YYYY",
+    "confidence": 0.96,
+    "reason": "Found 'DUE DATE: 11.03.2030' in the header; interpreted as DD.MM.YYYY and converted to ISO",
+    "evidence": "Top-right: 'DUE DATE: 11.03.2030'",
+    "bbox": null
+  },
+  "payment_terms": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.1,
+    "reason": "No explicit payment terms (e.g., 'Net 30') text found; only a due date is present",
+    "candidates": null,
+    "evidence": "Document shows 'DATE' and 'DUE DATE' but no 'Terms' or similar label",
+    "bbox": null
+  },
+  "seller": {
+    "name": {
+      "value": "Adeline Palmerston",
+      "normalized_value": "Adeline Palmerston",
+      "confidence": 0.86,
+      "reason": "Account Name 'Adeline Palmerston' appears under 'PAY TO' — used as seller/payee name",
+      "candidates": [
+        "Adeline Palmerston",
+        "Borcele Bank (payee bank)"
+      ],
+      "evidence": "Left section under 'PAY TO': 'Account Name: Adeline Palmerston'",
+      "bbox": null
+    },
+    "tax_id": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No tax ID or VAT number label/value found for seller",
+      "candidates": null,
+      "evidence": "No 'Tax ID', 'VAT', or similar present under seller/payee section",
+      "bbox": null
+    },
+    "address": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.1,
+      "reason": "No seller street address visible; only bank/payee details are provided",
+      "candidates": null,
+      "evidence": "PAY TO section lists bank and account details but no seller postal address",
+      "bbox": null
+    },
+    "email": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No seller email found on the document",
+      "candidates": null,
+      "evidence": "No email address present in header or payee section",
+      "bbox": null
+    },
+    "phone": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No seller phone number found on the document",
+      "candidates": null,
+      "evidence": "No telephone number present in header or payee section",
+      "bbox": null
+    }
+  },
+  "buyer": {
+    "name": {
+      "value": "Richard Sanchez",
+      "normalized_value": "Richard Sanchez",
+      "confidence": 0.95,
+      "reason": "Found 'ISSUED TO:' followed by 'Richard Sanchez' in the top-left area",
+      "candidates": [
+        "Richard Sanchez",
+        "Richard Sanchez, Thynk Unlimited"
+      ],
+      "evidence": "Top-left: 'ISSUED TO: Richard Sanchez'",
+      "bbox": null
+    },
+    "tax_id": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No buyer tax ID / VAT number found",
+      "candidates": null,
+      "evidence": "No 'Tax ID', 'VAT', or similar present under 'ISSUED TO' section",
+      "bbox": null
+    },
+    "address": {
+      "value": "Thynk Unlimited\n123 Anywhere St., Any City",
+      "normalized_value": "Thynk Unlimited, 123 Anywhere St., Any City",
+      "confidence": 0.93,
+      "reason": "Company and street address appear below the buyer name under 'ISSUED TO'",
+      "candidates": [
+        "Thynk Unlimited, 123 Anywhere St., Any City"
+      ],
+      "evidence": "Top-left under 'ISSUED TO': 'Thynk Unlimited' and '123 Anywhere St., Any City'",
+      "bbox": null
+    },
+    "email": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No buyer email found on the document",
+      "candidates": null,
+      "evidence": "No email address present in the 'ISSUED TO' block",
+      "bbox": null
+    },
+    "phone": {
+      "value": null,
+      "normalized_value": null,
+      "confidence": 0.05,
+      "reason": "No buyer phone number found on the document",
+      "candidates": null,
+      "evidence": "No phone number present in the 'ISSUED TO' block",
+      "bbox": null
+    }
+  },
+  "currency": {
+    "value": "USD",
+    "normalized_value": "USD",
+    "confidence": 0.96,
+    "reason": "Dollar sign ('$') appears next to line totals and totals; currency inferred as USD",
+    "candidates": [
+      "USD",
+      "$"
+    ],
+    "evidence": "Line totals show '$100', totals show '$400' and '$440'",
+    "bbox": null
+  },
+  "subtotal": {
+    "value": 400.0,
+    "normalized_value": 400.0,
+    "currency": "USD",
+    "confidence": 0.92,
+    "reason": "Found printed 'SUBTOTAL' value of '$400' in totals section",
+    "evidence": "Totals area: 'SUBTOTAL .................. $400'",
+    "bbox": null
+  },
+  "total_tax": {
+    "value": 40.0,
+    "normalized_value": 40.0,
+    "currency": "USD",
+    "confidence": 0.86,
+    "reason": "Document displays 'Tax 10%' and totals show Subtotal $400 and Total $440; tax amount inferred as $40 (10% of printed subtotal and matches printed total)",
+    "evidence": "Totals area: 'Tax 10%' and 'TOTAL $440' with 'SUBTOTAL $400' (440 - 400 = 40)",
+    "bbox": null
+  },
+  "total_discount": {
+    "value": null,
+    "normalized_value": null,
+    "currency": null,
+    "confidence": 0.05,
+    "reason": "No discount line or discount amount present on the invoice",
+    "evidence": "No 'Discount' or similar label in totals",
+    "bbox": null
+  },
+  "shipping": {
+    "value": null,
+    "normalized_value": null,
+    "currency": null,
+    "confidence": 0.05,
+    "reason": "No shipping/freight amount or label present on the invoice",
+    "evidence": "No 'Shipping' or 'Freight' line in totals section",
+    "bbox": null
+  },
+  "grand_total": {
+    "value": 440.0,
+    "normalized_value": 440.0,
+    "currency": "USD",
+    "confidence": 0.95,
+    "reason": "Found printed 'TOTAL $440' in totals section",
+    "evidence": "Totals area: 'TOTAL $440'",
+    "bbox": null
+  },
+  "notes": {
+    "value": null,
+    "normalized_value": null,
+    "confidence": 0.05,
+    "reason": "No notes or payment instructions (other than pay-to bank details) visible",
+    "candidates": null,
+    "evidence": "No 'Notes' or extra text block at bottom other than totals",
+    "bbox": null
+  },
+  "line_items": [
+    {
+      "description": {
+        "value": "Brand consultation",
+        "normalized_value": "Brand consultation",
+        "confidence": 0.97,
+        "reason": "First row in description column reads 'Brand consultation'",
+        "candidates": [
+          "Brand consultation"
+        ],
+        "evidence": "Line items: 'Brand consultation  100  1  $100'",
+        "bbox": null
+      },
+      "sku": {
+        "value": null,
+        "normalized_value": null,
+        "confidence": 0.05,
+        "reason": "No SKU or item code present for this line",
+        "candidates": null,
+        "evidence": "No SKU column or code visible in line row",
+        "bbox": null
+      },
+      "quantity": {
+        "value": 1.0,
+        "normalized_value": 1.0,
+        "confidence": 0.97,
+        "reason": "Qty column shows '1' for this line",
+        "candidates": [
+          "1"
+        ],
+        "evidence": "Line row: '... QTY 1 ...'",
+        "bbox": null
+      },
+      "unit_price": {
+        "value": 100.0,
+        "normalized_value": 100.0,
+        "currency": "USD",
+        "confidence": 0.96,
+        "reason": "Unit price column shows '100' for the item (total shown as $100)",
+        "evidence": "Line row: 'UNIT PRICE 100'",
+        "bbox": null
+      },
+      "discount": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.05,
+        "reason": "No per-line discount shown",
+        "evidence": "No discount column or value in line row",
+        "bbox": null
+      },
+      "tax": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.1,
+        "reason": "No per-line tax amount shown (document shows overall Tax 10% in totals)",
+        "evidence": "Line rows show only unit price, qty, and total ($100)",
+        "bbox": null
+      },
+      "line_total": {
+        "value": 100.0,
+        "normalized_value": 100.0,
+        "currency": "USD",
+        "confidence": 0.97,
+        "reason": "Line total printed as '$100' for this row",
+        "evidence": "Line row rightmost: '$100'",
+        "bbox": null
+      }
+    },
+    {
+      "description": {
+        "value": "logo design",
+        "normalized_value": "Logo design",
+        "confidence": 0.96,
+        "reason": "Second row description reads 'logo design'",
+        "candidates": [
+          "logo design"
+        ],
+        "evidence": "Line items: 'logo design  100  1  $100'",
+        "bbox": null
+      },
+      "sku": {
+        "value": null,
+        "normalized_value": null,
+        "confidence": 0.05,
+        "reason": "No SKU present",
+        "candidates": null,
+        "evidence": "No SKU column visible",
+        "bbox": null
+      },
+      "quantity": {
+        "value": 1.0,
+        "normalized_value": 1.0,
+        "confidence": 0.96,
+        "reason": "Qty column shows '1'",
+        "candidates": [
+          "1"
+        ],
+        "evidence": "Line row shows quantity '1'",
+        "bbox": null
+      },
+      "unit_price": {
+        "value": 100.0,
+        "normalized_value": 100.0,
+        "currency": "USD",
+        "confidence": 0.96,
+        "reason": "Unit price shown as '100'",
+        "evidence": "Line row: '100' under UNIT PRICE",
+        "bbox": null
+      },
+      "discount": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.05,
+        "reason": "No discount shown",
+        "evidence": "No discount column",
+        "bbox": null
+      },
+      "tax": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.1,
+        "reason": "No per-line tax shown",
+        "evidence": "Overall tax only in totals area",
+        "bbox": null
+      },
+      "line_total": {
+        "value": 100.0,
+        "normalized_value": 100.0,
+        "currency": "USD",
+        "confidence": 0.96,
+        "reason": "Line total printed as '$100'",
+        "evidence": "Line row rightmost: '$100'",
+        "bbox": null
+      }
+    },
+    {
+      "description": {
+        "value": "Website design",
+        "normalized_value": "Website design",
+        "confidence": 0.96,
+        "reason": "Third row description reads 'Website design'",
+        "candidates": [
+          "Website design"
+        ],
+        "evidence": "Line items: 'Website design  100  1  $100'",
+        "bbox": null
+      },
+      "sku": {
+        "value": null,
+        "normalized_value": null,
+        "confidence": 0.05,
+        "reason": "No SKU present",
+        "candidates": null,
+        "evidence": "No SKU column visible",
+        "bbox": null
+      },
+      "quantity": {
+        "value": 1.0,
+        "normalized_value": 1.0,
+        "confidence": 0.96,
+        "reason": "Qty column shows '1'",
+        "candidates": [
+          "1"
+        ],
+        "evidence": "Line row shows quantity '1'",
+        "bbox": null
+      },
+      "unit_price": {
+        "value": 100.0,
+        "normalized_value": 100.0,
+        "currency": "USD",
+        "confidence": 0.96,
+        "reason": "Unit price shown as '100'",
+        "evidence": "Line row: '100' under UNIT PRICE",
+        "bbox": null
+      },
+      "discount": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.05,
+        "reason": "No discount shown",
+        "evidence": "No discount column",
+        "bbox": null
+      },
+      "tax": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.1,
+        "reason": "No per-line tax shown",
+        "evidence": "Overall tax only in totals area",
+        "bbox": null
+      },
+      "line_total": {
+        "value": 100.0,
+        "normalized_value": 100.0,
+        "currency": "USD",
+        "confidence": 0.96,
+        "reason": "Line total printed as '$100'",
+        "evidence": "Line row rightmost: '$100'",
+        "bbox": null
+      }
+    },
+    {
+      "description": {
+        "value": "Social media templates",
+        "normalized_value": "Social media templates",
+        "confidence": 0.96,
+        "reason": "Fourth row description reads 'Social media templates'",
+        "candidates": [
+          "Social media templates"
+        ],
+        "evidence": "Line items: 'Social media templates  100  1  $100'",
+        "bbox": null
+      },
+      "sku": {
+        "value": null,
+        "normalized_value": null,
+        "confidence": 0.05,
+        "reason": "No SKU present",
+        "candidates": null,
+        "evidence": "No SKU column visible",
+        "bbox": null
+      },
+      "quantity": {
+        "value": 1.0,
+        "normalized_value": 1.0,
+        "confidence": 0.96,
+        "reason": "Qty column shows '1'",
+        "candidates": [
+          "1"
+        ],
+        "evidence": "Line row shows quantity '1'",
+        "bbox": null
+      },
+      "unit_price": {
+        "value": 100.0,
+        "normalized_value": 100.0,
+        "currency": "USD",
+        "confidence": 0.96,
+        "reason": "Unit price shown as '100'",
+        "evidence": "Line row: '100' under UNIT PRICE",
+        "bbox": null
+      },
+      "discount": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.05,
+        "reason": "No discount shown",
+        "evidence": "No discount column",
+        "bbox": null
+      },
+      "tax": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.1,
+        "reason": "No per-line tax shown",
+        "evidence": "Overall tax only in totals area",
+        "bbox": null
+      },
+      "line_total": {
+        "value": 100.0,
+        "normalized_value": 100.0,
+        "currency": "USD",
+        "confidence": 0.96,
+        "reason": "Line total printed as '$100'",
+        "evidence": "Line row rightmost: '$100'",
+        "bbox": null
+      }
+    },
+    {
+      "description": {
+        "value": "Brand photography",
+        "normalized_value": "Brand photography",
+        "confidence": 0.96,
+        "reason": "Fifth row description reads 'Brand photography'",
+        "candidates": [
+          "Brand photography"
+        ],
+        "evidence": "Line items: 'Brand photography  100  1  $100'",
+        "bbox": null
+      },
+      "sku": {
+        "value": null,
+        "normalized_value": null,
+        "confidence": 0.05,
+        "reason": "No SKU present",
+        "candidates": null,
+        "evidence": "No SKU column visible",
+        "bbox": null
+      },
+      "quantity": {
+        "value": 1.0,
+        "normalized_value": 1.0,
+        "confidence": 0.96,
+        "reason": "Qty column shows '1'",
+        "candidates": [
+          "1"
+        ],
+        "evidence": "Line row shows quantity '1'",
+        "bbox": null
+      },
+      "unit_price": {
+        "value": 100.0,
+        "normalized_value": 100.0,
+        "currency": "USD",
+        "confidence": 0.96,
+        "reason": "Unit price shown as '100'",
+        "evidence": "Line row: '100' under UNIT PRICE",
+        "bbox": null
+      },
+      "discount": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.05,
+        "reason": "No discount shown",
+        "evidence": "No discount column",
+        "bbox": null
+      },
+      "tax": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.1,
+        "reason": "No per-line tax shown",
+        "evidence": "Overall tax only in totals area",
+        "bbox": null
+      },
+      "line_total": {
+        "value": 100.0,
+        "normalized_value": 100.0,
+        "currency": "USD",
+        "confidence": 0.96,
+        "reason": "Line total printed as '$100'",
+        "evidence": "Line row rightmost: '$100'",
+        "bbox": null
+      }
+    },
+    {
+      "description": {
+        "value": "Brand guide",
+        "normalized_value": "Brand guide",
+        "confidence": 0.96,
+        "reason": "Sixth row description reads 'Brand guide'",
+        "candidates": [
+          "Brand guide"
+        ],
+        "evidence": "Line items: 'Brand guide  100  1  $100'",
+        "bbox": null
+      },
+      "sku": {
+        "value": null,
+        "normalized_value": null,
+        "confidence": 0.05,
+        "reason": "No SKU present",
+        "candidates": null,
+        "evidence": "No SKU column visible",
+        "bbox": null
+      },
+      "quantity": {
+        "value": 1.0,
+        "normalized_value": 1.0,
+        "confidence": 0.96,
+        "reason": "Qty column shows '1'",
+        "candidates": [
+          "1"
+        ],
+        "evidence": "Line row shows quantity '1'",
+        "bbox": null
+      },
+      "unit_price": {
+        "value": 100.0,
+        "normalized_value": 100.0,
+        "currency": "USD",
+        "confidence": 0.96,
+        "reason": "Unit price shown as '100'",
+        "evidence": "Line row: '100' under UNIT PRICE",
+        "bbox": null
+      },
+      "discount": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.05,
+        "reason": "No discount shown",
+        "evidence": "No discount column",
+        "bbox": null
+      },
+      "tax": {
+        "value": null,
+        "normalized_value": null,
+        "currency": null,
+        "confidence": 0.1,
+        "reason": "No per-line tax shown",
+        "evidence": "Overall tax only in totals area",
+        "bbox": null
+      },
+      "line_total": {
+        "value": 100.0,
+        "normalized_value": 100.0,
+        "currency": "USD",
+        "confidence": 0.96,
+        "reason": "Line total printed as '$100'",
+        "evidence": "Line row rightmost: '$100'",
+        "bbox": null
+      }
+    }
+  ],
+  "parsing_warnings": [
+    "Sum of line item totals (6 × $100 = $600) does not match printed SUBTOTAL ($400). Kept values as printed; discrepancy reported in checks.",
+    "Seller/company name is not explicit — used 'Account Name: Adeline Palmerston' from PAY TO as seller/payee name.",
+    "No seller or buyer email, phone, or tax ID fields found."
+  ],
+  "checks": [
+    "Line items sum: 6 items × $100 = $600. Printed SUBTOTAL is $400 — mismatch (do not modify printed totals).",
+    "Printed totals are consistent with each other: SUBTOTAL $400 + Tax (10%) $40 = TOTAL $440 (matches printed TOTAL).",
+    "Total tax $40 was inferred from printed subtotal and total (440 - 400 = 40) and matches the shown 'Tax 10%'."
+  ]
+}
