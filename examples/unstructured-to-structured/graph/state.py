@@ -8,14 +8,16 @@ class GraphState(TypedDict, total=False):
 
     Keys:
     - session_id: Unique identifier for a processing session
-    - files: List of (content bytes, filename, content_type) to process
-    - results: Per-file results with saved JSON paths and metadata
+    - json_paths: List of JSON file paths produced by processing
+    - csv_content: Generated CSV content as string
+    - csv_path: Path where CSV was saved
     - errors: Any non-fatal errors encountered during processing
     """
 
     session_id: str
-    files: List[Tuple[bytes, str, Optional[str]]]
-    results: List[Dict[str, Any]]
+    json_paths: List[str]
+    csv_content: str
+    csv_path: str
     errors: List[str]
 
 

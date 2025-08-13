@@ -6,6 +6,7 @@ from fastapi import APIRouter, File, Form, UploadFile
 from app.config.settings import settings
 from app.services.processing_service import ProcessingService
 from app.adapters.llm.openai_client import OpenAILLMClient
+from graph.graph import run_test_graph, run_csv_graph
 
 
 logger = logging.getLogger("app.documents")
@@ -38,10 +39,21 @@ async def bulk_process(
             (content, f.filename, f.content_type) for content, f in zip(contents, files)
         ]
         results = await svc.process_bulk(session_id=session_id, files=triplets)
+        # Collect JSON paths for the test graph
+        json_paths = [r["json_path"] for r in results]
+        # Run simple test graph to propagate state
+        graph_state = run_test_graph(json_paths)
+        # Run CSV generation graph
+        csv_state = run_csv_graph(session_id=session_id, json_paths=json_paths)
         logger.info("✅ Processed %d file(s) for session %s", len(results), session_id)
         for r in results:
             logger.debug("💾 Saved %s -> %s", r["filename"], r["json_path"])
-        return {"session_id": session_id, "saved": results}
+        return {
+            "session_id": session_id,
+            "saved": results,
+            "message": f"Done, las rutas de los archivos son: {', '.join(graph_state.get('json_paths', []))}",
+            "csv_path": csv_state.get("csv_path"),
+        }
     except Exception as exc:
         logger.exception("💥 Error processing bulk for session %s: %s", session_id, exc)
         raise

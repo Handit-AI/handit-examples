@@ -1,115 +1,69 @@
+from __future__ import annotations
+
+from typing import Dict
+
 from dotenv import load_dotenv
-from langgraph.checkpoint.memory import MemorySaver
-# from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.graph import END, StateGraph
 
-from graph.chains.answer_grader import answer_grader
-from graph.chains.hallucination_grader import hallucination_grader
-from graph.chains.router import question_router, RouteQuery
-from graph.consts import INGESTION, GRADE_DOCUMENTS, RETRIEVE, WEBSEARCH
-from graph.nodes import ingest_node
 from graph.state import GraphState
+from graph.nodes.generate_csv import generate_csv
+from graph.nodes.save_csv import save_csv
+
 
 load_dotenv()
 
 
-# memory = SqliteSaver.from_conn_string(":memory:")
-# memory = MemorySaver()
+def collect_json_paths(state: GraphState) -> GraphState:
+    """No-op node that ensures json_paths are present in the state.
 
+    This node simply passes through the state; useful to test wiring.
+    """
 
-def decide_to_generate(state):
-    print("---ASSESS GRADED DOCUMENTS---")
+    json_paths = state.get("json_paths") or []
+    # Ensure list type
+    state["json_paths"] = list(json_paths)
+    return state
 
-    if state["web_search"]:
-        print(
-            "---DECISION: NOT ALL DOCUMENTS ARE NOT RELEVANT TO QUESTION, INCLUDE WEB SEARCH---"
-        )
-        return WEBSEARCH
-    else:
-        print("---DECISION: GENERATE---")
-        return GENERATE
-
-
-def grade_generation_grounded_in_documents_and_question(state: GraphState) -> str:
-    print("---CHECK HALLUCINATIONS---")
-    question = state["question"]
-    documents = state["documents"]
-    generation = state["generation"]
-
-    score = hallucination_grader.invoke(
-        {"documents": documents, "generation": generation}
-    )
-
-    # Aquí se asigna el resultado de score.binary_score a la variable hallucination_grade y luego se usa en la condición
-    if hallucination_grade := score.binary_score:
-        print("---DECISION: GENERATION IS GROUNDED IN DOCUMENTS---")
-        print("---GRADE GENERATION vs QUESTION---")
-        score = answer_grader.invoke({"question": question, "generation": generation})
-        if answer_grade := score.binary_score:
-            print("---DECISION: GENERATION ADDRESSES QUESTION---")
-            return "useful"
-        else:
-            print("---DECISION: GENERATION DOES NOT ADDRESS QUESTION---")
-            return "not useful"
-    else:
-        print("---DECISION: GENERATION IS NOT GROUNDED IN DOCUMENTS, RE-TRY---")
-        return "not supported"
-
-
-# Conditional entry point
-# def route_question(state: GraphState) -> str:
-#     print("---ROUTE QUESTION---")
-#     question = state["question"]
-#     source: RouteQuery = question_router.invoke({"question": question})
-#     if source.datasource == WEBSEARCH:
-#         print("---ROUTE QUESTION TO WEB SEARCH---")
-#         return WEBSEARCH
-#     elif source.datasource == "vectorstore":
-#         print("---ROUTE QUESTION TO RAG---")
-#         return RETRIEVE
 
 # Initialize the graph
 workflow = StateGraph(GraphState)
 
-workflow.add_node(RETRIEVE, retrieve)
-workflow.add_node(GRADE_DOCUMENTS, grade_documents)
-workflow.add_node(GENERATE, generate)
-workflow.add_node(WEBSEARCH, web_search)
-
+workflow.add_node("collect", collect_json_paths)
 
 # Entry point
-workflow.set_entry_point(INGESTION)
+workflow.set_entry_point("collect")
 
-workflow.add_edge(RETRIEVE, GRADE_DOCUMENTS)
-
-
-workflow.add_conditional_edges(
-    GRADE_DOCUMENTS,
-    decide_to_generate,
-    {
-        WEBSEARCH: WEBSEARCH,
-        GENERATE: GENERATE,
-    },
-)
-
-
-
-workflow.add_edge(WEBSEARCH, GENERATE)
-
-
-workflow.add_conditional_edges(
-    GENERATE,
-    grade_generation_grounded_in_documents_and_question,
-    {
-        "not supported": GENERATE,
-        "useful": END,
-        "not useful": WEBSEARCH,
-    },
-)
-
-
-# app = workflow.compile(checkpointer=memory)
+# Direct edge to END
+workflow.add_edge("collect", END)
 
 app = workflow.compile()
 
-app.get_graph().draw_mermaid_png(output_file_path="graph.png")
+
+def run_test_graph(json_paths: list[str]) -> Dict:
+    """Helper to run the simple graph with provided json paths."""
+    initial: GraphState = {"json_paths": json_paths}
+    return app.invoke(initial)
+
+
+def run_csv_graph(session_id: str, json_paths: list[str]) -> Dict:
+    """Run a minimal graph that executes generate_csv then save_csv and returns state."""
+    import logging
+    logger = logging.getLogger("graph.csv_workflow")
+    
+    logger.info("🚀 Creating CSV workflow with session_id=%s, json_paths=%d", session_id, len(json_paths))
+    
+    csv_workflow = StateGraph(GraphState)
+    csv_workflow.add_node("generate_csv", generate_csv)
+    csv_workflow.add_node("save_csv", save_csv)
+    csv_workflow.set_entry_point("generate_csv")
+    csv_workflow.add_edge("generate_csv", "save_csv")
+    csv_workflow.add_edge("save_csv", END)
+    csv_app = csv_workflow.compile()
+    
+    initial: GraphState = {"session_id": session_id, "json_paths": json_paths}
+    logger.info("📤 Initial state: %s", list(initial.keys()))
+    
+    result = csv_app.invoke(initial)
+    logger.info("📥 Final state: %s", list(result.keys()))
+    
+    return result
