@@ -11,6 +11,7 @@ class GraphState(TypedDict, total=False):
     - json_paths: List of JSON file paths produced by processing
     - unstructured_paths: List of paths to uploaded unstructured files
     - classification_results: Dictionary containing document classification results
+    - inferred_schema: Inferred robust schema derived from the provided documents
     - invoices_paths: List of paths to files classified as invoices
     - structured_json_paths: List of paths to structured JSON files from invoice data extraction
     - csv_content: Generated CSV content as string
@@ -25,6 +26,7 @@ class GraphState(TypedDict, total=False):
     details_csv_path: str
     line_items_csv_path: str
     classification_results: Dict[str, Any]
+    inferred_schema: Dict[str, Any]
     invoices_paths: List[str]
     csv_content: str
     csv_path: str

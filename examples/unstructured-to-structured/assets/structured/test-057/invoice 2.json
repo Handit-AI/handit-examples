@@ -1,0 +1,270 @@
+{
+  "header": {
+    "document_title": {
+      "value": "INVOICE",
+      "normalized_value": "INVOICE",
+      "reason": "Large, prominent top-right text 'INVOICE' acting as the document title/header label; visually distinct and aligned at top.",
+      "confidence": 0.98
+    },
+    "vendor_name": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No visible vendor/issuer name block in the header area of the provided image — top-left area is blank (no company/seller name detected).",
+      "confidence": 0.9
+    },
+    "vendor_address": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No vendor postal address detected under a vendor name; header lacks an identifiable issuer address block.",
+      "confidence": 0.9
+    },
+    "vendor_phone": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No telephone number visible in the header/contact area of this document.",
+      "confidence": 0.95
+    },
+    "vendor_email": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No email address visible in the header/contact area of this document.",
+      "confidence": 0.95
+    },
+    "vendor_website": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No website/URL visible in the header area.",
+      "confidence": 0.95
+    }
+  },
+  "recipient": {
+    "client_name": {
+      "value": "Richard Sanchez",
+      "normalized_value": "Richard Sanchez",
+      "reason": "Text block labeled 'ISSUED TO:' shows 'Richard Sanchez' as the first line under that label; typical recipient name position.",
+      "confidence": 0.98
+    },
+    "client_address": {
+      "value": "Thynk Unlimited\n123 Anywhere St., Any City",
+      "normalized_value": "Thynk Unlimited, 123 Anywhere St., Any City",
+      "reason": "Lines under the recipient name (under 'ISSUED TO:') show the company and address: 'Thynk Unlimited' and '123 Anywhere St., Any City'. Combined into a single address string for normalization.",
+      "confidence": 0.96
+    }
+  },
+  "invoice_details": {
+    "invoice_number": {
+      "value": "01234",
+      "normalized_value": "01234",
+      "reason": "Right-side panel label 'INVOICE NO:' followed by '01234' clearly indicates the invoice identifier.",
+      "confidence": 0.99
+    },
+    "terms": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No explicit payment terms (e.g., 'Net 30') visible in the invoice details area.",
+      "confidence": 0.95
+    },
+    "invoice_date": {
+      "value": "11.02.2030",
+      "normalized_value": "2030-02-11",
+      "reason": "Right-side label 'DATE:' followed by '11.02.2030'. Interpreted as day.month.year and normalized to ISO-8601 (2030-02-11).",
+      "confidence": 0.92
+    },
+    "due_date": {
+      "value": "11.03.2030",
+      "normalized_value": "2030-03-11",
+      "reason": "Right-side label 'DUE DATE:' followed by '11.03.2030'. Interpreted as day.month.year and normalized to ISO-8601 (2030-03-11).",
+      "confidence": 0.92
+    }
+  },
+  "line_items": {
+    "items": {
+      "value": [
+        {
+          "description": "Brand consultation",
+          "quantity": 1,
+          "unit_price": 100,
+          "amount": 100,
+          "raw_row_text": "Brand consultation    100    1    $100"
+        },
+        {
+          "description": "logo design",
+          "quantity": 1,
+          "unit_price": 100,
+          "amount": 100,
+          "raw_row_text": "logo design    100    1    $100"
+        },
+        {
+          "description": "Website design",
+          "quantity": 1,
+          "unit_price": 100,
+          "amount": 100,
+          "raw_row_text": "Website design    100    1    $100"
+        },
+        {
+          "description": "Social media templates",
+          "quantity": 1,
+          "unit_price": 100,
+          "amount": 100,
+          "raw_row_text": "Social media templates    100    1    $100"
+        },
+        {
+          "description": "Brand photography",
+          "quantity": 1,
+          "unit_price": 100,
+          "amount": 100,
+          "raw_row_text": "Brand photography    100    1    $100"
+        },
+        {
+          "description": "Brand guide",
+          "quantity": 1,
+          "unit_price": 100,
+          "amount": 100,
+          "raw_row_text": "Brand guide    100    1    $100"
+        }
+      ],
+      "normalized_value": [
+        {
+          "description": "Brand consultation",
+          "quantity": 1,
+          "unit_price": 100.0,
+          "amount": 100.0
+        },
+        {
+          "description": "logo design",
+          "quantity": 1,
+          "unit_price": 100.0,
+          "amount": 100.0
+        },
+        {
+          "description": "Website design",
+          "quantity": 1,
+          "unit_price": 100.0,
+          "amount": 100.0
+        },
+        {
+          "description": "Social media templates",
+          "quantity": 1,
+          "unit_price": 100.0,
+          "amount": 100.0
+        },
+        {
+          "description": "Brand photography",
+          "quantity": 1,
+          "unit_price": 100.0,
+          "amount": 100.0
+        },
+        {
+          "description": "Brand guide",
+          "quantity": 1,
+          "unit_price": 100.0,
+          "amount": 100.0
+        }
+      ],
+      "reason": "Tabular area labeled 'DESCRIPTION / UNIT PRICE / QTY / TOTAL' with six rows. Each row's description is left column, unit price in middle, qty near right, and total with '$' at far right.",
+      "confidence": 0.97
+    },
+    "item_description": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "Multiple line-item descriptions exist and were mapped into items[]. Use items[] for per-row descriptions; single-field 'item_description' not applicable.",
+      "confidence": 0.95
+    },
+    "item_quantity": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "Quantities are provided per row and included in items[]. No single global item_quantity field applies.",
+      "confidence": 0.95
+    },
+    "item_unit_price": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "Unit prices are provided per row and included in items[]. No single global item_unit_price field applies.",
+      "confidence": 0.95
+    },
+    "item_amount": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "Line amounts are provided per row and included in items[]. No single global item_amount field applies.",
+      "confidence": 0.95
+    }
+  },
+  "financial_summary": {
+    "subtotal": {
+      "value": "$400",
+      "normalized_value": 400.0,
+      "reason": "Label 'SUBTOTAL' on bottom-right with value '$400' directly printed in the totals area; normalized to numeric 400.0 (currency handled separately).",
+      "confidence": 0.98
+    },
+    "discount": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No 'Discount' or deduction line visible in the financial summary area.",
+      "confidence": 0.98
+    },
+    "tax_rate": {
+      "value": "10%",
+      "normalized_value": 10.0,
+      "reason": "Near totals there is a 'Tax 10%' label. Captured the textual percent and normalized to numeric percent 10.0.",
+      "confidence": 0.97
+    },
+    "tax_amount": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No explicit tax monetary amount printed next to the tax label; although total implies $40 tax, the document does not show a separate tax amount value, so not inferred/ invented.",
+      "confidence": 0.9
+    },
+    "total": {
+      "value": "$440",
+      "normalized_value": 440.0,
+      "reason": "Bottom-right 'TOTAL' label shows '$440' as the final amount due; normalized to numeric 440.0.",
+      "confidence": 0.99
+    },
+    "currency": {
+      "value": "$",
+      "normalized_value": "USD",
+      "reason": "Monetary values in the document use '$' symbol. Normalized to common currency code 'USD' (symbol-based inference).",
+      "confidence": 0.85
+    }
+  },
+  "payment_and_bank_details": {
+    "payment_instructions": {
+      "value": "PAY TO:\nBorcele Bank\nAccount Name: Adeline Palmerston\nAccount No.: 0123 4567 8901",
+      "normalized_value": "Borcele Bank; Account Name: Adeline Palmerston; Account No: 0123 4567 8901",
+      "reason": "Block labeled 'PAY TO:' contains the payment/bank details; captured full block text as free-form payment instructions.",
+      "confidence": 0.97
+    },
+    "bank_name": {
+      "value": "Borcele Bank",
+      "normalized_value": "Borcele Bank",
+      "reason": "Under 'PAY TO:' the first line is 'Borcele Bank' indicating the receiving bank name.",
+      "confidence": 0.98
+    },
+    "bank_account_name": {
+      "value": "Adeline Palmerston",
+      "normalized_value": "Adeline Palmerston",
+      "reason": "Payment block shows 'Account Name: Adeline Palmerston' which is the payee/account holder name.",
+      "confidence": 0.98
+    },
+    "bank_account_number": {
+      "value": "0123 4567 8901",
+      "normalized_value": "012345678901",
+      "reason": "Payment block shows 'Account No.: 0123 4567 8901'. Normalized by removing spaces to a continuous digit string '012345678901'.",
+      "confidence": 0.98
+    }
+  },
+  "metadata": {
+    "notes": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No separate free-form 'Notes' or memo block detected in the visible document area.",
+      "confidence": 0.95
+    },
+    "document_page_number": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No page number or pagination information visible on this single-page invoice.",
+      "confidence": 0.99
+    }
+  }
+}

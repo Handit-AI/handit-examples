@@ -1,0 +1,270 @@
+{
+  "core": {
+    "issuer_name": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No seller/issuer company name or 'From' block found in the visible header area. Top-left contains a decorative line and large 'INVOICE' at top-right but no company name text.",
+      "confidence": 0.85
+    },
+    "issuer_address": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No multiline address block associated with an issuer/company detected. The visible address-like block on the left is the 'ISSUED TO' (recipient) section, not the issuer.",
+      "confidence": 0.9
+    },
+    "issuer_phone": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No phone/tel label or phone number located in the header or contact areas of the document.",
+      "confidence": 0.95
+    },
+    "issuer_email": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No email address text visible in the header or anywhere else on the invoice.",
+      "confidence": 0.95
+    },
+    "issuer_website": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No website or domain string detected in the header or contact areas.",
+      "confidence": 0.95
+    }
+  },
+  "recipient": {
+    "bill_to_name": {
+      "value": "Richard Sanchez",
+      "normalized_value": "Richard Sanchez",
+      "reason": "Found under the 'ISSUED TO:' heading in the left upper block; first line is clearly the recipient's name.",
+      "confidence": 0.98
+    },
+    "bill_to_address": {
+      "value": [
+        "Thynk Unlimited",
+        "123 Anywhere St., Any City"
+      ],
+      "normalized_value": [
+        "Thynk Unlimited",
+        "123 Anywhere St., Any City"
+      ],
+      "reason": "Lines immediately below the recipient name under 'ISSUED TO:' form the recipient organization and address (company and street/city). Preserved as an array of lines.",
+      "confidence": 0.98
+    },
+    "bill_to_contact": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No explicit phone or email for the billed party found in the 'ISSUED TO' block; only name, company, and address lines are present.",
+      "confidence": 0.95
+    }
+  },
+  "invoice_details": {
+    "invoice_number": {
+      "value": "01234",
+      "normalized_value": "01234",
+      "reason": "Extracted from the labeled field 'INVOICE NO:' on the right-side invoice metadata block.",
+      "confidence": 0.99
+    },
+    "terms": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No 'Terms' or payment terms (e.g., Net 30) text located in the invoice details area.",
+      "confidence": 0.95
+    },
+    "invoice_date": {
+      "value": "11.02.2030",
+      "normalized_value": "2030-02-11",
+      "reason": "Found next to label 'DATE:' in the invoice metadata block. Format is DD.MM.YYYY so normalized to ISO-8601 (YYYY-MM-DD).",
+      "confidence": 0.98
+    },
+    "due_date": {
+      "value": "11.03.2030",
+      "normalized_value": "2030-03-11",
+      "reason": "Found next to label 'DUE DATE:' in the invoice metadata block. Interpreted as DD.MM.YYYY and normalized to ISO-8601.",
+      "confidence": 0.98
+    }
+  },
+  "line_items": {
+    "items": {
+      "value": [
+        {
+          "description": "Brand consultation",
+          "quantity": "1",
+          "unit": null,
+          "unit_price": "100",
+          "amount": "$100"
+        },
+        {
+          "description": "logo design",
+          "quantity": "1",
+          "unit": null,
+          "unit_price": "100",
+          "amount": "$100"
+        },
+        {
+          "description": "Website design",
+          "quantity": "1",
+          "unit": null,
+          "unit_price": "100",
+          "amount": "$100"
+        },
+        {
+          "description": "Social media templates",
+          "quantity": "1",
+          "unit": null,
+          "unit_price": "100",
+          "amount": "$100"
+        },
+        {
+          "description": "Brand photography",
+          "quantity": "1",
+          "unit": null,
+          "unit_price": "100",
+          "amount": "$100"
+        },
+        {
+          "description": "Brand guide",
+          "quantity": "1",
+          "unit": null,
+          "unit_price": "100",
+          "amount": "$100"
+        }
+      ],
+      "normalized_value": [
+        {
+          "description": "Brand consultation",
+          "quantity": 1,
+          "unit": null,
+          "unit_price": 100.0,
+          "amount": 100.0,
+          "currency": "USD"
+        },
+        {
+          "description": "logo design",
+          "quantity": 1,
+          "unit": null,
+          "unit_price": 100.0,
+          "amount": 100.0,
+          "currency": "USD"
+        },
+        {
+          "description": "Website design",
+          "quantity": 1,
+          "unit": null,
+          "unit_price": 100.0,
+          "amount": 100.0,
+          "currency": "USD"
+        },
+        {
+          "description": "Social media templates",
+          "quantity": 1,
+          "unit": null,
+          "unit_price": 100.0,
+          "amount": 100.0,
+          "currency": "USD"
+        },
+        {
+          "description": "Brand photography",
+          "quantity": 1,
+          "unit": null,
+          "unit_price": 100.0,
+          "amount": 100.0,
+          "currency": "USD"
+        },
+        {
+          "description": "Brand guide",
+          "quantity": 1,
+          "unit": null,
+          "unit_price": 100.0,
+          "amount": 100.0,
+          "currency": "USD"
+        }
+      ],
+      "reason": "Tabular area with headers 'DESCRIPTION', 'UNIT PRICE', 'QTY', 'TOTAL' lists six repeated rows. Values mapped per row: description text in left column, unit price in center column (100), qty in QTY column (1), and TOTAL column shows '$100'. Currency inferred from '$' sign.",
+      "confidence": 0.98
+    }
+  },
+  "totals": {
+    "subtotal": {
+      "value": "$400",
+      "normalized_value": 400.0,
+      "reason": "The 'SUBTOTAL' label at the bottom-left of the totals block shows '$400'. Normalized to numeric 400.0.",
+      "confidence": 0.99
+    },
+    "discount": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No explicit discount line or negative amount present in the totals area.",
+      "confidence": 0.95
+    },
+    "tax_rate": {
+      "value": "10%",
+      "normalized_value": 0.1,
+      "reason": "A 'Tax 10%' label is visible above the total; captured as textual percentage and normalized to decimal 0.10.",
+      "confidence": 0.98
+    },
+    "tax_amount": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "The document shows the tax rate '10%' but does not explicitly display a separate tax monetary line/amount. Calculating would produce $40, but value is not explicitly printed so left null per mapping rules.",
+      "confidence": 0.9
+    },
+    "total": {
+      "value": "$440",
+      "normalized_value": 440.0,
+      "reason": "The emphasized 'TOTAL' label at the bottom-right lists '$440'. Normalized to numeric 440.0.",
+      "confidence": 0.99
+    },
+    "currency": {
+      "value": "$",
+      "normalized_value": "USD",
+      "reason": "Monetary amounts are prefixed with the dollar sign '$' throughout the invoice; currency normalized to 'USD'.",
+      "confidence": 0.99
+    }
+  },
+  "payment": {
+    "pay_to_name": {
+      "value": "Borcele Bank",
+      "normalized_value": "Borcele Bank",
+      "reason": "Under the 'PAY TO:' heading in the left block the first line is 'Borcele Bank' indicating the bank/payee name.",
+      "confidence": 0.98
+    },
+    "bank_account_name": {
+      "value": "Adeline Palmerston",
+      "normalized_value": "Adeline Palmerston",
+      "reason": "Line labeled 'Account Name:' under the 'PAY TO' block lists 'Adeline Palmerston' as the account name.",
+      "confidence": 0.99
+    },
+    "bank_account_number": {
+      "value": "0123 4567 8901",
+      "normalized_value": "012345678901",
+      "reason": "Line labeled 'Account No.:' shows '0123 4567 8901'. Normalized by removing spaces to a continuous digit string.",
+      "confidence": 0.99
+    },
+    "payment_instructions": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No additional freeform payment instruction lines beyond the PAY TO bank name, account name and account number were present.",
+      "confidence": 0.95
+    }
+  },
+  "metadata": {
+    "document_title": {
+      "value": "INVOICE",
+      "normalized_value": "INVOICE",
+      "reason": "Large top-right text 'INVOICE' indicates document type.",
+      "confidence": 0.99
+    },
+    "logo_or_brand": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No distinct logo text or image filename is extractable; top-left contains only a decorative line not recognizable as a brand name or logo text.",
+      "confidence": 0.9
+    },
+    "notes": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No separate notes, terms, or memo body text detected aside from structured fields already captured.",
+      "confidence": 0.95
+    }
+  }
+}

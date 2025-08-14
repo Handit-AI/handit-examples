@@ -1,0 +1,274 @@
+{
+  "core": {
+    "document_title": {
+      "value": "Invoice",
+      "normalized_value": "Invoice",
+      "reason": "Large top-left heading 'Invoice' visually prominent and matches schema 'document_title' synonyms.",
+      "confidence": 0.99
+    },
+    "invoice_number": {
+      "value": "12345",
+      "normalized_value": "12345",
+      "reason": "Found next to label 'Invoice #' inside the 'Invoice Details' block (visual grouping and strong label).",
+      "confidence": 0.98
+    },
+    "invoice_date": {
+      "value": "08/01/2024",
+      "normalized_value": "2024-08-01",
+      "reason": "Label 'Invoice date' followed by '08/01/2024' in the Invoice Details block; date normalized to ISO-8601.",
+      "confidence": 0.98
+    },
+    "due_date": {
+      "value": "08/31/2024",
+      "normalized_value": "2024-08-31",
+      "reason": "Label 'Due date' followed by '08/31/2024' in the Invoice Details block; normalized to ISO-8601.",
+      "confidence": 0.98
+    },
+    "terms": {
+      "value": "Net 30",
+      "normalized_value": "Net 30",
+      "reason": "Label 'Terms' with value 'Net 30' is present in the Invoice Details block next to invoice/date information.",
+      "confidence": 0.97
+    },
+    "currency": {
+      "value": "$",
+      "normalized_value": "USD",
+      "reason": "Monetary values on the document use the dollar sign '$' (e.g., $125, $650.00); normalized to USD.",
+      "confidence": 0.95
+    }
+  },
+  "entities": {
+    "vendor": {
+      "value": {
+        "vendor_name": "Craigs' Landscaping",
+        "vendor_address": "123 Sierra Dr\nPalo Alto, CA 94028",
+        "vendor_phone": "123-456-7890",
+        "vendor_email": "craigslandscaping@email.com",
+        "vendor_website": "craigslandscaping.com"
+      },
+      "normalized_value": {
+        "vendor_name": "Craigs' Landscaping",
+        "vendor_address": "123 Sierra Dr\nPalo Alto, CA 94028",
+        "vendor_phone": "123-456-7890",
+        "vendor_email": "craigslandscaping@email.com",
+        "vendor_website": "craigslandscaping.com"
+      },
+      "reason": "Top-left block contains company name, address, phone, email and website grouped visually; fields extracted from that block.",
+      "confidence": 0.96
+    },
+    "vendor_name": {
+      "value": "Craigs' Landscaping",
+      "normalized_value": "Craigs' Landscaping",
+      "reason": "Prominent text at top-left; visually corresponds to vendor/company name.",
+      "confidence": 0.98
+    },
+    "vendor_address": {
+      "value": "123 Sierra Dr\nPalo Alto, CA 94028",
+      "normalized_value": "123 Sierra Dr\nPalo Alto, CA 94028",
+      "reason": "Address lines directly beneath vendor name in the top-left contact block (multi-line preserved).",
+      "confidence": 0.96
+    },
+    "vendor_phone": {
+      "value": "123-456-7890",
+      "normalized_value": "123-456-7890",
+      "reason": "Phone number shown in the vendor contact area (right of vendor name block); extracted as-is.",
+      "confidence": 0.96
+    },
+    "vendor_email": {
+      "value": "craigslandscaping@email.com",
+      "normalized_value": "craigslandscaping@email.com",
+      "reason": "Email shown in the vendor contact block; lowercased and trimmed for normalization.",
+      "confidence": 0.97
+    },
+    "vendor_website": {
+      "value": "craigslandscaping.com",
+      "normalized_value": "craigslandscaping.com",
+      "reason": "Website/domain string present in the vendor contact block; extracted as displayed.",
+      "confidence": 0.95
+    },
+    "customer": {
+      "value": {
+        "customer_name": "Smith Enterprises",
+        "customer_address": "456 Sierra Dr\nPalo Alto, CA 94028"
+      },
+      "normalized_value": {
+        "customer_name": "Smith Enterprises",
+        "customer_address": "456 Sierra Dr\nPalo Alto, CA 94028"
+      },
+      "reason": "Left-side pale-blue box labeled 'Bill To' contains the customer name and address grouped visually.",
+      "confidence": 0.95
+    },
+    "customer_name": {
+      "value": "Smith Enterprises",
+      "normalized_value": "Smith Enterprises",
+      "reason": "Text under the 'Bill To' heading; positioned and styled as the billed party name.",
+      "confidence": 0.97
+    },
+    "customer_address": {
+      "value": "456 Sierra Dr\nPalo Alto, CA 94028",
+      "normalized_value": "456 Sierra Dr\nPalo Alto, CA 94028",
+      "reason": "Address lines appear below the customer name within the 'Bill To' block; preserved as multi-line string.",
+      "confidence": 0.95
+    },
+    "customer_contact": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No explicit phone/email/contact line for the customer beyond the address in the 'Bill To' block.",
+      "confidence": 0.6
+    }
+  },
+  "items": {
+    "line_items": {
+      "value": [
+        {
+          "description": "Stone work",
+          "quantity": 3.4,
+          "unit_price": 125.0,
+          "amount": 425.0
+        },
+        {
+          "description": "Mulching, weeding, planting",
+          "quantity": 3,
+          "unit_price": 75.0,
+          "amount": 225.0
+        }
+      ],
+      "normalized_value": [
+        {
+          "description": "Stone work",
+          "quantity": 3.4,
+          "unit_price": 125.0,
+          "amount": 425.0
+        },
+        {
+          "description": "Mulching, weeding, planting",
+          "quantity": 3.0,
+          "unit_price": 75.0,
+          "amount": 225.0
+        }
+      ],
+      "reason": "Two tabular rows under headers 'Product/Services | Qty/Hrs | Rate | Amount'. Extracted descriptions, quantities and monetary values from corresponding columns by column alignment and proximity.",
+      "confidence": 0.95
+    },
+    "item_description": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "Schema field for a single item description is ambiguous when multiple line items exist; line_items array contains the extracted descriptions.",
+      "confidence": 0.4
+    },
+    "item_quantity": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "Multiple quantities present in the line items table; values captured in 'line_items' array rather than a single field.",
+      "confidence": 0.4
+    },
+    "item_unit_price": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "Multiple unit prices present; captured per-line in 'line_items' array. No single unit_price to populate here.",
+      "confidence": 0.4
+    },
+    "item_amount": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "Multiple line amounts present; captured per-line in 'line_items' array rather than a single scalar field.",
+      "confidence": 0.4
+    }
+  },
+  "summary": {
+    "subtotal": {
+      "value": "$650.00",
+      "normalized_value": 650.0,
+      "reason": "Label 'Subtotal' with value '$650.00' in the bottom-right summary area; normalized to numeric.",
+      "confidence": 0.97
+    },
+    "discount_amount": {
+      "value": "-$65.00",
+      "normalized_value": -65.0,
+      "reason": "Label 'Discount' followed by '-$65.00' in the summary; schema expects absolute/negative as shown so preserved and numeric normalized to -65.00.",
+      "confidence": 0.96
+    },
+    "discount_rate": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No percentage discount rate shown (only an absolute discount amount is displayed).",
+      "confidence": 0.95
+    },
+    "tax_rate": {
+      "value": "8.5%",
+      "normalized_value": 8.5,
+      "reason": "Label 'Tax 8.5%' in the summary area indicates tax percentage; normalized to numeric percent 8.5.",
+      "confidence": 0.96
+    },
+    "tax_amount": {
+      "value": "$49.73",
+      "normalized_value": 49.73,
+      "reason": "Numeric tax amount '$49.73' listed next to 'Tax 8.5%' in summary; normalized to numeric value.",
+      "confidence": 0.96
+    },
+    "total": {
+      "value": "$634.73",
+      "normalized_value": 634.73,
+      "reason": "Bolded 'Total' value displayed as '$634.73' at bottom-right of the summary block; normalized to numeric.",
+      "confidence": 0.98
+    },
+    "balance_due": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No separate 'Balance Due' label or value present distinct from 'Total' on this document.",
+      "confidence": 0.9
+    }
+  },
+  "payment": {
+    "pay_to": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No 'Pay To' or bank/payment details block present on this invoice image.",
+      "confidence": 0.95
+    },
+    "bank_name": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No bank name visible on the document.",
+      "confidence": 0.95
+    },
+    "account_name": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No account name or transfer instructions provided on the invoice.",
+      "confidence": 0.95
+    },
+    "account_number": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No account number or routing details present on this document.",
+      "confidence": 0.95
+    },
+    "payment_instructions": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No free-text payment instructions or wiring notes on the invoice.",
+      "confidence": 0.95
+    }
+  },
+  "metadata": {
+    "document_id": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No external filename or document id was provided with the input image.",
+      "confidence": 0.5
+    },
+    "extraction_confidence": {
+      "value": 0.95,
+      "normalized_value": 0.95,
+      "reason": "Aggregate confidence estimate for automated extraction based on clear typography and strong label cues across the document.",
+      "confidence": 0.95
+    },
+    "raw_text": {
+      "value": "Invoice\nCraigs' Landscaping\n123 Sierra Dr\nPalo Alto, CA 94028\n123-456-7890\ncraigslandscaping@email.com\ncraigslandscaping.com\n\nBill To\nSmith Enterprises\n456 Sierra Dr\nPalo Alto, CA 94028\n\nInvoice Details\nInvoice # 12345\nTerms Net 30\nInvoice date 08/01/2024\nDue date 08/31/2024\n\nProduct/Services    Qty/Hrs    Rate    Amount\nStone work          3.4        $125    $425\nMulching, weeding,\nplanting             3         $75     $225\n\nSubtotal            $650.00\nDiscount             -$65.00\nTax 8.5%             $49.73\n\nTotal               $634.73",
+      "normalized_value": "Invoice\nCraigs' Landscaping\n123 Sierra Dr\nPalo Alto, CA 94028\n123-456-7890\ncraigslandscaping@email.com\ncraigslandscaping.com\n\nBill To\nSmith Enterprises\n456 Sierra Dr\nPalo Alto, CA 94028\n\nInvoice Details\nInvoice # 12345\nTerms Net 30\nInvoice date 08/01/2024\nDue date 08/31/2024\n\nProduct/Services    Qty/Hrs    Rate    Amount\nStone work          3.4        $125    $425\nMulching, weeding,\nplanting             3         $75     $225\n\nSubtotal            $650.00\nDiscount             -$65.00\nTax 8.5%             $49.73\n\nTotal               $634.73",
+      "reason": "OCR-extracted text blob compiled from visible text regions: header, vendor block, 'Bill To' block, invoice details, table rows, and summary area. Preserves line breaks to reflect layout.",
+      "confidence": 0.9
+    }
+  }
+}

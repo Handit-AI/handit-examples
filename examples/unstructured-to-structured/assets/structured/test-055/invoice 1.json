@@ -1,0 +1,214 @@
+{
+  "core": {
+    "issuer_name": {
+      "value": "Craigs' Landscaping",
+      "normalized_value": "Craigs' Landscaping",
+      "reason": "Top-left header text directly under the large 'Invoice' title reads 'Craigs' Landscaping' — typical issuer/seller placement.",
+      "confidence": 0.98
+    },
+    "issuer_address": {
+      "value": [
+        "123 Sierra Dr",
+        "Palo Alto, CA 94028"
+      ],
+      "normalized_value": [
+        "123 Sierra Dr",
+        "Palo Alto, CA 94028"
+      ],
+      "reason": "Multiline block under the issuer name (left column beneath company) contains two address lines; preserved line breaks as array.",
+      "confidence": 0.98
+    },
+    "issuer_phone": {
+      "value": "123-456-7890",
+      "normalized_value": "1234567890",
+      "reason": "Phone number appears in the header area to the right of the issuer name as '123-456-7890' (label proximity to issuer contact block).",
+      "confidence": 0.95
+    },
+    "issuer_email": {
+      "value": "craigslandscaping@email.com",
+      "normalized_value": "craigslandscaping@email.com",
+      "reason": "Email shown in header/contact block to the right of issuer name; lowercased for normalized_value.",
+      "confidence": 0.95
+    },
+    "issuer_website": {
+      "value": "craigslandscaping.com",
+      "normalized_value": "http://craigslandscaping.com",
+      "reason": "Website text appears beneath the email in the issuer contact area; normalized to a canonical URL form.",
+      "confidence": 0.9
+    }
+  },
+  "recipient": {
+    "bill_to_name": {
+      "value": "Smith Enterprises",
+      "normalized_value": "Smith Enterprises",
+      "reason": "'Bill To' blue block on the left shows 'Smith Enterprises' directly under the 'Bill To' heading — clear client name.",
+      "confidence": 0.99
+    },
+    "bill_to_address": {
+      "value": [
+        "456 Sierra Dr",
+        "Palo Alto, CA 94028"
+      ],
+      "normalized_value": [
+        "456 Sierra Dr",
+        "Palo Alto, CA 94028"
+      ],
+      "reason": "Address lines shown beneath the 'Bill To' heading in the light-blue block; preserved as array of lines.",
+      "confidence": 0.98
+    },
+    "bill_to_contact": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No explicit phone number or email is present in the 'Bill To' block; only name and address lines are shown.",
+      "confidence": 0.9
+    }
+  },
+  "invoice_details": {
+    "invoice_number": {
+      "value": "12345",
+      "normalized_value": "12345",
+      "reason": "Inside the right side of the light-blue 'Invoice Details' block the label 'Invoice # 12345' displays the invoice identifier.",
+      "confidence": 0.99
+    },
+    "terms": {
+      "value": "Net 30",
+      "normalized_value": "Net 30",
+      "reason": "The 'Terms' line in the invoice details block reads 'Terms Net 30'.",
+      "confidence": 0.98
+    },
+    "invoice_date": {
+      "value": "08/01/2024",
+      "normalized_value": "2024-08-01",
+      "reason": "The invoice details block shows 'Invoice date 08/01/2024'; normalized to ISO-8601 (YYYY-MM-DD).",
+      "confidence": 0.99
+    },
+    "due_date": {
+      "value": "08/31/2024",
+      "normalized_value": "2024-08-31",
+      "reason": "The invoice details block shows 'Due date 08/31/2024'; normalized to ISO-8601 (YYYY-MM-DD).",
+      "confidence": 0.99
+    }
+  },
+  "line_items": {
+    "items": {
+      "value": [
+        {
+          "description": "Stone work",
+          "quantity": "3.4",
+          "unit": null,
+          "unit_price": "$125",
+          "amount": "$425"
+        },
+        {
+          "description": "Mulching, weeding, planting",
+          "quantity": "3",
+          "unit": null,
+          "unit_price": "$75",
+          "amount": "$225"
+        }
+      ],
+      "normalized_value": [
+        {
+          "description": "Stone work",
+          "quantity": 3.4,
+          "unit": null,
+          "unit_price": 125.0,
+          "amount": 425.0
+        },
+        {
+          "description": "Mulching, weeding, planting",
+          "quantity": 3.0,
+          "unit": null,
+          "unit_price": 75.0,
+          "amount": 225.0
+        }
+      ],
+      "reason": "Tabular area with headers 'Product/Services', 'Qty/Hrs', 'Rate', 'Amount'. Two product/service rows visible: 'Stone work' and 'Mulching, weeding, planting' with corresponding quantities, rates and amounts. Quantities and monetary values normalized to numeric forms (quantities as numbers, unit_price and amount as numeric dollars).",
+      "confidence": 0.98
+    }
+  },
+  "totals": {
+    "subtotal": {
+      "value": "$650.00",
+      "normalized_value": 650.0,
+      "reason": "Bottom-right totals block shows label 'Subtotal' with value '$650.00' directly adjacent.",
+      "confidence": 0.99
+    },
+    "discount": {
+      "value": "-$65.00",
+      "normalized_value": -65.0,
+      "reason": "Totals area lists 'Discount' with value '-$65.00' under Subtotal; negative sign retained and numeric normalized.",
+      "confidence": 0.98
+    },
+    "tax_rate": {
+      "value": "8.5%",
+      "normalized_value": 8.5,
+      "reason": "Totals block shows label 'Tax 8.5%'; stored as percentage string and numeric percent (8.5) in normalized_value.",
+      "confidence": 0.98
+    },
+    "tax_amount": {
+      "value": "$49.73",
+      "normalized_value": 49.73,
+      "reason": "Adjacent to the 'Tax 8.5%' label the monetary amount '$49.73' is shown; numeric normalized_value provided.",
+      "confidence": 0.99
+    },
+    "total": {
+      "value": "$634.73",
+      "normalized_value": 634.73,
+      "reason": "Emphasized bottom-most 'Total' label shows '$634.73' as the final amount due; normalized to numeric value.",
+      "confidence": 0.99
+    },
+    "currency": {
+      "value": "$",
+      "normalized_value": "USD",
+      "reason": "Dollar sign appears before all monetary amounts; currency normalized to 'USD'.",
+      "confidence": 0.99
+    }
+  },
+  "payment": {
+    "pay_to_name": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No 'Pay To' or bank/payment instruction block is present in this document image.",
+      "confidence": 0.95
+    },
+    "bank_account_name": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No 'Account Name' or similar bank account label is present in the visible invoice.",
+      "confidence": 0.95
+    },
+    "bank_account_number": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No 'Account No.' or bank account number appears on this invoice image.",
+      "confidence": 0.95
+    },
+    "payment_instructions": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No freeform payment instructions or bank details are present in the visible layout; only totals and contact info are shown.",
+      "confidence": 0.95
+    }
+  },
+  "metadata": {
+    "document_title": {
+      "value": "Invoice",
+      "normalized_value": "Invoice",
+      "reason": "Large top-left title text clearly reads 'Invoice', indicating document type.",
+      "confidence": 0.99
+    },
+    "logo_or_brand": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "A small decorative graphic appears in the top-right corner but no textual brand/logo name or extractable filename is present, so no logo text is extracted.",
+      "confidence": 0.6
+    },
+    "notes": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No additional notes, memos, or long terms text are present outside the labeled fields in this image.",
+      "confidence": 0.9
+    }
+  }
+}

@@ -1,0 +1,297 @@
+{
+  "core": {
+    "document_type": {
+      "value": "invoice",
+      "normalized_value": "invoice",
+      "reason": "Large header text at top-right reads 'INVOICE' — matches schema's document_type enum and prominent header cue.",
+      "confidence": 0.98
+    },
+    "invoice_number": {
+      "value": "01234",
+      "normalized_value": "01234",
+      "reason": "Right-column label 'INVOICE NO:' followed by '01234' — visual proximity to label and typical invoice-number placement.",
+      "confidence": 0.99
+    },
+    "invoice_date": {
+      "value": "11.02.2030",
+      "normalized_value": "2030-02-11",
+      "reason": "Right-column label 'DATE:' followed by '11.02.2030'. Normalized to ISO-8601 assuming the printed format is DD.MM.YYYY as typical in this layout.",
+      "confidence": 0.95
+    },
+    "due_date": {
+      "value": "11.03.2030",
+      "normalized_value": "2030-03-11",
+      "reason": "Right-column label 'DUE DATE:' followed by '11.03.2030'. Normalized to ISO-8601 (assumed DD.MM.YYYY pattern consistent with invoice_date).",
+      "confidence": 0.95
+    },
+    "terms": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No explicit 'Terms' or 'Net' string found near invoice metadata in the visible document.",
+      "confidence": 0.6
+    },
+    "currency": {
+      "value": "$",
+      "normalized_value": "USD",
+      "reason": "Monetary values in totals and line items are prefixed with '$' (e.g., '$100', '$440'); normalized to USD.",
+      "confidence": 0.98
+    }
+  },
+  "parties": {
+    "vendor": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No distinct issuer/company block (vendor header) was detected. The visible left block is labelled 'ISSUED TO' (customer), while no top-left company name or address for the seller is present in the image.",
+      "confidence": 0.45
+    },
+    "customer": {
+      "value": {
+        "name": "Richard Sanchez",
+        "address_lines": [
+          "Thynk Unlimited",
+          "123 Anywhere St., Any City"
+        ],
+        "street": "123 Anywhere St.",
+        "city": "Any City",
+        "state": null,
+        "postal_code": null,
+        "country": null,
+        "contact": null
+      },
+      "normalized_value": {
+        "name": "Richard Sanchez",
+        "address_lines": [
+          "Thynk Unlimited",
+          "123 Anywhere St., Any City"
+        ],
+        "street": "123 Anywhere St.",
+        "city": "Any City",
+        "state": null,
+        "postal_code": null,
+        "country": null,
+        "contact": null
+      },
+      "reason": "Block labelled 'ISSUED TO:' contains name 'Richard Sanchez', organization 'Thynk Unlimited', and '123 Anywhere St., Any City'. Street and city parsed from the single address line; other subtler parts (state/postal/country/contact) not present.",
+      "confidence": 0.95
+    },
+    "pay_to": {
+      "value": {
+        "payee_name": "Borcele Bank",
+        "bank_name": "Borcele Bank",
+        "account_name": "Adeline Palmerston",
+        "account_number": "0123 4567 8901",
+        "routing": null,
+        "details_text": "Borcele Bank\nAccount Name: Adeline Palmerston\nAccount No.: 0123 4567 8901"
+      },
+      "normalized_value": {
+        "payee_name": "Borcele Bank",
+        "bank_name": "Borcele Bank",
+        "account_name": "Adeline Palmerston",
+        "account_number": "012345678901",
+        "routing": null,
+        "details_text": "Borcele Bank\nAccount Name: Adeline Palmerston\nAccount No.: 0123 4567 8901"
+      },
+      "reason": "Block labelled 'PAY TO:' contains bank and account details. 'Borcele Bank' appears as the bank/payee, 'Account Name: Adeline Palmerston' and 'Account No.: 0123 4567 8901' are captured. Account number normalized by removing spaces.",
+      "confidence": 0.95
+    }
+  },
+  "items": {
+    "line_items": {
+      "value": [
+        {
+          "description": "Brand consultation",
+          "quantity": "1",
+          "unit": null,
+          "unit_price": "100",
+          "amount": "$100"
+        },
+        {
+          "description": "logo design",
+          "quantity": "1",
+          "unit": null,
+          "unit_price": "100",
+          "amount": "$100"
+        },
+        {
+          "description": "Website design",
+          "quantity": "1",
+          "unit": null,
+          "unit_price": "100",
+          "amount": "$100"
+        },
+        {
+          "description": "Social media templates",
+          "quantity": "1",
+          "unit": null,
+          "unit_price": "100",
+          "amount": "$100"
+        },
+        {
+          "description": "Brand photography",
+          "quantity": "1",
+          "unit": null,
+          "unit_price": "100",
+          "amount": "$100"
+        },
+        {
+          "description": "Brand guide",
+          "quantity": "1",
+          "unit": null,
+          "unit_price": "100",
+          "amount": "$100"
+        }
+      ],
+      "normalized_value": [
+        {
+          "description": "Brand consultation",
+          "quantity": 1,
+          "unit": null,
+          "unit_price": 100,
+          "amount": 100
+        },
+        {
+          "description": "logo design",
+          "quantity": 1,
+          "unit": null,
+          "unit_price": 100,
+          "amount": 100
+        },
+        {
+          "description": "Website design",
+          "quantity": 1,
+          "unit": null,
+          "unit_price": 100,
+          "amount": 100
+        },
+        {
+          "description": "Social media templates",
+          "quantity": 1,
+          "unit": null,
+          "unit_price": 100,
+          "amount": 100
+        },
+        {
+          "description": "Brand photography",
+          "quantity": 1,
+          "unit": null,
+          "unit_price": 100,
+          "amount": 100
+        },
+        {
+          "description": "Brand guide",
+          "quantity": 1,
+          "unit": null,
+          "unit_price": 100,
+          "amount": 100
+        }
+      ],
+      "reason": "Tabular items area with header row 'DESCRIPTION | UNIT PRICE | QTY | TOTAL'. Each row lists a description, unit price '100', quantity '1', and a printed total '$100'. Values extracted by column alignment under headers.",
+      "confidence": 0.95
+    },
+    "item_table_headers": {
+      "value": [
+        "DESCRIPTION",
+        "UNIT PRICE",
+        "QTY",
+        "TOTAL"
+      ],
+      "normalized_value": [
+        "description",
+        "unit_price",
+        "qty",
+        "total"
+      ],
+      "reason": "Top of the items table clearly shows header labels 'DESCRIPTION', 'UNIT PRICE', 'QTY', 'TOTAL' across the columns — used to map item columns.",
+      "confidence": 0.98
+    }
+  },
+  "financial_summary": {
+    "subtotal": {
+      "value": "$400",
+      "normalized_value": 400,
+      "reason": "The totals area explicitly shows 'SUBTOTAL' with '$400' printed beneath the items table; taken as displayed value and normalized to number by removing currency symbol.",
+      "confidence": 0.95
+    },
+    "discount": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No 'Discount' line or percent/amount visible in the totals area of this document.",
+      "confidence": 0.9
+    },
+    "tax_rate": {
+      "value": "10%",
+      "normalized_value": 0.1,
+      "reason": "Totals area displays 'Tax 10%'. Captured as displayed percent string and normalized to decimal 0.10.",
+      "confidence": 0.96
+    },
+    "tax_amount": {
+      "value": "$40",
+      "normalized_value": 40,
+      "reason": "Document shows tax rate '10%' but no explicit tax monetary line. Tax amount computed as 10% of the displayed SUBTOTAL $400 (0.10 * 400 = 40); reported with reason describing computation from visible subtotal and tax rate.",
+      "confidence": 0.75
+    },
+    "total": {
+      "value": "$440",
+      "normalized_value": 440,
+      "reason": "Totals section explicitly shows 'TOTAL' with '$440'; normalized by stripping currency symbol to numeric 440.",
+      "confidence": 0.98
+    }
+  },
+  "payment_details": {
+    "payment_instructions": {
+      "value": "Borcele Bank\nAccount Name: Adeline Palmerston\nAccount No.: 0123 4567 8901",
+      "normalized_value": "Borcele Bank\nAccount Name: Adeline Palmerston\nAccount No.: 0123 4567 8901",
+      "reason": "The 'PAY TO:' block contains freeform payment instructions including bank name, account name and account number. Preserved as a text blob for payment_instructions.",
+      "confidence": 0.95
+    },
+    "due_terms_note": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No short terms/late fee note or explicit payment terms shown near totals beyond the Due Date; nothing labeled 'Terms' or similar was visible.",
+      "confidence": 0.9
+    }
+  },
+  "visual_and_metadata": {
+    "logo_present": {
+      "value": false,
+      "normalized_value": false,
+      "reason": "No distinct corporate logo graphic detected in the header; only the textual large 'INVOICE' header and a decorative line are present.",
+      "confidence": 0.85
+    },
+    "raw_text_blocks": {
+      "value": [
+        "INVOICE",
+        "ISSUED TO:",
+        "Richard Sanchez",
+        "Thynk Unlimited",
+        "123 Anywhere St., Any City",
+        "PAY TO:",
+        "Borcele Bank",
+        "Account Name: Adeline Palmerston",
+        "Account No.: 0123 4567 8901",
+        "INVOICE NO: 01234",
+        "DATE: 11.02.2030",
+        "DUE DATE: 11.03.2030",
+        "DESCRIPTION    UNIT PRICE    QTY    TOTAL",
+        "Brand consultation    100    1    $100",
+        "logo design    100    1    $100",
+        "Website design    100    1    $100",
+        "Social media templates    100    1    $100",
+        "Brand photography    100    1    $100",
+        "Brand guide    100    1    $100",
+        "SUBTOTAL    $400",
+        "Tax    10%",
+        "TOTAL    $440"
+      ],
+      "normalized_value": null,
+      "reason": "OCR-like extraction of prominent text blocks and lines from the document preserved for downstream parsing; blocks grouped by visual layout (header, left column, pay-to, right invoice meta, table, totals).",
+      "confidence": 0.92
+    },
+    "detected_language": {
+      "value": "English",
+      "normalized_value": "en",
+      "reason": "All visible text is in English (labels like 'INVOICE', 'ISSUED TO', 'PAY TO', 'TOTAL').",
+      "confidence": 0.99
+    }
+  }
+}

@@ -1,0 +1,214 @@
+{
+  "core": {
+    "vendor_name": {
+      "value": "Craigs' Landscaping",
+      "normalized_value": "Craigs' Landscaping",
+      "reason": "Top-left prominent text under the document title; typical vendor/company header placement and font size ('Craigs' Landscaping'). Visual header cluster indicates supplier name.",
+      "confidence": 0.98
+    },
+    "vendor_address": {
+      "value": "123 Sierra Dr\nPalo Alto, CA 94028",
+      "normalized_value": "123 Sierra Dr, Palo Alto, CA 94028",
+      "reason": "Multi-line block beneath vendor name in the top-left header area contains street and city/state/ZIP; formatted into a single-line normalized postal address.",
+      "confidence": 0.95
+    },
+    "vendor_phone": {
+      "value": "123-456-7890",
+      "normalized_value": "123-456-7890",
+      "reason": "Phone-like numeric sequence appears in the top-right of the vendor contact block ('123-456-7890'); preserved formatting with dashes as shown.",
+      "confidence": 0.97
+    },
+    "vendor_email": {
+      "value": "craigslandscaping@email.com",
+      "normalized_value": "craigslandscaping@email.com",
+      "reason": "Email-pattern string visible in vendor contact block at top-right; normalized to lowercase.",
+      "confidence": 0.99
+    },
+    "vendor_website": {
+      "value": "craigslandscaping.com",
+      "normalized_value": "craigslandscaping.com",
+      "reason": "Domain-like text shown below the email in the vendor contact area; interpreted as website.",
+      "confidence": 0.92
+    },
+    "customer_name": {
+      "value": "Smith Enterprises",
+      "normalized_value": "Smith Enterprises",
+      "reason": "Under the 'Bill To' heading (left pale-blue block) the first line is the billed party name 'Smith Enterprises' — standard bill-to placement.",
+      "confidence": 0.98
+    },
+    "customer_address": {
+      "value": "456 Sierra Dr\nPalo Alto, CA 94028",
+      "normalized_value": "456 Sierra Dr, Palo Alto, CA 94028",
+      "reason": "Multi-line block under the 'Bill To' heading contains the recipient's street and city/state/ZIP; normalized to single-line postal format.",
+      "confidence": 0.95
+    }
+  },
+  "invoice_details": {
+    "invoice_number": {
+      "value": "12345",
+      "normalized_value": "12345",
+      "reason": "Label 'Invoice #' in the Invoice Details block (right pale-blue area) with value '12345' adjacent to it; clear invoice identifier.",
+      "confidence": 0.99
+    },
+    "invoice_date": {
+      "value": "08/01/2024",
+      "normalized_value": "2024-08-01",
+      "reason": "Label 'Invoice date' in the invoice details block shows '08/01/2024'; normalized to ISO-8601 (YYYY-MM-DD).",
+      "confidence": 0.99
+    },
+    "due_date": {
+      "value": "08/31/2024",
+      "normalized_value": "2024-08-31",
+      "reason": "Label 'Due date' in the invoice details block shows '08/31/2024'; normalized to ISO-8601 (YYYY-MM-DD).",
+      "confidence": 0.99
+    },
+    "terms": {
+      "value": "Net 30",
+      "normalized_value": "Net 30",
+      "reason": "Label 'Terms' in the invoice details block reads 'Net 30'; common payment terms wording preserved.",
+      "confidence": 0.98
+    }
+  },
+  "line_items": {
+    "line_items": {
+      "value": [
+        {
+          "description": "Stone work",
+          "quantity": 3.4,
+          "unit": null,
+          "unit_price": "$125",
+          "line_total": "$425"
+        },
+        {
+          "description": "Mulching, weeding, planting",
+          "quantity": 3,
+          "unit": null,
+          "unit_price": "$75",
+          "line_total": "$225"
+        }
+      ],
+      "normalized_value": [
+        {
+          "description": "Stone work",
+          "quantity": 3.4,
+          "unit": null,
+          "unit_price": 125.0,
+          "line_total": 425.0,
+          "currency": "$"
+        },
+        {
+          "description": "Mulching, weeding, planting",
+          "quantity": 3.0,
+          "unit": null,
+          "unit_price": 75.0,
+          "line_total": 225.0,
+          "currency": "$"
+        }
+      ],
+      "reason": "Tabular area under 'Product/Services | Qty/Hrs | Rate | Amount' contains two rows. Each row mapped to description, quantity, rate (unit_price) and amount (line_total). Currency '$' inferred from rate/amount columns.",
+      "confidence": 0.98
+    },
+    "line_item_description": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "Multiple item descriptions exist in the table; individual singular 'line_item_description' not populated because the document contains an array of descriptions (see 'line_items' array).",
+      "confidence": 0.6
+    },
+    "line_item_quantity": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "Multiple quantities present in the table (3.4 and 3). Quantities are provided in the 'line_items' array; leaving this singular field null to avoid inventing which row to assign.",
+      "confidence": 0.6
+    },
+    "line_item_unit_price": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "Multiple unit prices present in the table ($125 and $75); values provided in the 'line_items' array instead of a single-field value.",
+      "confidence": 0.6
+    },
+    "line_item_total": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "Multiple line totals present in the table ($425 and $225); these are listed in the 'line_items' array rather than a single-field mapping.",
+      "confidence": 0.6
+    }
+  },
+  "payment_details": {
+    "pay_to": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No explicit 'Pay To' or bank remittance block is present in this document image; only vendor contact info is shown. Payment destination details not provided.",
+      "confidence": 0.85
+    },
+    "bank_account_name": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No bank account name or account-holder fields visible on this invoice.",
+      "confidence": 0.9
+    },
+    "bank_account_number": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No bank account number or account reference present in the visible invoice.",
+      "confidence": 0.9
+    }
+  },
+  "totals": {
+    "subtotal": {
+      "value": "$650.00",
+      "normalized_value": 650.0,
+      "reason": "Right-aligned 'Subtotal' line in totals area shows '$650.00'; normalized to numeric value without currency symbol.",
+      "confidence": 0.99
+    },
+    "discount": {
+      "value": "-$65.00",
+      "normalized_value": -65.0,
+      "reason": "Line labeled 'Discount' shows '-$65.00' in totals block; normalized to numeric negative value indicating subtraction.",
+      "confidence": 0.98
+    },
+    "tax_rate": {
+      "value": "8.5%",
+      "normalized_value": 8.5,
+      "reason": "Totals area line reads 'Tax 8.5%' with an adjacent monetary value; tax percentage extracted and normalized to numeric percent (8.5).",
+      "confidence": 0.98
+    },
+    "tax_amount": {
+      "value": "$49.73",
+      "normalized_value": 49.73,
+      "reason": "Monetary value next to the 'Tax 8.5%' label shows '$49.73'; normalized to numeric amount.",
+      "confidence": 0.99
+    },
+    "total": {
+      "value": "$634.73",
+      "normalized_value": 634.73,
+      "reason": "Prominent 'Total' line in the totals block shows '$634.73' (bolded) as the final amount due; normalized to numeric value.",
+      "confidence": 0.99
+    },
+    "currency": {
+      "value": "$",
+      "normalized_value": "USD",
+      "reason": "Monetary values use the dollar sign ('$') throughout the document. Normalized currency code set to 'USD' based on '$' symbol and US address context (Palo Alto, CA).",
+      "confidence": 0.95
+    }
+  },
+  "metadata": {
+    "document_title": {
+      "value": "Invoice",
+      "normalized_value": "Invoice",
+      "reason": "Large top-left title reads 'Invoice' indicating document type.",
+      "confidence": 0.99
+    },
+    "notes": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No additional free-form notes, payment instructions or small-print text detected in the visible areas below the table or near totals.",
+      "confidence": 0.9
+    },
+    "layout_region": {
+      "value": "header: top-left/right vendor contacts; bill-to: left pale-blue block; invoice-details: right pale-blue block; items: center table; totals: bottom-right",
+      "normalized_value": null,
+      "reason": "Document has clear visual regions: vendor header at top-left and top-right contact details, a pale-blue band with 'Bill To' (left) and 'Invoice Details' (right), line-item table centered, totals at bottom-right. Provided as a textual region map to assist bounding-box mapping.",
+      "confidence": 0.95
+    }
+  }
+}

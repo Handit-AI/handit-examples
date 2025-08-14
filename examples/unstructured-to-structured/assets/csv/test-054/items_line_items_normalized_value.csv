@@ -1,0 +1,9 @@
+source_file,description,quantity,unit_price,amount
+invoice 1.json,Stone work,3.4,125.0,425.0
+invoice 1.json,"Mulching, weeding, planting",3.0,75.0,225.0
+invoice 2.json,Brand consultation,1.0,100.0,100.0
+invoice 2.json,logo design,1.0,100.0,100.0
+invoice 2.json,Website design,1.0,100.0,100.0
+invoice 2.json,Social media templates,1.0,100.0,100.0
+invoice 2.json,Brand photography,1.0,100.0,100.0
+invoice 2.json,Brand guide,1.0,100.0,100.0

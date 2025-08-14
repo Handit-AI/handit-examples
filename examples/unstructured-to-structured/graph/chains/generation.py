@@ -1,92 +1,84 @@
-from __future__ import annotations
-
-import os
-from dotenv import load_dotenv
-from langchain_core.output_parsers import StrOutputParser
+from typing import List, Optional
+from pydantic import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.runnables import RunnableSequence
 from langchain_openai import ChatOpenAI
-import logging
+from dotenv import load_dotenv
+import os
 
-
-# Ensure environment variables (.env) are loaded before LLM init
 load_dotenv()
 
-# Initialize LLM (temperature 0 for deterministic CSV formatting)
-llm = ChatOpenAI(temperature=0, model=os.getenv("OPENAI_MODEL","gpt-4o-mini"))
-logger = logging.getLogger("graph.generation")
-logger.info("🤖 Using model: %s", getattr(llm, "model_name", "<unknown>"))
+# Resolve model from environment variable, default to gpt-4o-mini
+model_name = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+llm = ChatOpenAI(model=model_name, temperature=0)
 
 
-# Robust system prompt to convert multiple JSON records into a single CSV
-system_prompt = """
-You are a precise data transformation engine. Your task is to read multiple arbitrary JSON records and output a SINGLE CSV that aggregates the data across all records.
+class ColumnSpec(BaseModel):
+    name: str = Field(description="Column name to appear in the CSV (lower_snake_case)")
+    value_path: str = Field(
+        description="Dot path to the field in the JSON. For arrays, reference current item with '.' prefix, e.g., '.description.value' or '.price.normalized_value'"
+    )
+    prefer_normalized: bool = Field(
+        default=True, description="If true, prefer normalized_value when available; fallback to value"
+    )
+    description: Optional[str] = Field(default=None, description="Brief explanation for what the column represents")
 
-STRICT RULES:
-- Output ONLY the CSV text. No explanations, no markdown, no code fences.
-- Use comma (,) as the separator. Quote fields with commas, newlines, or quotes using standard CSV escaping (double quotes, and escape internal quotes by doubling them).
 
-COLUMN MAPPING STRATEGY:
-1. FIRST, analyze ALL records to identify semantic similarities between fields
-2. Group similar fields under unified column names:
-   - "items", "productos", "products" → "items"
-   - "total", "suma_total", "amount" → "total"
-   - "date", "fecha", "issue_date" → "date"
-   - "invoice_number", "factura_num", "bill_no" → "invoice_number"
-   - "customer", "cliente", "bill_to" → "customer"
-   - "subtotal", "subtotal", "base_amount" → "subtotal"
-   - "tax", "impuesto", "tax_amount" → "tax"
-   - "discount", "descuento", "discount_amount" → "discount"
-3. Always include these base columns: filename, session_id
-4. Add semantic columns based on the unified mapping above
-5. For arrays/lists: create summary columns (items_count, items_summary)
+class TableSpec(BaseModel):
+    name: str = Field(description="CSV/table file name without extension (lower_snake_case)")
+    row_scope: str = Field(
+        description="Either 'per_document' or 'per_array'. If 'per_array', specify array_path"
+    )
+    array_path: Optional[str] = Field(
+        default=None, description="When row_scope is 'per_array', dot path to array (e.g., 'line_items')"
+    )
+    columns: List[ColumnSpec] = Field(description="Columns to include in the table")
+    rationale: Optional[str] = Field(default=None, description="Reasoning for this table design")
 
-COLUMN GENERATION PROCESS:
-1. Scan all records to find field names and their semantic meanings
-2. Create a mapping of similar fields to unified column names
-3. Generate the CSV header with unified column names
-4. For each record, map its fields to the unified columns
-5. If a field doesn't exist in a record, leave it empty
 
-OUTPUT FORMAT:
-- Header row with unified column names
-- One data row per input record
-- Empty fields for missing data (don't invent values)
-- Consistent column alignment across all rows
+class CsvPlan(BaseModel):
+    tables: List[TableSpec] = Field(description="List of tables to generate")
+    rationale: Optional[str] = Field(default=None, description="High-level plan reasoning")
 
-EXAMPLE MAPPING:
-- Record 1 has "items": [{{"name": "Product A", "qty": 2}}] → maps to "items" column
-- Record 2 has "productos": [{{"nombre": "Product B", "cantidad": 1}}] → maps to "items" column
-- Both get items_count=1 and items_summary="Product A|2;Product B|1"
 
-GOAL:
-- Produce a clean CSV with unified columns that semantically group similar data across different records.
-- Ensure all rows have the same columns in the same order.
-- Map similar fields intelligently to create a consistent structure.
+# Parsing the answer
+structured_plan = llm.with_structured_output(CsvPlan)
+
+system = """
+You are a data modeling expert. Analyze a set of structured JSON documents (roots can vary; do not assume fixed top-level keys). Design CSV tables to present all available data clearly.
+
+Requirements:
+- Always include a primary table named 'general' with row_scope='per_document'. Map as many scalar fields as possible per document into this table (non-arrays). Arrays should be handled in additional tables.
+- Add as many extra tables as needed for readability (e.g., per_array tables for repeated elements) so that all data across documents is visible and well organized.
+- For every cell: prefer normalized_value when present; otherwise use value; if neither exists or is null, leave the cell empty. Never include 'reason' or 'confidence'. Never place objects/arrays in a cell.
+- Use lower_snake_case for table and column names.
+- For per_array tables, create one row per array element. When referencing fields of the current item, use '.field.subfield' and target scalar subfields such as '.amount.normalized_value'.
+
+Output:
+- Return JSON matching the CsvPlan schema. For each TableSpec: set name, row_scope, optional array_path, and columns where each column has name, value_path, prefer_normalized.
+- value_path must reference a scalar location (e.g., '*.normalized_value' or '*.value').
+- array_path must be the dot path of the array (omit '[]' from the path).
 """
 
+user = """
+You will receive an inventory of documents that lists flattened field paths and sample values/types for all provided structured_json_paths. Use only this inventory to decide paths; do not assume fixed roots.
 
-# Build prompt template
-prompt = ChatPromptTemplate.from_messages(
+Goals:
+- Design a set of tables that makes all document data visible and well organized.
+- Always include a 'general' per_document table and add any extra tables you deem useful (especially per_array tables) to cover arrays and improve readability.
+- For each field, use normalized_value if present; else value; if both are missing/null, the cell should be empty. Never include reason or confidence.
+- Ensure every field path appears in at least one table.
+
+Inventory:
+{documents_inventory}
+"""
+
+generation_prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", system_prompt),
-        (
-            "human",
-            "Build a CSV from these JSON records.\n\nFilenames: {filenames}\n\nJSON Records:\n{records_text}",
-        ),
+        ("system", system),
+        ("user", user),
     ]
 )
 
-
-# Final chain: prompt -> llm -> parse to raw string
-generation_chain = prompt | llm | StrOutputParser()
-
-# Add logging wrapper to see what LLM returns
-def logged_generation_chain(inputs):
-    logger.info("🚀 Sending to LLM: filenames=%s, records_text_len=%d", 
-                inputs.get("filenames", ""), len(inputs.get("records_text", "")))
-    result = generation_chain.invoke(inputs)
-    logger.info("🤖 Raw LLM output: %s", repr(result))
-    return result
-
-
-
+# Public chain export
+csv_generation_planner: RunnableSequence = generation_prompt | structured_plan

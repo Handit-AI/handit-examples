@@ -1,0 +1,62 @@
+source_file,file_core_document_title,core_document_title_confidence,invoice_number,invoice_number_confidence,invoice_date,invoice_date_confidence,due_date,due_date_confidence,terms,terms_confidence,currency,currency_confidence,vendor_block_vendor_name,vendor_block_vendor_address,vendor_block_vendor_phone,vendor_block_vendor_email,vendor_block_vendor_website,entities_vendor_confidence,vendor_name,vendor_name_confidence,vendor_address,vendor_address_confidence,vendor_phone,vendor_phone_confidence,vendor_email,vendor_email_confidence,vendor_website,vendor_website_confidence,customer_block_customer_name,customer_block_customer_address,entities_customer_confidence,customer_name,customer_name_confidence,customer_address,customer_address_confidence,customer_contact,customer_contact_confidence,items_item_description,items_item_description_confidence,items_item_quantity,items_item_quantity_confidence,items_item_unit_price,items_item_unit_price_confidence,items_item_amount,items_item_amount_confidence,line_items_confidence,summary_subtotal,summary_subtotal_confidence,summary_discount_amount,summary_discount_amount_confidence,summary_discount_rate,summary_discount_rate_confidence,summary_tax_rate,summary_tax_rate_confidence,summary_tax_amount,summary_tax_amount_confidence,summary_total,summary_total_confidence,summary_balance_due,summary_balance_due_confidence,payment_pay_to_bank_name,payment_pay_to_account_name,payment_pay_to_account_number,payment_pay_to_confidence,payment_bank_name,payment_bank_name_confidence,payment_account_name,payment_account_name_confidence,payment_account_number,payment_account_number_confidence,payment_instructions,payment_instructions_confidence,metadata_document_id,metadata_document_id_confidence,metadata_extraction_confidence,metadata_extraction_confidence_confidence,metadata_raw_text,metadata_raw_text_confidence
+invoice 1.json,Invoice,0.99,12345,0.98,08/01/2024,0.98,08/31/2024,0.98,Net 30,0.97,$,0.95,Craigs' Landscaping,"123 Sierra Dr
+Palo Alto, CA 94028",123-456-7890,craigslandscaping@email.com,craigslandscaping.com,0.96,Craigs' Landscaping,0.98,"123 Sierra Dr
+Palo Alto, CA 94028",0.96,123-456-7890,0.96,craigslandscaping@email.com,0.97,craigslandscaping.com,0.95,Smith Enterprises,"456 Sierra Dr
+Palo Alto, CA 94028",0.95,Smith Enterprises,0.97,"456 Sierra Dr
+Palo Alto, CA 94028",0.95,,0.6,,0.4,,0.4,,0.4,,0.4,0.95,$650.00,0.97,-$65.00,0.96,,0.95,8.5%,0.96,$49.73,0.96,$634.73,0.98,,0.9,,,,0.95,,0.95,,0.95,,0.95,,0.95,,0.5,0.95,0.95,"Invoice
+Craigs' Landscaping
+123 Sierra Dr
+Palo Alto, CA 94028
+123-456-7890
+craigslandscaping@email.com
+craigslandscaping.com
+
+Bill To
+Smith Enterprises
+456 Sierra Dr
+Palo Alto, CA 94028
+
+Invoice Details
+Invoice # 12345
+Terms Net 30
+Invoice date 08/01/2024
+Due date 08/31/2024
+
+Product/Services    Qty/Hrs    Rate    Amount
+Stone work          3.4        $125    $425
+Mulching, weeding,
+planting             3         $75     $225
+
+Subtotal            $650.00
+Discount             -$65.00
+Tax 8.5%             $49.73
+
+Total               $634.73",0.9
+invoice 2.json,INVOICE,0.98,01234,0.98,11.02.2030,0.95,11.03.2030,0.95,,0.4,$,0.9,,,,,,0.6,,0.6,,0.6,,0.9,,0.9,,0.9,,,0.92,,1.0,"Thynk Unlimited
+123 Anywhere St., Any City",0.95,,0.9,,0.9,,0.9,,0.9,,0.9,0.94,$400,0.97,,0.95,,0.95,10%,0.97,,0.9,$440,0.98,,0.95,Borcele Bank,[REDACTED NAME],0123 4567 8901,0.95,Borcele Bank,0.98,,1.0,0123 4567 8901,0.98,,0.95,,0.5,0.92,0.92,"INVOICE
+
+ISSUED TO:
+[REDACTED NAME]
+Thynk Unlimited
+123 Anywhere St., Any City
+
+PAY TO:
+Borcele Bank
+Account Name: [REDACTED NAME]
+Account No.: 0123 4567 8901
+
+INVOICE NO: 01234
+DATE: 11.02.2030
+DUE DATE: 11.03.2030
+
+DESCRIPTION        UNIT PRICE   QTY   TOTAL
+Brand consultation     100         1    $100
+logo design            100         1    $100
+Website design         100         1    $100
+Social media templates 100         1    $100
+Brand photography      100         1    $100
+Brand guide            100         1    $100
+
+SUBTOTAL             $400
+     Tax  10%
+TOTAL                $440",0.92

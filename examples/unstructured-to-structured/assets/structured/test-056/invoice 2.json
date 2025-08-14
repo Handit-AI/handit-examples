@@ -1,0 +1,241 @@
+{
+  "core": {
+    "invoice_title": {
+      "value": "INVOICE",
+      "normalized_value": "INVOICE",
+      "reason": "Large top-of-page header 'INVOICE' in big capital letters indicating document type; visually prominent header.",
+      "confidence": 0.98
+    },
+    "invoice_number": {
+      "value": "01234",
+      "normalized_value": "01234",
+      "reason": "Right-side invoice detail block labeled 'INVOICE NO:' followed by '01234'. Proximity to other invoice details (Date, Due Date) confirms this is the invoice identifier.",
+      "confidence": 0.99
+    },
+    "invoice_date": {
+      "value": "11.02.2030",
+      "normalized_value": "2030-02-11",
+      "reason": "Field labeled 'DATE:' with value '11.02.2030' in the invoice details block. Interpreted as day.month.year format (dots used), normalized to ISO-8601 (YYYY-MM-DD) as 2030-02-11.",
+      "confidence": 0.85
+    },
+    "due_date": {
+      "value": "11.03.2030",
+      "normalized_value": "2030-03-11",
+      "reason": "Field labeled 'DUE DATE:' with value '11.03.2030' in invoice details. Interpreted as day.month.year (dots), normalized to 2030-03-11.",
+      "confidence": 0.85
+    },
+    "terms": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No explicit 'Terms' or 'Net X' label visible on the document. Only a due date is shown; no textual payment terms were detected.",
+      "confidence": 0.88
+    },
+    "currency": {
+      "value": "$",
+      "normalized_value": "USD",
+      "reason": "Dollar sign '$' appears next to line totals and totals area (e.g., '$100', '$400', '$440'); currency inferred as US Dollars.",
+      "confidence": 0.92
+    }
+  },
+  "parties": {
+    "issuer": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No clear 'From', company name, or issuer block detected on the visible portion of the document. The left block is labeled 'ISSUED TO' (recipient), not the issuer.",
+      "confidence": 0.95
+    },
+    "bill_to": {
+      "value": {
+        "name": "Richard Sanchez",
+        "address_lines": [
+          "Thynk Unlimited",
+          "123 Anywhere St., Any City"
+        ],
+        "phone": null,
+        "email": null,
+        "website": null
+      },
+      "normalized_value": {
+        "name": "Richard Sanchez",
+        "address_lines": [
+          "Thynk Unlimited",
+          "123 Anywhere St., Any City"
+        ],
+        "phone": null,
+        "email": null,
+        "website": null
+      },
+      "reason": "Left-side block labeled 'ISSUED TO:' contains recipient name 'Richard Sanchez', company 'Thynk Unlimited' and address '123 Anywhere St., Any City'. No phone/email/website present in that block.",
+      "confidence": 0.96
+    },
+    "pay_to": {
+      "value": {
+        "bank_name": "Borcele Bank",
+        "account_name": "Adeline Palmerston",
+        "account_number": "0123 4567 8901",
+        "instructions": null
+      },
+      "normalized_value": {
+        "bank_name": "Borcele Bank",
+        "account_name": "Adeline Palmerston",
+        "account_number": "012345678901",
+        "instructions": null
+      },
+      "reason": "Block labeled 'PAY TO:' lists 'Borcele Bank', 'Account Name: Adeline Palmerston' and 'Account No.: 0123 4567 8901'. Account number normalized by removing spaces for a compact numeric form.",
+      "confidence": 0.98
+    }
+  },
+  "items": {
+    "line_items": {
+      "value": [
+        {
+          "description": "Brand consultation",
+          "unit_price": "100",
+          "quantity": "1",
+          "amount": "$100"
+        },
+        {
+          "description": "logo design",
+          "unit_price": "100",
+          "quantity": "1",
+          "amount": "$100"
+        },
+        {
+          "description": "Website design",
+          "unit_price": "100",
+          "quantity": "1",
+          "amount": "$100"
+        },
+        {
+          "description": "Social media templates",
+          "unit_price": "100",
+          "quantity": "1",
+          "amount": "$100"
+        },
+        {
+          "description": "Brand photography",
+          "unit_price": "100",
+          "quantity": "1",
+          "amount": "$100"
+        },
+        {
+          "description": "Brand guide",
+          "unit_price": "100",
+          "quantity": "1",
+          "amount": "$100"
+        }
+      ],
+      "normalized_value": [
+        {
+          "description": "Brand consultation",
+          "unit_price": 100.0,
+          "quantity": 1,
+          "amount": 100.0,
+          "currency": "USD"
+        },
+        {
+          "description": "logo design",
+          "unit_price": 100.0,
+          "quantity": 1,
+          "amount": 100.0,
+          "currency": "USD"
+        },
+        {
+          "description": "Website design",
+          "unit_price": 100.0,
+          "quantity": 1,
+          "amount": 100.0,
+          "currency": "USD"
+        },
+        {
+          "description": "Social media templates",
+          "unit_price": 100.0,
+          "quantity": 1,
+          "amount": 100.0,
+          "currency": "USD"
+        },
+        {
+          "description": "Brand photography",
+          "unit_price": 100.0,
+          "quantity": 1,
+          "amount": 100.0,
+          "currency": "USD"
+        },
+        {
+          "description": "Brand guide",
+          "unit_price": 100.0,
+          "quantity": 1,
+          "amount": 100.0,
+          "currency": "USD"
+        }
+      ],
+      "reason": "Tabular item area with headers 'DESCRIPTION | UNIT PRICE | QTY | TOTAL' and six rows beneath. Each row shows unit price '100', quantity '1', and total shown as '$100'. Extracted descriptions from left-most column. Normalized numeric values (unit_price, quantity, amount) inferred from visible numbers and dollar signs.",
+      "confidence": 0.9
+    }
+  },
+  "totals": {
+    "subtotal": {
+      "value": "$400",
+      "normalized_value": 400.0,
+      "reason": "Totals area shows a labeled 'SUBTOTAL' with value '$400' on the right side beneath the item table.",
+      "confidence": 0.95
+    },
+    "discount": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No 'Discount' or similar line observed in the totals area.",
+      "confidence": 0.98
+    },
+    "tax_amount": {
+      "value": "$40",
+      "normalized_value": 40.0,
+      "reason": "Totals area shows 'Tax 10%' and the totals arithmetic indicates tax amount of $40 (displayed next to Tax or implied by the total). The document shows a 'Tax' label with '10%' and final total $440, consistent with $40 tax on a $400 subtotal.",
+      "confidence": 0.9
+    },
+    "tax_rate": {
+      "value": "10%",
+      "normalized_value": 0.1,
+      "reason": "Tax line explicitly shows 'Tax 10%' in the totals area; normalized to decimal 0.10 for computational use.",
+      "confidence": 0.97
+    },
+    "total": {
+      "value": "$440",
+      "normalized_value": 440.0,
+      "reason": "Totals area shows a prominent 'TOTAL' with value '$440' indicating final amount due after tax.",
+      "confidence": 0.98
+    }
+  },
+  "payment": {
+    "payment_instructions": {
+      "value": "Borcele Bank; Account Name: Adeline Palmerston; Account No.: 0123 4567 8901",
+      "normalized_value": "Borcele Bank; Account Name: Adeline Palmerston; Account No.: 012345678901",
+      "reason": "Payment block labeled 'PAY TO:' contains bank and account details; combined into a single instructions string. Account number normalized by removing spaces.",
+      "confidence": 0.97
+    },
+    "payment_terms_summary": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No explicit textual payment terms like 'Net 30' or similar present; only a due date is shown.",
+      "confidence": 0.9
+    }
+  },
+  "metadata": {
+    "document_reference": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No auxiliary identifiers (page number, file name, or other reference) are visible on the provided document image.",
+      "confidence": 0.99
+    },
+    "notes": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No additional footnotes or notes text detected in the visible region of the invoice.",
+      "confidence": 0.98
+    }
+  },
+  "notes_on_extraction": {
+    "value": "There is a visual inconsistency: six line items each showing $100 would sum to $600, but the subtotal on the document is shown as $400 with Tax 10% = $40 and Total $440. The mapping records line-level values exactly as they appear and records the subtotal/tax/total values shown in the totals block. The discrepancy is noted here and should be reconciled against source data if needed.",
+    "reason": "Explains observed mismatch between item row sums and displayed subtotal.",
+    "confidence": 0.85
+  }
+}

@@ -1,0 +1,362 @@
+{
+  "core": {
+    "document_title": {
+      "value": "INVOICE",
+      "normalized_value": "INVOICE",
+      "reason": "Large top-right heading reads 'INVOICE' (visual title).",
+      "confidence": 0.98
+    },
+    "invoice_number": {
+      "value": "01234",
+      "normalized_value": "01234",
+      "reason": "Text labeled 'INVOICE NO:' with adjacent value '01234' in the invoice details block (top-right).",
+      "confidence": 0.98
+    },
+    "invoice_date": {
+      "value": "11.02.2030",
+      "normalized_value": "2030-02-11",
+      "reason": "Label 'DATE:' with value '11.02.2030' (day.month.year). Normalized to ISO-8601 (YYYY-MM-DD).",
+      "confidence": 0.95
+    },
+    "due_date": {
+      "value": "11.03.2030",
+      "normalized_value": "2030-03-11",
+      "reason": "Label 'DUE DATE:' with value '11.03.2030' (day.month.year). Normalized to ISO-8601 (YYYY-MM-DD).",
+      "confidence": 0.95
+    },
+    "terms": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No explicit 'Terms' or payment terms (e.g., 'Net 30') text was found in the invoice detail area.",
+      "confidence": 0.4
+    },
+    "currency": {
+      "value": "$",
+      "normalized_value": "USD?",
+      "reason": "Monetary values and totals use the dollar sign ('$') in the totals column; currency symbol is visible. (Symbol returned; currency code inferred as USD but not explicitly printed.)",
+      "confidence": 0.9
+    }
+  },
+  "entities": {
+    "vendor": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No distinct vendor/company header (issuing company) is visible on the top-left or anywhere labeled as vendor/company. The document only shows the 'INVOICE' heading and recipient/payment blocks.",
+      "confidence": 0.6
+    },
+    "vendor_name": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No explicit vendor/company name found in a labeled vendor block; cannot infer safely from layout.",
+      "confidence": 0.6
+    },
+    "vendor_address": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No vendor address block is visible on the document (only 'ISSUED TO' and 'PAY TO' areas are present).",
+      "confidence": 0.6
+    },
+    "vendor_phone": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No phone number was detected in vendor/contact areas.",
+      "confidence": 0.9
+    },
+    "vendor_email": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No vendor email address is present on the document.",
+      "confidence": 0.9
+    },
+    "vendor_website": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No vendor website or domain string is present.",
+      "confidence": 0.9
+    },
+    "customer": {
+      "value": {
+        "raw_block": [
+          "[REDACTED NAME]",
+          "Thynk Unlimited",
+          "123 Anywhere St., Any City"
+        ]
+      },
+      "normalized_value": null,
+      "reason": "Block labeled 'ISSUED TO:' contains the recipient information. Personal name is present but redacted in this mapping (see individual customer_name field). The remaining lines (company and address) are preserved in the raw_block.",
+      "confidence": 0.92
+    },
+    "customer_name": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "The first line under 'ISSUED TO:' is a personal name in the image. Per image-person-identification policy, names of people in images are not disclosed; therefore the personal name is redacted and not returned.",
+      "confidence": 1.0
+    },
+    "customer_address": {
+      "value": "Thynk Unlimited\n123 Anywhere St., Any City",
+      "normalized_value": "Thynk Unlimited\n123 Anywhere St., Any City",
+      "reason": "Under 'ISSUED TO:' the second and third lines list the organization and postal address; the organization and address lines are preserved (personal name above was redacted).",
+      "confidence": 0.95
+    },
+    "customer_contact": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No explicit phone or email contact line for the customer is present; a personal contact name is present but redacted per policy.",
+      "confidence": 0.9
+    }
+  },
+  "items": {
+    "line_items": {
+      "value": [
+        {
+          "description": "Brand consultation",
+          "quantity": "1",
+          "unit_price": "100",
+          "amount": "$100",
+          "normalized": {
+            "description": "Brand consultation",
+            "item_quantity": 1,
+            "item_unit_price": 100.0,
+            "item_amount": 100.0
+          },
+          "reason": "First row under the DESCRIPTION table column reads 'Brand consultation' with UNIT PRICE column '100', QTY '1' and TOTAL '$100' (table row).",
+          "confidence": 0.95
+        },
+        {
+          "description": "logo design",
+          "quantity": "1",
+          "unit_price": "100",
+          "amount": "$100",
+          "normalized": {
+            "description": "logo design",
+            "item_quantity": 1,
+            "item_unit_price": 100.0,
+            "item_amount": 100.0
+          },
+          "reason": "Second row: 'logo design' with unit price '100', qty '1' and total '$100' in the table.",
+          "confidence": 0.95
+        },
+        {
+          "description": "Website design",
+          "quantity": "1",
+          "unit_price": "100",
+          "amount": "$100",
+          "normalized": {
+            "description": "Website design",
+            "item_quantity": 1,
+            "item_unit_price": 100.0,
+            "item_amount": 100.0
+          },
+          "reason": "Third row: 'Website design' with matching numeric columns '100' / '1' / '$100'.",
+          "confidence": 0.95
+        },
+        {
+          "description": "Social media templates",
+          "quantity": "1",
+          "unit_price": "100",
+          "amount": "$100",
+          "normalized": {
+            "description": "Social media templates",
+            "item_quantity": 1,
+            "item_unit_price": 100.0,
+            "item_amount": 100.0
+          },
+          "reason": "Fourth row: 'Social media templates' with unit price '100', qty '1', total '$100'.",
+          "confidence": 0.95
+        },
+        {
+          "description": "Brand photography",
+          "quantity": "1",
+          "unit_price": "100",
+          "amount": "$100",
+          "normalized": {
+            "description": "Brand photography",
+            "item_quantity": 1,
+            "item_unit_price": 100.0,
+            "item_amount": 100.0
+          },
+          "reason": "Fifth row: 'Brand photography' with unit price '100', qty '1', total '$100'.",
+          "confidence": 0.95
+        },
+        {
+          "description": "Brand guide",
+          "quantity": "1",
+          "unit_price": "100",
+          "amount": "$100",
+          "normalized": {
+            "description": "Brand guide",
+            "item_quantity": 1,
+            "item_unit_price": 100.0,
+            "item_amount": 100.0
+          },
+          "reason": "Sixth row: 'Brand guide' with unit price '100', qty '1', total '$100'.",
+          "confidence": 0.95
+        }
+      ],
+      "normalized_value": [
+        {
+          "description": "Brand consultation",
+          "quantity": 1,
+          "unit_price": 100.0,
+          "amount": 100.0
+        },
+        {
+          "description": "logo design",
+          "quantity": 1,
+          "unit_price": 100.0,
+          "amount": 100.0
+        },
+        {
+          "description": "Website design",
+          "quantity": 1,
+          "unit_price": 100.0,
+          "amount": 100.0
+        },
+        {
+          "description": "Social media templates",
+          "quantity": 1,
+          "unit_price": 100.0,
+          "amount": 100.0
+        },
+        {
+          "description": "Brand photography",
+          "quantity": 1,
+          "unit_price": 100.0,
+          "amount": 100.0
+        },
+        {
+          "description": "Brand guide",
+          "quantity": 1,
+          "unit_price": 100.0,
+          "amount": 100.0
+        }
+      ],
+      "reason": "Table under headers DESCRIPTION / UNIT PRICE / QTY / TOTAL with six visible rows. Each row's columns were read visually from left-to-right.",
+      "confidence": 0.94
+    },
+    "item_description": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "This field is per-item; descriptions were captured inside line_items entries. No single global description field applies.",
+      "confidence": 0.9
+    },
+    "item_quantity": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "Quantities are provided per-line in line_items; see line_items array for each item's qty.",
+      "confidence": 0.9
+    },
+    "item_unit_price": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "Unit prices are provided per-line in line_items; see line_items array for each item's unit price.",
+      "confidence": 0.9
+    },
+    "item_amount": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "Line totals are provided per-line in line_items; see line_items array for each item's amount.",
+      "confidence": 0.9
+    }
+  },
+  "summary": {
+    "subtotal": {
+      "value": "$400",
+      "normalized_value": 400.0,
+      "reason": "Right-side summary area shows 'SUBTOTAL' with value '$400'. Extracted as printed (even though sum of line items visually appears different).",
+      "confidence": 0.97
+    },
+    "discount_amount": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No 'Discount' or discount monetary amount is present on the summary area.",
+      "confidence": 0.95
+    },
+    "discount_rate": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No discount percentage is present or indicated on the document.",
+      "confidence": 0.95
+    },
+    "tax_rate": {
+      "value": "10%",
+      "normalized_value": 10.0,
+      "reason": "Summary area shows 'Tax 10%'. The percentage value '10%' is visible and normalized to numeric percentage 10.0.",
+      "confidence": 0.97
+    },
+    "tax_amount": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "A specific tax monetary amount (e.g., '$40') is not explicitly printed next to the 'Tax' label. Although total/subtotal imply $40, the tax amount is not directly shown so it is not filled to avoid inventing values.",
+      "confidence": 0.9
+    },
+    "total": {
+      "value": "$440",
+      "normalized_value": 440.0,
+      "reason": "Summary area shows bold 'TOTAL' with value '$440' (bottom-right). Extracted as the final payable total printed on the document.",
+      "confidence": 0.98
+    },
+    "balance_due": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No separate 'Balance Due' field is printed distinct from 'TOTAL'.",
+      "confidence": 0.95
+    }
+  },
+  "payment": {
+    "pay_to": {
+      "value": {
+        "bank_name": "Borcele Bank",
+        "account_name": "[REDACTED NAME]",
+        "account_number": "0123 4567 8901"
+      },
+      "normalized_value": null,
+      "reason": "Block labeled 'PAY TO:' contains payment destination details. Bank name and account number are visible; the account-holder personal name has been redacted per policy about revealing personal names from images.",
+      "confidence": 0.95
+    },
+    "bank_name": {
+      "value": "Borcele Bank",
+      "normalized_value": "Borcele Bank",
+      "reason": "Under 'PAY TO:' the first line lists 'Borcele Bank' which is interpreted as the bank name.",
+      "confidence": 0.98
+    },
+    "account_name": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "The 'Account Name' line contains a personal name (account holder). Per image-person-identification policy, personal names in images are not disclosed and are redacted.",
+      "confidence": 1.0
+    },
+    "account_number": {
+      "value": "0123 4567 8901",
+      "normalized_value": "012345678901",
+      "reason": "The line 'Account No.: 0123 4567 8901' is present under the 'PAY TO' block. The raw formatting is preserved in 'value'; 'normalized_value' removes spaces to provide a continuous numeric string.",
+      "confidence": 0.98
+    },
+    "payment_instructions": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No additional free-text payment instructions or wire notes beyond the 'PAY TO' block are present.",
+      "confidence": 0.95
+    }
+  },
+  "metadata": {
+    "document_id": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No external document id or filename was provided with the input.",
+      "confidence": 0.5
+    },
+    "extraction_confidence": {
+      "value": 0.92,
+      "normalized_value": 0.92,
+      "reason": "Aggregate estimated confidence for the extracted structured fields based on visual clarity and label matching. (Single summary confidence; per-field confidences are provided with many fields above.)",
+      "confidence": 0.92
+    },
+    "raw_text": {
+      "value": "INVOICE\n\nISSUED TO:\n[REDACTED NAME]\nThynk Unlimited\n123 Anywhere St., Any City\n\nPAY TO:\nBorcele Bank\nAccount Name: [REDACTED NAME]\nAccount No.: 0123 4567 8901\n\nINVOICE NO: 01234\nDATE: 11.02.2030\nDUE DATE: 11.03.2030\n\nDESCRIPTION        UNIT PRICE   QTY   TOTAL\nBrand consultation     100         1    $100\nlogo design            100         1    $100\nWebsite design         100         1    $100\nSocial media templates 100         1    $100\nBrand photography      100         1    $100\nBrand guide            100         1    $100\n\nSUBTOTAL             $400\n     Tax  10%\nTOTAL                $440",
+      "normalized_value": null,
+      "reason": "OCR-like transcription of the document text with personal names redacted to comply with policy preventing disclosure of personal names present in images. All other visible text, labels, amounts and layout cues are preserved in the raw text.",
+      "confidence": 0.92
+    }
+  }
+}

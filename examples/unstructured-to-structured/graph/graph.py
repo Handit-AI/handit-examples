@@ -4,8 +4,8 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, StateGraph
 
 
-from graph.consts import CLASSIFY_DOCUMENTS, INVOICE_DATA_CAPTURE, GENERATE_CSV
-from graph.nodes.classify_documents import classify_documents
+from graph.consts import INFERENCE_SCHEMA, INVOICE_DATA_CAPTURE, GENERATE_CSV
+from graph.nodes.inference_schema import inference_schema
 from graph.nodes.invoice_data_capture import invoice_data_capture
 from graph.nodes.generate_csv import generate_csv
 from graph.state import GraphState
@@ -18,14 +18,22 @@ load_dotenv()
 workflow = StateGraph(GraphState)
 
 
-workflow.add_node(CLASSIFY_DOCUMENTS, classify_documents)
+workflow.add_node(INFERENCE_SCHEMA, inference_schema)
 workflow.add_node(INVOICE_DATA_CAPTURE, invoice_data_capture)
 workflow.add_node(GENERATE_CSV, generate_csv)
 
-# Entry point
-workflow.set_entry_point(CLASSIFY_DOCUMENTS)
+# # Entry point
+# workflow.set_entry_point(INFERENCE_SCHEMA)
 
-workflow.add_edge(CLASSIFY_DOCUMENTS, INVOICE_DATA_CAPTURE)
+# workflow.add_edge(INFERENCE_SCHEMA, INVOICE_DATA_CAPTURE)
+
+# workflow.add_edge(INVOICE_DATA_CAPTURE, GENERATE_CSV)
+
+# workflow.add_edge(GENERATE_CSV, END)
+
+workflow.set_entry_point(INFERENCE_SCHEMA)
+
+workflow.add_edge(INFERENCE_SCHEMA, INVOICE_DATA_CAPTURE)
 
 workflow.add_edge(INVOICE_DATA_CAPTURE, GENERATE_CSV)
 

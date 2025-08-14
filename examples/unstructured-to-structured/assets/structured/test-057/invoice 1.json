@@ -1,0 +1,218 @@
+{
+  "header": {
+    "document_title": {
+      "value": "Invoice",
+      "normalized_value": "Invoice",
+      "reason": "Large prominent text at top of document labeled 'Invoice' — matches schema synonyms 'title'/'document_type'. Located in top-center area.",
+      "confidence": 0.99
+    },
+    "vendor_name": {
+      "value": "Craigs' Landscaping",
+      "normalized_value": "Craigs' Landscaping",
+      "reason": "Top-left block directly under the document title lists the issuer name 'Craigs' Landscaping' — matches synonyms 'vendor','from','seller'.",
+      "confidence": 0.98
+    },
+    "vendor_address": {
+      "value": "123 Sierra Dr\nPalo Alto, CA 94028",
+      "normalized_value": "123 Sierra Dr, Palo Alto, CA 94028",
+      "reason": "Multi-line address beneath vendor name in the header block ('123 Sierra Dr' and 'Palo Alto, CA 94028'). Location and proximity indicate vendor address.",
+      "confidence": 0.97
+    },
+    "vendor_phone": {
+      "value": "123-456-7890",
+      "normalized_value": "123-456-7890",
+      "reason": "Right-side header contact block shows a phone number '123-456-7890' next to vendor contact details; mapped to vendor phone (synonyms: phone, tel).",
+      "confidence": 0.98
+    },
+    "vendor_email": {
+      "value": "craigslandscaping@email.com",
+      "normalized_value": "craigslandscaping@email.com",
+      "reason": "Right-side header contact block contains an email 'craigslandscaping@email.com' adjacent to phone and website; mapped to vendor_email and lowercased.",
+      "confidence": 0.99
+    },
+    "vendor_website": {
+      "value": "craigslandscaping.com",
+      "normalized_value": "http://craigslandscaping.com",
+      "reason": "Right-side header contact block shows 'craigslandscaping.com' near other contact details; mapped to vendor_website (synonym: web/url). Normalized by prefixing http:// for clarity.",
+      "confidence": 0.95
+    }
+  },
+  "recipient": {
+    "client_name": {
+      "value": "Smith Enterprises",
+      "normalized_value": "Smith Enterprises",
+      "reason": "Left-column blue block labeled 'Bill To' contains the recipient name 'Smith Enterprises' — matches synonyms 'Bill To','issued_to','client'.",
+      "confidence": 0.99
+    },
+    "client_address": {
+      "value": "456 Sierra Dr\nPalo Alto, CA 94028",
+      "normalized_value": "456 Sierra Dr, Palo Alto, CA 94028",
+      "reason": "Address lines under 'Bill To' in the left blue block show '456 Sierra Dr' and 'Palo Alto, CA 94028'; mapped to billing address.",
+      "confidence": 0.98
+    }
+  },
+  "invoice_details": {
+    "invoice_number": {
+      "value": "12345",
+      "normalized_value": "12345",
+      "reason": "Right side of the blue details block is labeled 'Invoice # 12345' — direct mapping to invoice identifier ('invoice_no', 'Invoice #').",
+      "confidence": 0.99
+    },
+    "terms": {
+      "value": "Net 30",
+      "normalized_value": "Net 30",
+      "reason": "Within the invoice details block the line 'Terms Net 30' indicates payment terms; mapped to 'terms' field (synonym: payment_terms).",
+      "confidence": 0.97
+    },
+    "invoice_date": {
+      "value": "08/01/2024",
+      "normalized_value": "2024-08-01",
+      "reason": "Invoice details block contains 'Invoice date 08/01/2024' — date normalized to ISO-8601 (YYYY-MM-DD).",
+      "confidence": 0.99
+    },
+    "due_date": {
+      "value": "08/31/2024",
+      "normalized_value": "2024-08-31",
+      "reason": "Invoice details block contains 'Due date 08/31/2024' — date normalized to ISO-8601 (YYYY-MM-DD).",
+      "confidence": 0.99
+    }
+  },
+  "line_items": {
+    "items": {
+      "value": [
+        {
+          "description": "Stone work",
+          "quantity": "3.4",
+          "unit_price": "$125",
+          "amount": "$425"
+        },
+        {
+          "description": "Mulching, weeding, planting",
+          "quantity": "3",
+          "unit_price": "$75",
+          "amount": "$225"
+        }
+      ],
+      "normalized_value": [
+        {
+          "description": "Stone work",
+          "quantity": 3.4,
+          "unit_price": 125.0,
+          "amount": 425.0,
+          "currency": "$"
+        },
+        {
+          "description": "Mulching, weeding, planting",
+          "quantity": 3.0,
+          "unit_price": 75.0,
+          "amount": 225.0,
+          "currency": "$"
+        }
+      ],
+      "reason": "Tabular area under headers 'Product/Services', 'Qty/Hrs', 'Rate', 'Amount' contains two rows. Mapped each row to an item object; numeric fields normalized to numbers and currency symbol noted.",
+      "confidence": 0.98
+    },
+    "item_description": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "Multiple line-item descriptions are present as an array in 'items'. The single-field 'item_description' is not applicable when using items[].",
+      "confidence": 0.5
+    },
+    "item_quantity": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "Quantities are provided per-row in items[] ('3.4', '3'). The single 'item_quantity' field is not populated to avoid inventing a single representative value.",
+      "confidence": 0.5
+    },
+    "item_unit_price": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "Unit prices are captured per-row in items[]. The generic 'item_unit_price' field is left null because multiple values exist in the table.",
+      "confidence": 0.5
+    },
+    "item_amount": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "Line amounts are provided per-row in items[]. The single-field 'item_amount' is not used to avoid ambiguity.",
+      "confidence": 0.5
+    }
+  },
+  "financial_summary": {
+    "subtotal": {
+      "value": "$650.00",
+      "normalized_value": 650.0,
+      "reason": "Right-side summary shows 'Subtotal $650.00' below the items table — mapped to subtotal and normalized to numeric value without currency separators.",
+      "confidence": 0.99
+    },
+    "discount": {
+      "value": "-$65.00",
+      "normalized_value": -65.0,
+      "reason": "Summary line labeled 'Discount' shows '-$65.00'. Mapped to discount; normalized to negative numeric value -65.00 as shown.",
+      "confidence": 0.98
+    },
+    "tax_rate": {
+      "value": "8.5%",
+      "normalized_value": 8.5,
+      "reason": "Summary line is labeled 'Tax 8.5%' indicating the tax rate. Normalized to numeric percent value 8.5 (percent).",
+      "confidence": 0.98
+    },
+    "tax_amount": {
+      "value": "$49.73",
+      "normalized_value": 49.73,
+      "reason": "Tax monetary amount shown in summary as '$49.73' adjacent to the 'Tax 8.5%' label; normalized to numeric amount 49.73.",
+      "confidence": 0.99
+    },
+    "total": {
+      "value": "$634.73",
+      "normalized_value": 634.73,
+      "reason": "Bottom-right bold summary line labeled 'Total' shows '$634.73' which is the final amount due; normalized to numeric 634.73.",
+      "confidence": 0.99
+    },
+    "currency": {
+      "value": "$",
+      "normalized_value": "USD",
+      "reason": "Monetary values in the document use the dollar sign '$' across amounts; normalized to currency code 'USD'.",
+      "confidence": 0.98
+    }
+  },
+  "payment_and_bank_details": {
+    "payment_instructions": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No explicit 'Pay To' or bank transfer/payment instruction block is present in this document image; field set to null per requirement to not invent values.",
+      "confidence": 0.95
+    },
+    "bank_name": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No bank name or 'Pay To' institution is visible in the provided document.",
+      "confidence": 0.95
+    },
+    "bank_account_name": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No account holder name or account name is visible in a payment block on this invoice.",
+      "confidence": 0.95
+    },
+    "bank_account_number": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No bank account number or IBAN is present in the document; left null to avoid invention.",
+      "confidence": 0.95
+    }
+  },
+  "metadata": {
+    "notes": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No separate free-form 'Notes' or memo block is present in the visible area of this document image; nearby text are addresses and invoice details which have been mapped elsewhere.",
+      "confidence": 0.95
+    },
+    "document_page_number": {
+      "value": null,
+      "normalized_value": null,
+      "reason": "No page number or pagination visible on the provided single-page invoice; set to null.",
+      "confidence": 0.99
+    }
+  }
+}

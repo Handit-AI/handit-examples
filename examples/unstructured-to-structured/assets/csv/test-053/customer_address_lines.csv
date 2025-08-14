@@ -1,0 +1,5 @@
+source_file,address_line
+invoice 1.json,456 Sierra Dr
+invoice 1.json,"Palo Alto, CA 94028"
+invoice 2.json,Thynk Unlimited
+invoice 2.json,"123 Anywhere St., Any City"

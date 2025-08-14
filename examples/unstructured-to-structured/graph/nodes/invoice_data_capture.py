@@ -47,15 +47,15 @@ def invoice_data_capture(state: GraphState) -> Dict[str, Any]:
     print("🔄 Starting invoice data capture...")
     
     session_id = state.get("session_id")
-    invoices_paths = state.get("invoices_paths", [])
+    invoices_paths = state.get("unstructured_paths", [])
     execution_id = state.get("execution_id")
     
     if not invoices_paths:
-        print("⚠️ No invoices found to process")
+        print("⚠️ No documents found to process")
         return {
             **state,
             "structured_json_paths": [],
-            "errors": state.get("errors", []) + ["No invoices found to process"]
+            "errors": state.get("errors", []) + ["No documents found to process"],
         }
     
     # Create structured output directory
@@ -66,6 +66,22 @@ def invoice_data_capture(state: GraphState) -> Dict[str, Any]:
     structured_json_paths = []
     processing_errors = []
     
+    # Required inferred schema to drive mapping
+    inferred_schema = state.get("inferred_schema")
+    if not inferred_schema:
+        print("❌ Missing inferred_schema in state; cannot perform mapping.")
+        return {
+            **state,
+            "structured_json_paths": [],
+            "errors": state.get("errors", []) + ["Missing inferred_schema in state"],
+        }
+    # Ensure schema is JSON-serializable for the mapping prompt
+    try:
+        schema_json = inferred_schema.model_dump() if hasattr(inferred_schema, "model_dump") else inferred_schema
+    except Exception:
+        schema_json = inferred_schema
+    schema_json_text = json.dumps(schema_json, ensure_ascii=False)
+
     for i, invoice_path in enumerate(invoices_paths):
         try:
             print(f"\n🔄 Processing invoice {i+1}/{len(invoices_paths)}: {Path(invoice_path).name}")
@@ -81,6 +97,7 @@ def invoice_data_capture(state: GraphState) -> Dict[str, Any]:
             file_path = Path(invoice_path)
             extension = file_path.suffix.lower()
             
+            preface = "Map the document to the provided schema. Analyze layout first, use synonyms/semantic similarity; include reasons."
             if extension in ['.png', '.jpg', '.jpeg', '.gif', '.bmp']:
                 # For images, create multimodal input similar to openai_client.py
                 try:
@@ -90,7 +107,7 @@ def invoice_data_capture(state: GraphState) -> Dict[str, Any]:
                     # Build LangChain multimodal message
                     messages = [
                         HumanMessage(content=[
-                            {"type": "text", "text": "Extract the requested invoice data following the system rules and schema."},
+                            {"type": "text", "text": preface},
                             {"type": "image_url", "image_url": {"url": f"data:image/{extension[1:]};base64,{base64.b64encode(image_bytes).decode('utf-8')}"}},
                         ])
                     ]
@@ -102,13 +119,17 @@ def invoice_data_capture(state: GraphState) -> Dict[str, Any]:
                     processing_errors.append(error_msg)
                     continue
                     
+            elif extension == '.pdf':
+                # PDFs: pass as a marker; recommend page rendering in future
+                messages = [HumanMessage(content=f"{preface}\n\n[PDF_FILE] {file_path.name}")]
+                print(f"📄 PDF file detected: {extension}")
             else:
                 # For text files, read directly
                 try:
                     with open(invoice_path, 'r', encoding='utf-8') as f:
                         text = f.read()
                     # Build text message
-                    messages = [HumanMessage(content=f"Extract invoice data using the system rules and schema.\n\nDocument name: {file_path.name}\n\nContent:\n{text}")]
+                    messages = [HumanMessage(content=f"{preface}\n\nDocument name: {file_path.name}\n\nContent:\n{text}")]
                     print(f"📄 Text file detected: {extension}")
                     
                 except UnicodeDecodeError:
@@ -128,12 +149,12 @@ def invoice_data_capture(state: GraphState) -> Dict[str, Any]:
             print("🤖 Invoking invoice data extractor...")
             
             # Call the invoice data extraction chain with multimodal messages
-            extraction_result = invoice_data_extractor.invoke({"messages": messages})
+            extraction_result = invoice_data_extractor.invoke({"messages": messages, "schema_json": schema_json_text})
             
             print("✅ Invoice data extraction completed successfully!")
             
             # Convert to dictionary for JSON serialization
-            result_dict = extraction_result.model_dump()
+            result_dict = extraction_result if isinstance(extraction_result, dict) else getattr(extraction_result, "model_dump", lambda: {} )()
             
             # Create output filename
             original_filename = Path(invoice_path).stem  # Remove extension
@@ -159,11 +180,8 @@ def invoice_data_capture(state: GraphState) -> Dict[str, Any]:
             
             # Track the LLM call
             tracker.track_node(
-                 input={
-                    "user_prompt": messages,
-                }
-                 ,
-                 output={"llm_result": extraction_result},
+                 input="hola",
+                 output=result_dict,
                  node_name="invoice_data_capture",
                  agent_name="unstructured_to_structured",
                  node_type="llm",

@@ -1,0 +1,47 @@
+source_file,raw_text_block
+invoice 1.json,Invoice
+invoice 1.json,Craigs' Landscaping
+invoice 1.json,123 Sierra Dr
+invoice 1.json,"Palo Alto, CA 94028"
+invoice 1.json,123-456-7890
+invoice 1.json,craigslandscaping@email.com
+invoice 1.json,craigslandscaping.com
+invoice 1.json,Bill To
+invoice 1.json,Smith Enterprises
+invoice 1.json,456 Sierra Dr
+invoice 1.json,"Palo Alto, CA 94028"
+invoice 1.json,Invoice Details
+invoice 1.json,Invoice # 12345
+invoice 1.json,Terms Net 30
+invoice 1.json,Invoice date 08/01/2024
+invoice 1.json,Due date 08/31/2024
+invoice 1.json,Product/Services    Qty/Hrs    Rate    Amount
+invoice 1.json,Stone work          3.4        $125    $425
+invoice 1.json,"Mulching, weeding,  3          $75     $225"
+invoice 1.json,planting
+invoice 1.json,Subtotal            $650.00
+invoice 1.json,Discount            -$65.00
+invoice 1.json,Tax 8.5%            $49.73
+invoice 1.json,Total               $634.73
+invoice 2.json,INVOICE
+invoice 2.json,ISSUED TO:
+invoice 2.json,Richard Sanchez
+invoice 2.json,Thynk Unlimited
+invoice 2.json,"123 Anywhere St., Any City"
+invoice 2.json,PAY TO:
+invoice 2.json,Borcele Bank
+invoice 2.json,Account Name: Adeline Palmerston
+invoice 2.json,Account No.: 0123 4567 8901
+invoice 2.json,INVOICE NO: 01234
+invoice 2.json,DATE: 11.02.2030
+invoice 2.json,DUE DATE: 11.03.2030
+invoice 2.json,DESCRIPTION    UNIT PRICE    QTY    TOTAL
+invoice 2.json,Brand consultation    100    1    $100
+invoice 2.json,logo design    100    1    $100
+invoice 2.json,Website design    100    1    $100
+invoice 2.json,Social media templates    100    1    $100
+invoice 2.json,Brand photography    100    1    $100
+invoice 2.json,Brand guide    100    1    $100
+invoice 2.json,SUBTOTAL    $400
+invoice 2.json,Tax    10%
+invoice 2.json,TOTAL    $440
