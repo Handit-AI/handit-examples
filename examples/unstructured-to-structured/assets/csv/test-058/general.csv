@@ -1,4 +1,0 @@
-source_file,vendor_name,vendor_address,vendor_phone,vendor_email,vendor_website,customer_name,customer_address,invoice_number,invoice_date,due_date,terms,line_item_description,line_item_quantity,line_item_unit_price,line_item_total,payment_pay_to,payment_bank_account_name,payment_bank_account_number,totals_subtotal,totals_discount,totals_tax_rate,totals_tax_amount,totals_total,totals_currency,metadata_document_title,metadata_notes,metadata_layout_region
-invoice 1.json,Craigs' Landscaping,"123 Sierra Dr, Palo Alto, CA 94028",123-456-7890,craigslandscaping@email.com,craigslandscaping.com,Smith Enterprises,"456 Sierra Dr, Palo Alto, CA 94028",12345,2024-08-01,2024-08-31,Net 30,,,,,,,,650.0,-65.0,8.5,49.73,634.73,USD,Invoice,,
-invoice 2.json,,,,,,Richard Sanchez,"Thynk Unlimited
-123 Anywhere St., Any City",01234,2030-02-11,2030-03-11,,,,,,Borcele Bank,Adeline Palmerston,012345678901,400.0,,0.1,,440.0,$,Invoice,,

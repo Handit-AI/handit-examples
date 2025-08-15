@@ -1,9 +1,0 @@
-source_file,header
-invoice 1.json,description
-invoice 1.json,quantity
-invoice 1.json,unit_price
-invoice 1.json,amount
-invoice 2.json,description
-invoice 2.json,unit_price
-invoice 2.json,qty
-invoice 2.json,total

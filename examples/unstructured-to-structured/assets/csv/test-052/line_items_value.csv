@@ -1,9 +1,0 @@
-source_file,source_filename,description,description_normalized,quantity,quantity_normalized,rate,rate_normalized,amount,amount_normalized,currency,currency_normalized,unit_price,total
-invoice 1.json,,Stone work,Stone work,3.4,3.4,$125,125.0,$425,425.0,,$,,
-invoice 1.json,,"Mulching, weeding, planting","Mulching, weeding, planting",3.0,3.0,$75,75.0,$225,225.0,,$,,
-invoice 2.json,,Brand consultation,,1.0,,,,,,$,,100.0,100.0
-invoice 2.json,,logo design,,1.0,,,,,,$,,100.0,100.0
-invoice 2.json,,Website design,,1.0,,,,,,$,,100.0,100.0
-invoice 2.json,,Social media templates,,1.0,,,,,,$,,100.0,100.0
-invoice 2.json,,Brand photography,,1.0,,,,,,$,,100.0,100.0
-invoice 2.json,,Brand guide,,1.0,,,,,,$,,100.0,100.0
