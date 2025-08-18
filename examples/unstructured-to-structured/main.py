@@ -123,7 +123,7 @@ async def bulk_unstructured_to_structured(
     logger.info(f"📄 Uploading {len(files)} files")
 
     # Start tracing
-    tracing_response = tracker.start_tracing(agent_name="unstructured_to_structured")
+    tracing_response = tracker.start_tracing(agent_name="unstructured_to_structured_csv")
     execution_id = tracing_response.get("executionId")
     
     try:
@@ -181,7 +181,7 @@ async def bulk_unstructured_to_structured(
         logger.info(f"✨ File upload completed successfully - {len(saved_files)} files saved to {session_dir}")
 
         # End tracing
-        tracker.end_tracing(execution_id=execution_id, agent_name="unstructured_to_structured")
+        tracker.end_tracing(execution_id=execution_id, agent_name="unstructured_to_structured_csv")
 
         return response
         

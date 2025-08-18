@@ -8,7 +8,7 @@ Welcome to the official examples repository for [Handit.ai](https://www.handit.a
 
 An AI-powered tool that automatically converts messy, unstructured documents into clean, structured data and CSV tables. Perfect for processing invoices, purchase orders, contracts, medical reports, and any other document types.
 
-![Document Processing](examples/unstructured-to-structured/graph.png)
+![Document Processing](/examples/unstructured-to-structured/assets/cover/cover.png)
 
 **Key Features:**
 - **Schema Inference**: AI analyzes documents and creates optimal JSON structure

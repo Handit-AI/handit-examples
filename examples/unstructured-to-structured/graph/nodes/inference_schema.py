@@ -107,7 +107,7 @@ def inference_schema(state: GraphState) -> Dict[str, Any]:
             input="hola",
             output= inferred_schema,
             node_name="inference_schema",
-            agent_name="unstructured_to_structured",
+            agent_name="unstructured_to_structured_csv",
             node_type="llm",
             execution_id=execution_id,
         )
