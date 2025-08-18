@@ -1,5 +1,7 @@
-from typing import List, Optional
-from pydantic import BaseModel, Field
+"""
+Data Shaping Assistant Chain - Returns structured data tables
+"""
+
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableSequence
 from langchain_openai import ChatOpenAI
@@ -12,73 +14,80 @@ load_dotenv()
 model_name = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 llm = ChatOpenAI(model=model_name, temperature=0)
 
+system = """You are a data shaping assistant.
 
-class ColumnSpec(BaseModel):
-    name: str = Field(description="Column name to appear in the CSV (lower_snake_case)")
-    value_path: str = Field(
-        description="Dot path to the field in the JSON. For arrays, reference current item with '.' prefix, e.g., '.description.value' or '.price.normalized_value'"
-    )
-    prefer_normalized: bool = Field(
-        default=True, description="If true, prefer normalized_value when available; fallback to value"
-    )
-    description: Optional[str] = Field(default=None, description="Brief explanation for what the column represents")
+You are given a set of JSON documents with the same schema (same keys & depth).
 
+Your job is to analyze the documents and create 1..N CSV tables that include ALL the data from the files, but omit any 'reason' or 'confidence' values.
 
-class TableSpec(BaseModel):
-    name: str = Field(description="CSV/table file name without extension (lower_snake_case)")
-    row_scope: str = Field(
-        description="Either 'per_document' or 'per_array'. If 'per_array', specify array_path"
-    )
-    array_path: Optional[str] = Field(
-        default=None, description="When row_scope is 'per_array', dot path to array (e.g., 'line_items')"
-    )
-    columns: List[ColumnSpec] = Field(description="Columns to include in the table")
-    rationale: Optional[str] = Field(default=None, description="Reasoning for this table design")
+IMPORTANT: You must analyze the actual structure of the documents provided and create tables based on what you find, not on assumptions.
 
+CRITICAL EXTRACTION RULES:
+- ALWAYS check for "normalized_value" first, then "value" if normalized_value is null/empty
+- If a field has both "normalized_value" and "value", prefer "normalized_value"
+- If "normalized_value" is null/empty, use "value"
+- Double check the data, if the data is correct
+- Extract the actual string/number values, not the field objects
 
-class CsvPlan(BaseModel):
-    tables: List[TableSpec] = Field(description="List of tables to generate")
-    rationale: Optional[str] = Field(default=None, description="High-level plan reasoning")
+Rules:
+- Analyze the actual JSON structure provided in the documents
+- Create as many tables as needed to organize the data clearly
+- Include ALL data fields from the documents (except reason/confidence)
+- Skip 'reason' and 'confidence' fields completely
+- Prefer 'normalized_value' over 'value' when both exist
+- Make table and column names clear and descriptive
+- Use lower_snake_case for naming
+- If you see arrays, consider if they should be separate tables
+- If you see nested objects, consider if they should be flattened or separate tables
+- Be smart about data organization - group related fields together
 
+ALWAYS create a "general" table first that gives an overview of all documents.
 
-# Parsing the answer
-structured_plan = llm.with_structured_output(CsvPlan)
+Output format:
+Return a JSON object with this structure:
+{{
+  "tables": [
+    {{
+      "name": "general",
+      "description": "Overview of all documents",
+      "data_dict": {{
+        "column_name": ["value1", "value2", "value3"],
+        "another_column": ["value1", "value2", "value3"]
+      }}
+    }},
+    {{
+      "name": "table_name",
+      "description": "What this table contains",
+      "data_dict": {{
+        "column_name": ["value1", "value2", "value3"],
+        "another_column": ["value1", "value2", "value3"]
+      }}
+    }}
+  ]
+}}
 
-system = """
-You are a data modeling expert. Analyze a set of structured JSON documents (roots can vary; do not assume fixed top-level keys). Design CSV tables to present all available data clearly.
+IMPORTANT: Each table must have a "data_dict" field with the actual data in the format:
+data_dict = {{
+    "Producto": ["Laptop", "Mouse", "Teclado"],
+    "Precio": [1200, 25, 45],
+    "Stock": [10, 200, 150]
+}}
 
-Requirements:
-- Always include a primary table named 'general' with row_scope='per_document'. Map as many scalar fields as possible per document into this table (non-arrays). Arrays should be handled in additional tables.
-- Add as many extra tables as needed for readability (e.g., per_array tables for repeated elements) so that all data across documents is visible and well organized.
-- For every cell: prefer normalized_value when present; otherwise use value; if neither exists or is null, leave the cell empty. Never include 'reason' or 'confidence'. Never place objects/arrays in a cell.
-- Use lower_snake_case for table and column names.
-- For per_array tables, create one row per array element. When referencing fields of the current item, use '.field.subfield' and target scalar subfields such as '.amount.normalized_value'.
-
-Output:
-- Return JSON matching the CsvPlan schema. For each TableSpec: set name, row_scope, optional array_path, and columns where each column has name, value_path, prefer_normalized.
-- value_path must reference a scalar location (e.g., '*.normalized_value' or '*.value').
-- array_path must be the dot path of the array (omit '[]' from the path).
-"""
+The LLM must extract the actual values from the documents and populate these lists, don't invent values."""
 
 user = """
-You will receive an inventory of documents that lists flattened field paths and sample values/types for all provided structured_json_paths. Use only this inventory to decide paths; do not assume fixed roots.
+Analyze these documents and create CSV tables with structured data:
 
-Goals:
-- Design a set of tables that makes all document data visible and well organized.
-- Always include a 'general' per_document table and add any extra tables you deem useful (especially per_array tables) to cover arrays and improve readability.
-- For each field, use normalized_value if present; else value; if both are missing/null, the cell should be empty. Never include reason or confidence.
-- Ensure every field path appears in at least one table.
-
-Inventory:
+Documents:
 {documents_inventory}
+
+Return only the JSON with the table structure and data_dict for each table.
 """
 
-generation_prompt = ChatPromptTemplate.from_messages(
-    [
-        ("system", system),
-        ("user", user),
-    ]
-)
+generation_prompt = ChatPromptTemplate.from_messages([
+    ("system", system),
+    ("user", user),
+])
 
 # Public chain export
-csv_generation_planner: RunnableSequence = generation_prompt | structured_plan
+csv_generation_planner: RunnableSequence = generation_prompt | llm

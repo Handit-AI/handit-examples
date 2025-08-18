@@ -183,7 +183,7 @@ def invoice_data_capture(state: GraphState) -> Dict[str, Any]:
                  input="hola",
                  output=result_dict,
                  node_name="invoice_data_capture",
-                 agent_name="unstructured_to_structured",
+                 agent_name="unstructured_to_structured_csv",
                  node_type="llm",
                  execution_id=execution_id
             )    
