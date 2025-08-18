@@ -181,3 +181,8 @@ temp/
 tmp/
 *.tmp
 *.temp
+
+# Exceptions for important images
+!cover.png
+!assets/cover/
+!assets/cover/*.png
