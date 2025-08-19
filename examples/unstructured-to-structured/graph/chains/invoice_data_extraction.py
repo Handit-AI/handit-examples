@@ -47,3 +47,11 @@ parser = JsonOutputParser()
 
 # Public chain export (returns dict)
 invoice_data_extractor: RunnableSequence = mapping_prompt | llm | parser
+
+def get_system_prompt() -> str:
+    """Get the mapping system prompt for external use (e.g., tracking)"""
+    return mapping_system
+
+def get_user_prompt() -> str:
+    """Get the user template for external use (e.g., tracking)"""
+    return user_template

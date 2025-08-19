@@ -1,5 +1,5 @@
 """
-Simple CSV Generation Node for LangGraph - Prints structured tables to console
+CSV Generation Node for LangGraph
 """
 
 import json
@@ -9,147 +9,12 @@ from typing import Any, Dict, List
 import pandas as pd
 from graph.state import GraphState
 from graph.chains.generation import csv_generation_planner
+# Get system and user prompts from the chain
+from graph.chains.generation import get_system_prompt, get_user_prompt
+# Handit.ai
 from services.handit_service import tracker
 
 logger = logging.getLogger(__name__)
-
-
-def _collect_documents_summary(structured_json_paths: List[str]) -> str:
-    """Create a comprehensive summary of documents for the LLM to analyze."""
-    summaries = []
-    
-    for json_path in structured_json_paths:
-        try:
-            with open(json_path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            
-            filename = Path(json_path).name
-            summary = f"=== DOCUMENT: {filename} ===\n"
-            
-            # Analyze document structure
-            if isinstance(data, dict):
-                summary += f"Type: Dictionary with {len(data)} top-level keys\n"
-                summary += f"Top-level keys: {list(data.keys())}\n\n"
-                
-                # Show structure of each top-level key
-                for key, value in data.items():
-                    if key in ['reason', 'confidence']:
-                        continue
-                    
-                    if isinstance(value, dict):
-                        if "normalized_value" in value or "value" in value:
-                            # This is a field object
-                            nv = value.get("normalized_value")
-                            v = value.get("value")
-                            summary += f"  {key}: FIELD_OBJECT"
-                            if nv is not None:
-                                summary += f" (normalized_value: {nv}, type: {type(nv).__name__})"
-                            elif v is not None:
-                                summary += f" (value: {v}, type: {type(v).__name__})"
-                            else:
-                                summary += f" (empty field object)"
-                            summary += "\n"
-                        else:
-                            # Regular nested object
-                            summary += f"  {key}: NESTED_OBJECT with keys: {list(value.keys())}\n"
-                    elif isinstance(value, list):
-                        summary += f"  {key}: ARRAY with {len(value)} items"
-                        if value:
-                            first_item = value[0]
-                            if isinstance(first_item, dict):
-                                summary += f" (first item keys: {list(first_item.keys())})"
-                            else:
-                                summary += f" (first item: {first_item})"
-                        summary += "\n"
-                    else:
-                        summary += f"  {key}: {type(value).__name__} = {value}\n"
-                
-                # Show some sample nested structures
-                summary += "\nSample nested structures:\n"
-                for key, value in data.items():
-                    if key in ['reason', 'confidence']:
-                        continue
-                    
-                    if isinstance(value, dict) and len(value) > 0:
-                        sample_key = list(value.keys())[0]
-                        sample_value = value[sample_key]
-                        summary += f"  {key}.{sample_key}: {type(sample_value).__name__} = {sample_value}\n"
-                    elif isinstance(value, list) and len(value) > 0:
-                        first_item = value[0]
-                        if isinstance(first_item, dict) and len(first_item) > 0:
-                            sample_key = list(first_item.keys())[0]
-                            sample_value = first_item[sample_key]
-                            summary += f"  {key}[0].{sample_key}: {type(sample_value).__name__} = {sample_value}\n"
-                
-            elif isinstance(data, list):
-                summary += f"Type: Array with {len(data)} items\n"
-                if data:
-                    first_item = data[0]
-                    if isinstance(first_item, dict):
-                        summary += f"First item keys: {list(first_item.keys())}\n"
-                    else:
-                        summary += f"First item: {first_item}\n"
-            else:
-                summary += f"Type: {type(data).__name__} = {data}\n"
-            
-            summaries.append(summary)
-            
-        except Exception as e:
-            summaries.append(f"File: {json_path} - Error: {e}")
-    
-    return "\n\n".join(summaries)
-
-
-def _print_table_to_console(table: Dict[str, Any]) -> None:
-    """Print a table to console in a nice format."""
-    table_name = table.get("name", "unknown")
-    description = table.get("description", "No description")
-    data_dict = table.get("data_dict", {})
-    
-    print(f"\n{'='*60}")
-    print(f"📊 TABLE: {table_name.upper()}")
-    print(f"📝 Description: {description}")
-    print(f"{'='*60}")
-    
-    if not data_dict:
-        print("⚠️  No data found in table")
-        return
-    
-    # Get column names and data
-    columns = list(data_dict.keys())
-    if not columns:
-        print("⚠️  No columns found in table")
-        return
-    
-    # Get the length of the longest list to determine number of rows
-    max_rows = max(len(data_dict[col]) for col in columns if isinstance(data_dict[col], list))
-    
-    if max_rows == 0:
-        print("⚠️  No data rows found in table")
-        return
-    
-    # Print header
-    header = " | ".join(f"{col:20}" for col in columns)
-    print(header)
-    print("-" * len(header))
-    
-    # Print data rows
-    for i in range(max_rows):
-        row_data = []
-        for col in columns:
-            if isinstance(data_dict[col], list) and i < len(data_dict[col]):
-                value = str(data_dict[col][i])
-                if len(value) > 18:
-                    value = value[:15] + "..."
-                row_data.append(f"{value:20}")
-            else:
-                row_data.append(f"{'N/A':20}")
-        
-        print(" | ".join(row_data))
-    
-    print(f"\n📊 Total rows: {max_rows}")
-    print(f"📊 Total columns: {len(columns)}")
-    print(f"{'='*60}\n")
 
 
 def _save_tables_to_csv(tables: List[Dict[str, Any]], output_dir: Path) -> List[str]:
@@ -191,6 +56,11 @@ def generate_csv(state: GraphState) -> Dict[str, Any]:
         # Get data from state
         session_id = state.get("session_id")
         structured_json_paths = state.get("structured_json_paths", [])
+
+        # App name for tracing
+        agent_name = state.get("agent_name")
+
+        # Execution id for tracing
         execution_id = state.get("execution_id")
         
         if not structured_json_paths:
@@ -202,15 +72,31 @@ def generate_csv(state: GraphState) -> Dict[str, Any]:
         
         logger.info(f"📊 Processing {len(structured_json_paths)} JSON files")
         
-        # Step 1: Create document summary for LLM
-        documents_summary = _collect_documents_summary(structured_json_paths)
-        logger.info("📋 Created document summary for LLM")
+        # Step 1: Load all JSON files completely for LLM
+        all_json_data = []
+        for json_path in structured_json_paths:
+            try:
+                with open(json_path, "r", encoding="utf-8") as f:
+                    json_data = json.load(f)
+                
+                filename = Path(json_path).name
+                all_json_data.append({
+                    "filename": filename,
+                    "data": json_data
+                })
+                logger.info(f"📄 Loaded complete JSON: {filename}")
+                
+            except Exception as e:
+                logger.error(f"❌ Error loading JSON file {json_path}: {e}")
+                continue
         
-        # Step 2: Get structured tables from LLM
+        logger.info(f"📋 Loaded {len(all_json_data)} complete JSON files for LLM")
+        
+        # Step 2: Get structured tables from LLM with complete data
         try:
-            logger.info("🤖 Getting structured tables from LLM...")
+            logger.info("🤖 Getting structured tables from LLM with complete JSON data...")
             llm_response = csv_generation_planner.invoke({
-                "documents_inventory": documents_summary
+                "documents_inventory": all_json_data
             })
             
             logger.info(f"🤖 Raw LLM response: {llm_response}")
@@ -249,16 +135,13 @@ def generate_csv(state: GraphState) -> Dict[str, Any]:
             plan = _create_simple_plan(structured_json_paths)
             logger.info("📋 Using fallback plan")
         
-        # Step 3: Print tables to console
+        # Step 3: Print tables len to console
         tables = plan.get("tables", [])
         logger.info(f"📊 Found {len(tables)} tables to display")
         
         print(f"\n🚀 GENERATING STRUCTURED TABLES FOR SESSION: {session_id}")
         print(f"📁 Processing {len(structured_json_paths)} documents")
         print(f"📊 LLM generated {len(tables)} tables\n")
-        
-        for table in tables:
-            _print_table_to_console(table)
         
         # Step 4: Save tables to CSV files
         output_dir = Path(f"assets/csv/{session_id}")
@@ -269,12 +152,20 @@ def generate_csv(state: GraphState) -> Dict[str, Any]:
         logger.info(f"💾 Generated {len(generated_files)} CSV files")
         
         # Step 5: Track and return results
+        
+        # Prepare tracking input with complete JSON data
+        tracking_input = {
+            "systemPrompt": get_system_prompt(),
+            "userPrompt": get_user_prompt(),
+            "documents_inventory": all_json_data
+        }
+        
         tracker.track_node(
-            input="Table generation with LLM",
+            input=tracking_input,
             output={"tables": tables, "plan": plan, "generated_files": generated_files},
             node_name="generate_csv",
-            agent_name="unstructured_to_structured_csv",
-            node_type="table_generation",
+            agent_name=agent_name,
+            node_type="llm",
             execution_id=execution_id
         )
         

@@ -7,6 +7,7 @@ class GraphState(TypedDict, total=False):
     """Shared state passed between LangGraph nodes for ingestion.
 
     Keys:
+    - agent_name: Name of your App for tracing
     - session_id: Unique identifier for a processing session
     - json_paths: List of JSON file paths produced by processing
     - unstructured_paths: List of paths to uploaded unstructured files
@@ -19,6 +20,7 @@ class GraphState(TypedDict, total=False):
     - errors: Any non-fatal errors encountered during processing
     """
 
+    agent_name: str
     session_id: str
     json_paths: List[str]
     unstructured_paths: List[str]

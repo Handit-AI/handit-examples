@@ -91,3 +91,11 @@ generation_prompt = ChatPromptTemplate.from_messages([
 
 # Public chain export
 csv_generation_planner: RunnableSequence = generation_prompt | llm
+
+def get_system_prompt() -> str:
+    """Get the generation system prompt for external use (e.g., tracking)"""
+    return system
+
+def get_user_prompt() -> str:
+    """Get the user template for external use (e.g., tracking)"""
+    return user

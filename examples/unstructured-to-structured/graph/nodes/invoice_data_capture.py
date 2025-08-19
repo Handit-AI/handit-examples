@@ -6,6 +6,11 @@ import base64
 from langchain_core.messages import HumanMessage
 from graph.chains.invoice_data_extraction import invoice_data_extractor
 from graph.state import GraphState
+
+# Get system and user prompts from the chain
+from graph.chains.invoice_data_extraction import get_system_prompt, get_user_prompt
+
+# Handit.ai
 from services.handit_service import tracker
 
 def read_document_content(file_path: str) -> str:
@@ -48,6 +53,10 @@ def invoice_data_capture(state: GraphState) -> Dict[str, Any]:
     
     session_id = state.get("session_id")
     invoices_paths = state.get("unstructured_paths", [])
+
+    # App name for tracing
+    agent_name = state.get("agent_name")
+    # Execution id for tracing
     execution_id = state.get("execution_id")
     
     if not invoices_paths:
@@ -137,7 +146,7 @@ def invoice_data_capture(state: GraphState) -> Dict[str, Any]:
                         # Try binary mode for other binary files
                         with open(invoice_path, 'rb') as f:
                             text = f"[BINARY_FILE: {file_path.name}] - Binary file, cannot extract text"
-                        messages = [HumanMessage(content=f"Extract invoice data using the system rules and schema.\n\nDocument name: {file_path.name}\n\nContent:\n{text}")]
+                        messages = [HumanMessage(content=f"Extract data using the system rules and schema.\n\nDocument name: {file_path.name}\n\nContent:\n{text}")]
                     except Exception as e:
                         error_msg = f"Error reading file {invoice_path}: {str(e)}"
                         print(f"❌ {error_msg}")
@@ -178,15 +187,52 @@ def invoice_data_capture(state: GraphState) -> Dict[str, Any]:
                 currency = result_dict["grand_total"].get("currency", "Unknown")
                 print(f"💰 Grand Total: {total} {currency}")
             
-            # Track the LLM call
+            # Extract images from the document if it's an image file
+            image_attachments = []
+            print(f"🔍 Processing images for document: {Path(invoice_path).name} (extension: {extension})")
+            
+            if extension in ['.png', '.jpg', '.jpeg', '.gif', '.bmp']:
+                try:
+                    with open(invoice_path, 'rb') as f:
+                        image_bytes = f.read()
+                    
+                    # Convert to base64 and create data URL (format that Handit.ai expects)
+                    base64_data = base64.b64encode(image_bytes).decode('utf-8')
+                    mime_type = f"image/{extension[1:]}" if extension[1:] != "jpg" else "image/jpeg"
+                    data_url = f"data:{mime_type};base64,{base64_data}"
+                    
+                    image_attachments.append(data_url)
+                    print(f"📸 Added image for tracking: {Path(invoice_path).name} ({len(data_url)} chars)")
+                    print(f"📸 Image MIME type: {mime_type}")
+                    print(f"📸 Base64 length: {len(base64_data)}")
+                    
+                except Exception as e:
+                    print(f"❌ Error processing image for tracking: {str(e)}")
+            else:
+                print(f"📄 No image processing needed for file type: {extension}")
+            
+            print(f"🖼️ Total images in this cycle: {len(image_attachments)}")
+            print(f"🖼️ Total len of this document: {len(data_url)}")
+            
+            # Prepare tracking input in the correct Handit.ai format
+            tracking_input = {
+                "systemPrompt": get_system_prompt(),
+                "userPrompt": get_user_prompt(),
+                "schema_json": schema_json_text,
+                "document": data_url,
+            }
+            
+            print(f"📤 Sending tracking data to Handit.ai:")
+            print(f"   - Document: {Path(invoice_path).name}")
+            
             tracker.track_node(
-                 input="hola",
+                 input=tracking_input,
                  output=result_dict,
                  node_name="invoice_data_capture",
-                 agent_name="unstructured_to_structured_csv",
+                 agent_name=agent_name,
                  node_type="llm",
                  execution_id=execution_id
-            )    
+            )
             
         except Exception as e:
             error_msg = f"Error processing invoice {i+1}: {str(e)}"
