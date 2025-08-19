@@ -76,3 +76,7 @@ schema_prompt = ChatPromptTemplate.from_messages(
 
 # Create the schema inference chain
 schema_inferencer: RunnableSequence = schema_prompt | structured_llm_schema
+
+def get_system_prompt() -> str:
+    """Get the system prompt for external use (e.g., tracking)"""
+    return system

@@ -4,7 +4,7 @@ import base64
 from pathlib import Path
 from langchain_core.messages import HumanMessage
 
-from graph.chains.document_inference import schema_inferencer
+from graph.chains.document_inference import schema_inferencer, get_system_prompt
 from graph.state import GraphState
 
 from services.handit_service import tracker
@@ -73,6 +73,11 @@ def inference_schema(state: GraphState) -> Dict[str, Any]:
 
     session_id = state["session_id"]
     unstructured_paths = state.get("unstructured_paths", [])
+
+    # App name for tracing
+    agent_name = state.get("agent_name")
+
+    # Execution id for tracing
     execution_id = state.get("execution_id")
 
     print(f"Session ID: {session_id}")
@@ -103,11 +108,64 @@ def inference_schema(state: GraphState) -> Dict[str, Any]:
 
 
         # Track the LLM call
+        system_prompt = get_system_prompt()
+        
+        # Create a clean version of user prompt for tracking (without heavy base64 data)
+        clean_user_prompt = []
+        for item in human_message.content:
+            if item["type"] == "text":
+                clean_user_prompt.append(item["text"])
+            # Remove image processing since images are sent separately
+        
+        user_prompt_summary = " | ".join(clean_user_prompt)
+        
+        # Print both prompts for debugging
+        print("🔧 SYSTEM PROMPT:")
+        print(system_prompt)
+        print("\n👤 USER PROMPT (CLEAN):")
+        print(user_prompt_summary)
+        print("\n" + "="*50)
+        
+        # Prepare input with images in the correct Handit.ai format
+        tracking_input = {
+            "systemPrompt": system_prompt,
+            "userPrompt": user_prompt_summary,
+            "images": []  # Will contain data URLs for each image
+        }
+        
+        # Add images as data URLs in the correct format
+        for file_path in unstructured_paths:
+            try:
+                if not os.path.exists(file_path):
+                    continue
+                    
+                p = Path(file_path)
+                ext = p.suffix.lower()
+                
+                # Only process image files
+                if ext in [".png", ".jpg", ".jpeg", ".gif", ".bmp"]:
+                    with open(p, "rb") as f:
+                        image_bytes = f.read()
+                    
+                    # Convert to base64 and create data URL (format that Handit.ai expects)
+                    base64_data = base64.b64encode(image_bytes).decode('utf-8')
+                    mime_type = f"image/{ext[1:]}" if ext[1:] != "jpg" else "image/jpeg"
+                    data_url = f"data:{mime_type};base64,{base64_data}"
+                    
+                    tracking_input["images"].append(data_url)
+                    print(f"📸 Added image: {p.name} ({len(data_url)} chars)")
+                    
+            except Exception as e:
+                print(f"❌ Error processing image {file_path}: {str(e)}")
+                continue
+        
+        print(f"🖼️ Total images in input: {len(tracking_input['images'])}")
+        
         tracker.track_node(
-            input="hola",
+            input=tracking_input,
             output= inferred_schema,
             node_name="inference_schema",
-            agent_name="unstructured_to_structured_csv",
+            agent_name= agent_name,
             node_type="llm",
             execution_id=execution_id,
         )

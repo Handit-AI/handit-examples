@@ -122,9 +122,13 @@ async def bulk_unstructured_to_structured(
     logger.info(f"🚀 File upload requested for session: {session_id}")
     logger.info(f"📄 Uploading {len(files)} files")
 
-    # Start tracing
-    tracing_response = tracker.start_tracing(agent_name="unstructured_to_structured_csv")
-    execution_id = tracing_response.get("executionId")
+    # Start tracing with Handit.ai
+    
+    agent_name = "unstructured_to_structured_data" # Set agent name for tracing, this is the name of your application
+    tracing_response = tracker.start_tracing(agent_name=agent_name)
+    execution_id = tracing_response.get("executionId") # Get execution id for tracing
+
+    logger.info(f"✅ Handit.ai Tracing running correctly with execution_id: {execution_id}")
     
     try:
         # Create session directory
@@ -164,9 +168,11 @@ async def bulk_unstructured_to_structured(
                 
             except Exception as e:
                 logger.error(f"❌ Error saving file {i+1}: {str(e)}")
+                 # End tracing
+                tracker.end_tracing(execution_id=execution_id, agent_name= agent_name) # When the workflow has finished, end tracing
 
         # Invoke LangGraph with full file paths
-        graph_result = langgraph_app.invoke(input={"session_id": session_id, "unstructured_paths": unstructured_paths, "execution_id": execution_id})        
+        graph_result = langgraph_app.invoke(input={"session_id": session_id, "unstructured_paths": unstructured_paths, "agent_name": agent_name, "execution_id": execution_id})        
         
         # Update response message
         response = BulkProcessingResponse(
@@ -181,12 +187,15 @@ async def bulk_unstructured_to_structured(
         logger.info(f"✨ File upload completed successfully - {len(saved_files)} files saved to {session_dir}")
 
         # End tracing
-        tracker.end_tracing(execution_id=execution_id, agent_name="unstructured_to_structured_csv")
+        tracker.end_tracing(execution_id=execution_id, agent_name=agent_name) # When the workflow has finished, end tracing
 
         return response
         
     except Exception as e:
         logger.error(f"💥 Error in file upload: {str(e)}")
+        # End tracing
+        tracker.end_tracing(execution_id=execution_id, agent_name=agent_name) # When the workflow has finished, end tracing
+
         return BulkProcessingResponse(
             message=f"Error uploading files: {str(e)}",
             status="error",
