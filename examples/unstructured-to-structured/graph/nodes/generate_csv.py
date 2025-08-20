@@ -1,5 +1,32 @@
 """
 CSV Generation Node for LangGraph
+
+This node processes structured JSON data from document extraction and generates
+organized CSV tables for data analysis and visualization. It uses AI-powered
+planning to create meaningful table structures from heterogeneous document data.
+
+The node performs intelligent table generation by:
+- Loading and analyzing structured JSON data from previous processing stages
+- Using AI to plan optimal table structures and groupings
+- Converting complex nested data into flat, tabular formats
+- Generating CSV files with proper data organization
+- Providing fallback plans when AI processing fails
+
+Key Features:
+- AI-powered table structure planning
+- Automatic CSV file generation
+- Fallback processing for robustness
+- Comprehensive logging and error handling
+- Integration with Handit.ai for tracking and monitoring
+- Support for various data structures and formats
+
+Processing Flow:
+1. Load structured JSON data from previous processing stage
+2. Use AI to plan optimal table structures
+3. Parse and validate AI-generated plans
+4. Convert data to tabular format
+5. Generate and save CSV files
+6. Track operations and return results
 """
 
 import json
@@ -18,7 +45,26 @@ logger = logging.getLogger(__name__)
 
 
 def _save_tables_to_csv(tables: List[Dict[str, Any]], output_dir: Path) -> List[str]:
-    """Save tables to CSV files and return list of generated file paths."""
+    """
+    Save tables to CSV files and return list of generated file paths.
+    
+    This function converts the AI-generated table plans into actual CSV files
+    using pandas DataFrame operations. It handles various data structures and
+    provides comprehensive error handling for each table.
+    
+    Args:
+        tables: List of table dictionaries containing name, description, and data_dict
+        output_dir: Directory path where CSV files will be saved
+        
+    Returns:
+        List[str]: List of file paths for successfully generated CSV files
+        
+    Table Structure Expected:
+        Each table should have:
+        - name: Table identifier (used for filename)
+        - description: Human-readable table description
+        - data_dict: Dictionary where keys are column names and values are lists of data
+    """
     generated_files = []
     
     for table in tables:
@@ -30,10 +76,11 @@ def _save_tables_to_csv(tables: List[Dict[str, Any]], output_dir: Path) -> List[
             continue
         
         try:
-            # Convert data_dict to DataFrame
+            # Convert data_dict to pandas DataFrame for CSV generation
+            # This handles the conversion from nested dictionary to tabular format
             df = pd.DataFrame(data_dict)
             
-            # Save to CSV
+            # Save DataFrame to CSV file with table name as filename
             csv_path = output_dir / f"{table_name}.csv"
             df.to_csv(csv_path, index=False)
             generated_files.append(str(csv_path))
@@ -48,21 +95,47 @@ def _save_tables_to_csv(tables: List[Dict[str, Any]], output_dir: Path) -> List[
 
 def generate_csv(state: GraphState) -> Dict[str, Any]:
     """
-    Generate structured tables using LLM, print them to console, and save as CSVs.
+    Generate structured tables using LLM, process them, and save as CSV files.
+    
+    This is the main function that orchestrates the complete CSV generation pipeline.
+    It loads structured JSON data, uses AI to plan table structures, converts data
+    to tabular format, and generates CSV files for data analysis.
+    
+    The function includes robust error handling with fallback plans when AI processing
+    fails, ensuring reliable CSV generation even in error conditions.
+    
+    Args:
+        state: GraphState containing session information and structured JSON paths
+        
+    Returns:
+        Dict[str, Any]: Updated state with CSV generation results, including:
+            - csv_generation_status: 'completed', 'skipped', or 'error'
+            - csv_generation_message: Human-readable status description
+            - generated_tables: AI-generated table structures
+            - llm_plan: Complete AI planning response
+            - csv_output_dir: Directory containing generated CSV files
+            - generated_csv_files: List of generated CSV file paths
+            
+    Processing Stages:
+        1. Data Loading: Load structured JSON data from previous processing
+        2. AI Planning: Use LLM to plan optimal table structures
+        3. Response Parsing: Handle various LLM response formats
+        4. Table Generation: Convert planned structures to actual tables
+        5. CSV Export: Save tables as CSV files
+        6. Tracking: Monitor operations with Handit.ai
     """
     logger.info("🔄 Starting table generation...")
     
     try:
-        # Get data from state
+        # Extract session and processing information from state
         session_id = state.get("session_id")
         structured_json_paths = state.get("structured_json_paths", [])
 
-        # App name for tracing
+        # App name and execution ID for Handit.ai observability
         agent_name = state.get("agent_name")
-
-        # Execution id for tracing
         execution_id = state.get("execution_id")
         
+        # Validate that structured JSON data is available for processing
         if not structured_json_paths:
             return {
                 **state,
@@ -72,7 +145,8 @@ def generate_csv(state: GraphState) -> Dict[str, Any]:
         
         logger.info(f"📊 Processing {len(structured_json_paths)} JSON files")
         
-        # Step 1: Load all JSON files completely for LLM
+        # Step 1: Load all JSON files completely for LLM processing
+        # This ensures the AI has access to complete document data for planning
         all_json_data = []
         for json_path in structured_json_paths:
             try:
@@ -93,6 +167,7 @@ def generate_csv(state: GraphState) -> Dict[str, Any]:
         logger.info(f"📋 Loaded {len(all_json_data)} complete JSON files for LLM")
         
         # Step 2: Get structured tables from LLM with complete data
+        # This is the core AI processing step that plans optimal table structures
         try:
             logger.info("🤖 Getting structured tables from LLM with complete JSON data...")
             llm_response = csv_generation_planner.invoke({
@@ -102,9 +177,10 @@ def generate_csv(state: GraphState) -> Dict[str, Any]:
             logger.info(f"🤖 Raw LLM response: {llm_response}")
             logger.info(f"🤖 Response type: {type(llm_response)}")
             
-            # Parse LLM response
+            # Parse LLM response with robust error handling
+            # Handle different response formats (AIMessage, string, structured object)
             if hasattr(llm_response, 'content'):
-                # This is an AIMessage, extract the content
+                # This is an AIMessage, extract the content for JSON parsing
                 response_content = llm_response.content
                 logger.info(f"🤖 Extracted content from AIMessage: {response_content}")
                 
@@ -116,7 +192,7 @@ def generate_csv(state: GraphState) -> Dict[str, Any]:
                     logger.info("📋 Using fallback plan")
                     plan = _create_simple_plan(structured_json_paths)
             elif isinstance(llm_response, str):
-                # Try to extract JSON from response
+                # Try to extract JSON from string response
                 try:
                     plan = json.loads(llm_response)
                     logger.info("✅ Successfully parsed JSON from LLM response")
@@ -125,41 +201,46 @@ def generate_csv(state: GraphState) -> Dict[str, Any]:
                     logger.info("📋 Using fallback plan")
                     plan = _create_simple_plan(structured_json_paths)
             else:
+                # Assume structured response (dict, list, etc.)
                 plan = llm_response
                 logger.info("✅ LLM returned structured response")
             
             logger.info(f"📋 Final plan: {json.dumps(plan, indent=2)}")
             
         except Exception as e:
+            # Comprehensive error handling for LLM processing failures
             logger.error(f"❌ LLM planning failed: {e}")
             plan = _create_simple_plan(structured_json_paths)
             logger.info("📋 Using fallback plan")
         
-        # Step 3: Print tables len to console
+        # Step 3: Extract table information from the AI-generated plan
         tables = plan.get("tables", [])
         logger.info(f"📊 Found {len(tables)} tables to display")
         
+        # Display processing summary to console
         print(f"\n🚀 GENERATING STRUCTURED TABLES FOR SESSION: {session_id}")
         print(f"📁 Processing {len(structured_json_paths)} documents")
         print(f"📊 LLM generated {len(tables)} tables\n")
         
-        # Step 4: Save tables to CSV files
+        # Step 4: Save tables to CSV files in organized directory structure
         output_dir = Path(f"assets/csv/{session_id}")
         output_dir.mkdir(parents=True, exist_ok=True)
         logger.info(f"💾 Output directory: {output_dir}")
         
+        # Generate CSV files from the planned table structures
         generated_files = _save_tables_to_csv(tables, output_dir)
         logger.info(f"💾 Generated {len(generated_files)} CSV files")
         
-        # Step 5: Track and return results
+        # Step 5: Track operations and prepare return results
         
-        # Prepare tracking input with complete JSON data
+        # Prepare tracking input with complete JSON data for Handit.ai monitoring
         tracking_input = {
             "systemPrompt": get_system_prompt(),
             "userPrompt": get_user_prompt(),
             "documents_inventory": all_json_data
         }
         
+        # Track the CSV generation operation for observability and debugging
         tracker.track_node(
             input=tracking_input,
             output={"tables": tables, "plan": plan, "generated_files": generated_files},
@@ -171,6 +252,7 @@ def generate_csv(state: GraphState) -> Dict[str, Any]:
         
         logger.info("✅ Table generation completed")
         
+        # Return comprehensive results including status, tables, and file information
         return {
             **state,
             'csv_generation_status': 'completed',
@@ -182,6 +264,7 @@ def generate_csv(state: GraphState) -> Dict[str, Any]:
         }
         
     except Exception as e:
+        # Global error handling for any unexpected failures
         logger.error(f"❌ Table generation failed: {e}")
         return {
             **state,
@@ -191,7 +274,25 @@ def generate_csv(state: GraphState) -> Dict[str, Any]:
 
 
 def _create_simple_plan(structured_json_paths: List[str]) -> Dict[str, Any]:
-    """Create a simple fallback plan with basic structure."""
+    """
+    Create a simple fallback plan with basic structure when AI processing fails.
+    
+    This function provides a robust fallback mechanism that ensures CSV generation
+    can continue even when the AI planning step encounters errors. It creates a
+    basic table structure that provides useful information about the processed
+    documents.
+    
+    Args:
+        structured_json_paths: List of paths to structured JSON files
+        
+    Returns:
+        Dict[str, Any]: Simple table plan with basic document overview
+        
+    Fallback Structure:
+        Creates a single "general" table with:
+        - source_file: Names of processed document files
+        - document_count: Total count of processed documents
+    """
     return {
         "tables": [
             {

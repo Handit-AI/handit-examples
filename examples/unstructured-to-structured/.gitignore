@@ -186,3 +186,11 @@ tmp/
 !cover.png
 !assets/cover/
 !assets/cover/*.png
+
+# Asset directories to ignore
+assets/csv/
+assets/structured/
+assets/unstructured/
+
+
+

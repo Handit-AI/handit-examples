@@ -1,5 +1,31 @@
 """
-Data Shaping Assistant Chain - Returns structured data tables
+Data Shaping Assistant Chain for LangGraph
+
+This module provides an AI-powered system for converting structured JSON documents
+into organized CSV table formats. It analyzes document structures and creates
+intelligent table organizations that preserve all data while optimizing for
+readability and analysis.
+
+The chain performs intelligent data shaping by:
+- Analyzing JSON document structures to understand data organization
+- Creating multiple CSV tables based on logical data groupings
+- Extracting actual values while omitting metadata fields
+- Prioritizing normalized values over raw values for data quality
+- Organizing related fields into coherent table structures
+
+Key Features:
+- AI-powered table structure analysis and planning
+- Automatic CSV table generation from JSON documents
+- Intelligent data organization and grouping
+- Support for nested objects and array structures
+- Comprehensive data extraction with value prioritization
+- Clear table naming and description generation
+
+Use Cases:
+- Converting extracted document data to analysis-ready formats
+- Creating structured datasets from heterogeneous document collections
+- Generating reports and dashboards from processed documents
+- Data preparation for machine learning and analytics workflows
 """
 
 from langchain_core.prompts import ChatPromptTemplate
@@ -8,12 +34,16 @@ from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 import os
 
+# Load environment variables from .env file
 load_dotenv()
 
-# Resolve model from environment variable, default to gpt-4o-mini
+# Configure OpenAI model from environment variable with fallback to gpt-4o-mini
+# This allows easy switching between different AI models for different use cases
 model_name = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 llm = ChatOpenAI(model=model_name, temperature=0)
 
+# System prompt that defines the AI's role and behavior for data shaping
+# This prompt emphasizes data analysis, value extraction, and table organization
 system = """You are a data shaping assistant.
 
 You are given a set of JSON documents with the same schema (same keys & depth).
@@ -75,6 +105,8 @@ data_dict = {{
 
 The LLM must extract the actual values from the documents and populate these lists, don't invent values."""
 
+# User template that provides the documents for analysis
+# This template ensures consistent input format and clear output requirements
 user = """
 Analyze these documents and create CSV tables with structured data:
 
@@ -84,18 +116,37 @@ Documents:
 Return only the JSON with the table structure and data_dict for each table.
 """
 
+# Create the complete prompt template combining system instructions and user input
+# This template guides the AI through the data shaping process
 generation_prompt = ChatPromptTemplate.from_messages([
-    ("system", system),
-    ("user", user),
+    ("system", system),  # AI's role and data shaping rules
+    ("user", user),      # Document input and output requirements
 ])
 
-# Public chain export
+# Public chain export that processes documents and returns structured table plans
+# This chain combines the prompt template with the AI model for data shaping
 csv_generation_planner: RunnableSequence = generation_prompt | llm
 
 def get_system_prompt() -> str:
-    """Get the generation system prompt for external use (e.g., tracking)"""
+    """
+    Get the generation system prompt for external use (e.g., tracking, debugging, or logging).
+    
+    This function allows other parts of the system to access the exact
+    instructions given to the AI model for data shaping operations.
+    
+    Returns:
+        str: The complete system prompt that defines the AI's behavior for data shaping
+    """
     return system
 
 def get_user_prompt() -> str:
-    """Get the user template for external use (e.g., tracking)"""
+    """
+    Get the user template for external use (e.g., tracking, debugging, or logging).
+    
+    This function provides access to the user-facing instructions and document
+    input template used for data shaping operations.
+    
+    Returns:
+        str: The user template that defines the input format and output requirements
+    """
     return user

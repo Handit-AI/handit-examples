@@ -17,7 +17,7 @@ The system uses a **3-step LangGraph workflow** to process your documents:
 - Works with any document type - it figures out the right format automatically
 - Creates a unified schema that all documents will follow
 
-### Step 2: Data Extraction (`invoice_data_capture`)
+### Step 2: Data Extraction (`document_data_capture`)
 - A specialized LLM maps fields from your documents to the inferred schema
 - Strictly follows the schema - every document gets the same structure
 - Handles images, PDFs, and text files
@@ -40,7 +40,7 @@ unstructured-to-structured/
 │   ├── consts.py         # Workflow constants
 │   ├── nodes/            # Individual workflow nodes
 │   │   ├── inference_schema.py
-│   │   ├── invoice_data_capture.py
+│   │   ├── document_data_capture.py
 │   │   └── generate_csv.py
 │   └── chains/           # LangChain processing chains
 │       ├── document_inference.py

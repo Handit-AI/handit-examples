@@ -23,16 +23,16 @@ class GraphState(TypedDict, total=False):
     agent_name: str
     session_id: str
     json_paths: List[str]
-    unstructured_paths: List[str]
+    unstructured_paths: List[str] 
     structured_json_paths: List[str]
     details_csv_path: str
     line_items_csv_path: str
     classification_results: Dict[str, Any]
-    inferred_schema: Dict[str, Any]
+    inferred_schema: Dict[str, Any] 
     invoices_paths: List[str]
     csv_content: str
     csv_path: str
-    errors: List[str]
-    execution_id: str
+    errors: List[str]   
+    execution_id: str   
 
 
