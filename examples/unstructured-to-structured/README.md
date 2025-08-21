@@ -1,4 +1,3 @@
-
 <p align="center">
   <!-- shows in LIGHT mode only -->
   <img src="./assets/cover/handit-small-3.png#gh-light-mode-only" width="400" style="object-fit: cover; object-position: center;" alt="Handit logo" />
@@ -300,3 +299,5 @@ Enable detailed logging by setting log level to DEBUG in `main.py`.
 ---
 
 **Questions?** Open an issue or start a discussion. We're here to help!
+
+
