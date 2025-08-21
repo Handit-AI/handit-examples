@@ -3,7 +3,7 @@ Inference Schema Node for LangGraph
 
 This module handles the automatic inference of JSON schemas from unstructured documents.
 It processes multimodal content including images, PDFs, and text files to generate
-a unified schema that can represent all provided documents.
+an unified schema that can represent all provided documents.
 
 The node uses a vLLm capabilities to analyze document layouts and content,
 then generates a structured JSON schema with field definitions and synonyms.
@@ -203,7 +203,7 @@ def inference_schema(state: GraphState) -> Dict[str, Any]:
                     
                     # Convert to base64 and create data URL (format that Handit.ai expects)
                     base64_data = base64.b64encode(image_bytes).decode('utf-8')
-                    mime_type = f"image/{ext[1:]}" if ext[1:] != "jpg" else "image/jpeg"
+                    mime_type = f"image/{ext[1:]}}" if ext[1:] != "jpg" else "image/jpeg"
                     data_url = f"data:{mime_type};base64,{base64_data}"
                     
                     tracking_input["images"].append(data_url)
