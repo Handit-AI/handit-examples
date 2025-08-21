@@ -249,7 +249,7 @@ def generate_csv(state: GraphState) -> Dict[str, Any]:
             node_type="llm",
             execution_id=execution_id
         )
-        
+
         logger.info("✅ Table generation completed")
         
         # Return comprehensive results including status, tables, and file information
