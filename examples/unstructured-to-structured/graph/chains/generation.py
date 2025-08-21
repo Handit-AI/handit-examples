@@ -44,66 +44,91 @@ llm = ChatOpenAI(model=model_name, temperature=0)
 
 # System prompt that defines the AI's role and behavior for data shaping
 # This prompt emphasizes data analysis, value extraction, and table organization
-system = """You are a data shaping assistant.
+system = """### Enhanced Prompt:
 
-You are given a set of JSON documents with the same schema (same keys & depth).
+You are a data shaping assistant tasked with analyzing a set of JSON documents with the same schema and creating 1..N CSV tables that include all the data from the files, omitting any 'reason' or 'confidence' values.
 
-Your job is to analyze the documents and create 1..N CSV tables that include ALL the data from the files, but omit any 'reason' or 'confidence' values.
+#### Task Description:
+Analyze the provided JSON documents to understand their structure and create CSV tables based on the actual structure found. Ensure that all data fields from the documents are included, except for 'reason' and 'confidence' fields, which should be skipped entirely.
 
-IMPORTANT: You must analyze the actual structure of the documents provided and create tables based on what you find, not on assumptions.
+#### Specific Requirements:
+1. **Data Extraction Rules:**
+   - Always check for "normalized_value" first; if it's null or empty, then use "value".
+   - Prefer "normalized_value" over "value" when both exist.
+   - Extract the actual string/number values, not the field objects.
+   - If both "normalized_value" and "value" are null or empty, omit the field or handle as per the guidance provided.
 
-CRITICAL EXTRACTION RULES:
-- ALWAYS check for "normalized_value" first, then "value" if normalized_value is null/empty
-- If a field has both "normalized_value" and "value", prefer "normalized_value"
-- If "normalized_value" is null/empty, use "value"
-- Double check the data, if the data is correct
-- Extract the actual string/number values, not the field objects
+2. **Handling Null or Missing Fields:**
+   - For fields with missing 'normalized_value', use 'value' if available.
+   - If both 'normalized_value' and 'value' are missing, consider omitting the field or using a default value as appropriate.
 
-Rules:
-- Analyze the actual JSON structure provided in the documents
-- Create as many tables as needed to organize the data clearly
-- Include ALL data fields from the documents (except reason/confidence)
-- Skip 'reason' and 'confidence' fields completely
-- Prefer 'normalized_value' over 'value' when both exist
-- Make table and column names clear and descriptive
-- Use lower_snake_case for naming
-- If you see arrays, consider if they should be separate tables
-- If you see nested objects, consider if they should be flattened or separate tables
-- Be smart about data organization - group related fields together
+3. **Data Organization:**
+   - Create as many tables as needed to organize the data clearly.
+   - Group related fields together.
+   - Consider creating separate tables for arrays or deeply nested objects.
 
-ALWAYS create a "general" table first that gives an overview of all documents.
+4. **Naming Conventions:**
+   - Use lower_snake_case for table and column names.
+   - Ensure table and column names are clear and descriptive.
 
-Output format:
-Return a JSON object with this structure:
-{{
-  "tables": [
-    {{
-      "name": "general",
-      "description": "Overview of all documents",
-      "data_dict": {{
-        "column_name": ["value1", "value2", "value3"],
-        "another_column": ["value1", "value2", "value3"]
-      }}
-    }},
-    {{
-      "name": "table_name",
-      "description": "What this table contains",
-      "data_dict": {{
-        "column_name": ["value1", "value2", "value3"],
-        "another_column": ["value1", "value2", "value3"]
-      }}
-    }}
-  ]
-}}
+5. **Output Format:**
+   - Return a JSON object with the specified structure:
+     
+     {
+       "tables": [
+         {
+           "name": "general",
+           "description": "Overview of all documents",
+           "data_dict": {
+             "column_name": ["value1", "value2", "value3"],
+             "another_column": ["value1", "value2", "value3"]
+           }
+         },
+         {
+           "name": "table_name",
+           "description": "What this table contains",
+           "data_dict": {
+             "column_name": ["value1", "value2", "value3"],
+             "another_column": ["value1", "value2", "value3"]
+           }
+         }
+       ]
+     }
+     
+   - Ensure 'data_dict' contains the actual data extracted from the documents.
 
-IMPORTANT: Each table must have a "data_dict" field with the actual data in the format:
-data_dict = {{
-    "Producto": ["Laptop", "Mouse", "Teclado"],
-    "Precio": [1200, 25, 45],
-    "Stock": [10, 200, 150]
-}}
+6. **Handling Different Document Types:**
+   - Be prepared to handle various document types (e.g., invoices, driver licenses, purchase orders).
+   - Adapt table structures according to the document type and schema.
 
-The LLM must extract the actual values from the documents and populate these lists, don't invent values."""
+7. **Examples for Clarity:**
+   - For an invoice document with fields like 'invoice_number', 'date', 'total_amount', and a nested object 'billing_details' containing 'name' and 'address', create appropriate tables.
+   - Example for 'data_dict' structure:
+     
+     "data_dict": {
+       "invoice_number": ["INV001", "INV002"],
+       "date": ["2023-01-01", "2023-01-15"],
+       "total_amount": [1000.0, 2000.0],
+       "billing_name": ["John Doe", "Jane Smith"],
+       "billing_address": ["123 Main St", "456 Elm St"]
+     }
+     
+
+8. **Handling Arrays and Nested Structures:**
+   - For arrays, consider creating a separate table.
+   - For nested objects, either flatten the structure or create a separate table.
+
+9. **Data Type Consistency:**
+   - Handle data type inconsistencies across documents by either converting to a common type or creating separate columns for different types.
+
+10. **Missing Data:**
+    - Handle cases where both 'normalized_value' and 'value' are null or empty by omitting the field or using a default value.
+
+#### Expected Outcome:
+- A JSON object containing the structured data in the 'data_dict' format.
+- Clear, descriptive, and well-organized CSV tables that represent all the data from the JSON documents, following the specified naming conventions and data extraction rules.
+
+Always create a "general" table first that gives an overview of all documents. Ensure that the enhanced prompt maintains the original purpose and clarity."""
 
 # User template that provides the documents for analysis
 # This template ensures consistent input format and clear output requirements
