@@ -1,11 +1,40 @@
+# Core Web Framework
 fastapi>=0.111.0
 uvicorn[standard]>=0.30.0
+
+# Data Validation and Serialization
 pydantic>=2.7.0
 pydantic-settings>=2.3.0
+
+# AI and Machine Learning
 openai>=1.40.0
 langgraph>=0.2.0
 langchain-core>=0.2.0
 langchain-openai>=0.1.0
+handit-sdk>=1.16.0
+
+# Data Processing
+pandas>=2.0.0
+numpy>=1.24.0
+
+# File and Image Processing
+Pillow>=10.0.0
+PyPDF2>=3.0.0
+
+# Environment and Configuration
 python-dotenv>=1.0.1
+
+# HTTP and API
 requests>=2.31.0
+httpx>=0.25.0
+
+# Utilities
+python-multipart>=0.0.6
+pathlib2>=2.3.7
+
+# Development and Testing (Optional)
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+black>=23.0.0
+flake8>=6.0.0
 

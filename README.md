@@ -20,8 +20,8 @@
   <a href="https://github.com/handit-ai/handit.ai/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-green?style=flat&logo=opensourceinitiative&logoColor=white&labelColor=000000" alt="license">
   </a>
-  <a href="https://github.com/handit-ai/handit.ai">
-    <img src="https://img.shields.io/github/stars/handit-ai/handit.ai?style=flat&logo=github&logoColor=white&color=yellow&labelColor=000000" alt="GitHub stars">
+  <a href="https://github.com/Handit-AI/handit-examples.git">
+    <img src="https://img.shields.io/github/stars/Handit-AI/handit-examples?style=flat&logo=github&logoColor=white&color=yellow&labelColor=000000" alt="GitHub stars">
   </a>
   <!-- TODO: Add Twitter handle when available -->
       <a href="https://discord.com/invite/XCVWYCFen6" target="_blank">
