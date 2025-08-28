@@ -1,46 +1,16 @@
 const { ChatOpenAI } = require('langchain/chat_models/openai');
 const { PromptTemplate } = require('langchain/prompts');
-const { StructuredOutputParser } = require('langchain/output_parsers');
 const { HumanMessage } = require('langchain/schema');
 const fs = require('fs').promises;
 const path = require('path');
 
 class LangChainService {
     constructor() {
-
         // VLLM-compatible configuration for gpt-5-mini-2025-08-07
         this.llm = new ChatOpenAI({
             openAIApiKey: process.env.OPENAI_API_KEY,
             modelName: process.env.OPENAI_MODEL || 'gpt-5-mini-2025-08-07',
-            // temperature: 0,  // Removed - this model only supports default value (1)
             maxCompletionTokens: 4000,  // VLLM-compatible parameter
-            // Additional VLLM-compatible parameters (uncomment if needed)
-            // topK: 40,  // For diversity control
-            // repetitionPenalty: 1.1,  // To avoid repetitions
-        });
-
-        // Use a more flexible parser that lets the LLM define the structure
-        this.parser = StructuredOutputParser.fromNamesAndDescriptions({
-            // Core fields that are commonly found in financial documents
-            documentType: "The type of document (invoice, receipt, purchase order, contract, statement, etc.)",
-            vendor: "The vendor or company name that issued the document",
-            vendorAddress: "The vendor's address information",
-            vendorContact: "The vendor's contact information",
-            customer: "The customer or client name if present",
-            invoiceNumber: "The invoice or document number",
-            invoiceDate: "The date when the invoice was issued",
-            dueDate: "The due date for payment if present",
-            headerCurrency: "The header currency used in the document, in Currency code ISO 4217 format",
-            totalAmount: "The total amount including all taxes and charges",
-            lineItems: "Array of line items with their details",
-            paymentTerms: "The payment terms and conditions",
-            notes: "Any additional notes or comments",
-            confidence: "Confidence level of the extraction (0-1)",
-            extractedText: "The raw text extracted from the document",
-
-            // Dynamic fields - let the LLM add any additional fields it finds
-            additionalFields: "Any other relevant fields or data found in the document that don't fit the above categories",
-            customFields: "Object containing any custom or document-specific fields discovered during extraction"
         });
     }
 
@@ -52,19 +22,31 @@ class LangChainService {
      */
     async processFilesWithLangChain(files, sessionId) {
         try {
-            console.log(`Starting LangChain processing for session: ${sessionId}`);
+            console.log(`🚀 Starting LangChain processing for session: ${sessionId}`);
+            console.log(`📁 Total files to process: ${files.length}`);
+            console.log(`📋 Files:`, files.map(f => f.originalName));
 
             // Process all files in parallel for better performance
+            console.log(`⚡ Starting parallel processing of ${files.length} files...`);
             const processingPromises = files.map(file =>
                 this.processSingleFile(file, sessionId)
             );
 
             const processingResults = await Promise.all(processingPromises);
+            console.log(`✅ Parallel processing completed for session: ${sessionId}`);
+            console.log(`📊 Processing results:`, processingResults.map(r => ({
+                file: r.file,
+                success: r.success,
+                hasData: !!r.extractedData,
+                error: r.error || null
+            })));
 
             // Save structured data to JSON files
+            console.log(`💾 Starting to save structured data for session: ${sessionId}`);
             await this.saveStructuredData(sessionId, processingResults);
+            console.log(`✅ Structured data saved successfully for session: ${sessionId}`);
 
-            return {
+            const finalResult = {
                 sessionId: sessionId,
                 totalFiles: files.length,
                 processedFiles: processingResults.length,
@@ -73,8 +55,14 @@ class LangChainService {
                 structuredDataPath: `assets/${sessionId}/structured/`
             };
 
+            console.log(`🎉 LangChain processing completed successfully for session: ${sessionId}`);
+            console.log(`📊 Final result:`, finalResult);
+            
+            return finalResult;
+
         } catch (error) {
-            console.error('LangChain processing error:', error);
+            console.error('❌ LangChain processing error:', error);
+            console.error('❌ Error stack:', error.stack);
             throw new Error(`Failed to process files with LangChain: ${error.message}`);
         }
     }
@@ -87,15 +75,25 @@ class LangChainService {
      */
     async processSingleFile(file, sessionId) {
         try {
-            console.log(`Processing file: ${file.originalName}`);
+            console.log(`🔄 Processing file: ${file.originalName}`);
+            console.log(`📁 File path: ${file.path}`);
+            console.log(`📏 File size: ${file.size} bytes`);
+            console.log(`🔤 MIME type: ${file.mimetype}`);
 
             // Read actual file content
+            console.log(`📖 Reading file content for: ${file.originalName}`);
             const fileContent = await this.readFileContent(file.path, file.mimetype);
+            console.log(`📄 File content type: ${typeof fileContent}`);
+            console.log(`📏 File content length: ${fileContent.length} characters`);
 
             // Process with LangChain using real file content
+            console.log(`🤖 Starting LangChain extraction for: ${file.originalName}`);
             const extractedData = await this.extractDataWithLangChain(fileContent, file.originalName, file.path);
+            console.log(`✅ LangChain extraction completed for: ${file.originalName}`);
+            console.log(`📊 Extracted data type: ${typeof extractedData}`);
+            console.log(`📊 Extracted data keys:`, extractedData ? Object.keys(extractedData) : 'NULL');
 
-            return {
+            const result = {
                 file: file.originalName,
                 success: true,
                 extractedData: extractedData,
@@ -105,9 +103,14 @@ class LangChainService {
                 mimeType: file.mimetype
             };
 
+            console.log(`✅ Successfully processed file: ${file.originalName}`);
+            return result;
+
         } catch (error) {
-            console.error(`Error processing file ${file.originalName}:`, error);
-            return {
+            console.error(`❌ Error processing file ${file.originalName}:`, error);
+            console.error(`❌ Error stack:`, error.stack);
+            
+            const errorResult = {
                 file: file.originalName,
                 success: false,
                 error: error.message,
@@ -116,6 +119,9 @@ class LangChainService {
                 fileSize: file.size,
                 mimeType: file.mimetype
             };
+
+            console.log(`⚠️ Returning error result for: ${file.originalName}`);
+            return errorResult;
         }
     }
 
@@ -132,7 +138,13 @@ class LangChainService {
             await fs.mkdir(structuredDir, { recursive: true });
 
             // Save each file's extracted data to a separate JSON file
+            console.log(`💾 Starting to save structured data for ${processingResults.length} files...`);
+            
             for (const result of processingResults) {
+                console.log(`📁 Processing result for file: ${result.file}`);
+                console.log(`✅ Success status: ${result.success}`);
+                console.log(`📊 Has extractedData: ${!!result.extractedData}`);
+                
                 if (result.success && result.extractedData) {
                     const fileName = path.basename(result.file, path.extname(result.file));
                     const jsonFileName = `${fileName}_extracted_data.json`;
@@ -150,8 +162,17 @@ class LangChainService {
                         extractedData: result.extractedData
                     };
 
+                    console.log(`💾 Saving JSON data for ${result.file} to: ${jsonFilePath}`);
+                    console.log(`📊 JSON data structure:`, Object.keys(jsonData));
+                    console.log(`📊 Extracted data structure:`, Object.keys(result.extractedData));
+                    
                     await fs.writeFile(jsonFilePath, JSON.stringify(jsonData, null, 2), 'utf-8');
-                    console.log(`Saved structured data for ${result.file} to ${jsonFilePath}`);
+                    console.log(`✅ Successfully saved structured data for ${result.file} to ${jsonFilePath}`);
+                } else {
+                    console.log(`⚠️ Skipping file ${result.file} - success: ${result.success}, has data: ${!!result.extractedData}`);
+                    if (result.error) {
+                        console.log(`❌ Error details: ${result.error}`);
+                    }
                 }
             }
 
@@ -271,7 +292,8 @@ IMPORTANT:
 - Create custom fields for document-specific information
 - Focus on tables, line items, and structured data
 - Be flexible and adaptive to different document formats
-- Process base64 files directly - don't just report that you can't access them`;
+- Process base64 files directly - don't just report that you can't access them
+- ALWAYS return valid JSON format with proper structure`;
 
             // User prompt that encourages field discovery
             const userPrompt = `Please analyze the following document and extract ALL data you can find:
@@ -282,22 +304,29 @@ IMPORTANT:
 **Document Content**:
 ${fileContent}
 
-Please extract information in a structured format. You are NOT limited to predefined fields. Discover and create fields based on what you find in the document.
+Please extract information in a structured JSON format. You are NOT limited to predefined fields. Discover and create fields based on what you find in the document.
+
+**CRITICAL FORMAT REQUIREMENTS**:
+- Return ONLY valid JSON format
+- For tables and line items, use proper JSON arrays with objects
+- Each field should have its own confidence level (0-1)
+- Make the JSON structure clean and readable
 
 **Required Fields** (these should always be present):
 - documentType: What type of document is this?
 - headerCurrency: Analyze the document and determine the header currency as an ISO 4217 code (e.g., USD, EUR, COP)
 - invoiceDate: The date when the invoice was issued, in this format: DD-MM-YYYY
-- confidence: Your confidence level (0-1)
-- extractedText: The raw text or content you extracted
 
-**Standard Fields** (extract if present):
-- vendor, customer, invoiceNumber, dates, amounts, headerCurrency, lineItems, etc.
+**Standard Fields** (extract if present with individual confidence):
+- vendor, customer, invoiceNumber, totalAmount, etc.
+- Each field should be an object with "value", "confidence", and "reason" properties
+- lineItems should be an array of objects with reason for each item
 
 **Custom Fields** (create these based on what you discover):
 - Any additional fields, tables, or structured data you find
 - Document-specific information that doesn't fit standard categories
 - Special fields, codes, references, or metadata
+- Each with individual confidence levels and reason for extraction
 
 **Guidelines**:
 1. Be extremely thorough - extract every piece of information
@@ -305,25 +334,81 @@ Please extract information in a structured format. You are NOT limited to predef
 3. Focus on tables, line items, and structured layouts
 4. Don't limit yourself to predefined fields
 5. Adapt to the specific document type and format
+6. ALWAYS return valid, well-structured JSON
+7. Use proper arrays for tables and line items
+8. Include confidence for each field individually
+9. Provide a short reason for each field explaining how/where it was extracted
 
-Provide your analysis with maximum detail and flexibility.`;
+Provide your analysis with maximum detail and flexibility in clean, readable JSON format.
+
+**IMPORTANT**: Your response must be valid JSON. Here's the expected structure:
+
+Example structure:
+- documentType: object with "value" and "confidence" properties
+- vendor: object with "value" and "confidence" properties  
+- lineItems: array of objects with description, quantity, rate, amount, and confidence
+Each field should follow this pattern:
+"fieldName": {{
+  "value": "actual value here",
+  "confidence": 0.95,
+  "reason": "short explanation of why this value was extracted"
+}}
+
+Example JSON structure:
+{{
+  "documentType": {{
+    "value": "invoice",
+    "confidence": 0.95,
+    "reason": "Found 'Invoice' header at top of document"
+  }},
+  "vendor": {{
+    "value": "Company Name",
+    "confidence": 0.90,
+    "reason": "Company name found in top-left corner with logo"
+  }},
+  "lineItems": [
+    {{
+      "description": "Service Description",
+      "quantity": "1",
+      "rate": "$50.00",
+      "amount": "$50.00",
+      "confidence": 0.95,
+      "reason": "Extracted from itemized table row"
+    }}
+  ],
+}}`;
 
             // Create the prompt template
-            const promptTemplate = PromptTemplate.fromTemplate(`
+            console.log(`🔧 Creating prompt template for: ${fileName}`);
+            console.log(`📝 System prompt length: ${systemPrompt.length} characters`);
+            console.log(`📝 User prompt length: ${userPrompt.length} characters`);
+            
+            let promptTemplate;
+            try {
+                promptTemplate = PromptTemplate.fromTemplate(`
 ${systemPrompt}
 
 ${userPrompt}
-
-{format_instructions}
 `);
-
-            // Get format instructions from the parser
-            const formatInstructions = this.parser.getFormatInstructions();
+                console.log(`✅ Prompt template created successfully for: ${fileName}`);
+            } catch (templateError) {
+                console.error(`❌ Failed to create prompt template for ${fileName}:`, templateError);
+                console.error(`❌ Template error details:`, templateError.message);
+                throw new Error(`Failed to create prompt template: ${templateError.message}`);
+            }
 
             // Create the final prompt
-            const finalPrompt = await promptTemplate.format({
-                format_instructions: formatInstructions
-            });
+            console.log(`🔧 Formatting final prompt for: ${fileName}`);
+            let finalPrompt;
+            try {
+                finalPrompt = await promptTemplate.format({});
+                console.log(`✅ Final prompt formatted successfully for: ${fileName}`);
+                console.log(`📏 Final prompt length: ${finalPrompt.length} characters`);
+            } catch (formatError) {
+                console.error(`❌ Failed to format final prompt for ${fileName}:`, formatError);
+                console.error(`❌ Format error details:`, formatError.message);
+                throw new Error(`Failed to format final prompt: ${formatError.message}`);
+            }
 
             // Check if this is an image file and create proper multimodal message
             let messages;
@@ -369,10 +454,54 @@ ${userPrompt}
             }
 
             // Call the actual LLM for real processing
+            console.log(`🤖 Calling LLM for file: ${fileName}`);
+            console.log(`📤 Sending prompt to LLM (first 500 chars):`, finalPrompt.substring(0, 500) + '...');
+            
             const response = await this.llm.call(messages);
-            const extractedData = await this.parser.parse(response.content);
-
-            return extractedData;
+            console.log(`📝 LLM response received for: ${fileName}`);
+            console.log(`📄 Response content length: ${response.content.length} characters`);
+            console.log(`📄 FULL LLM RESPONSE for ${fileName}:`, response.content);
+            
+            // Parse the JSON response from the LLM
+            try {
+                console.log(`🔍 Attempting to parse LLM response as JSON for: ${fileName}`);
+                const extractedData = JSON.parse(response.content);
+                console.log(`✅ Successfully parsed JSON for: ${fileName}`);
+                console.log(`📊 Extracted data keys:`, Object.keys(extractedData));
+                return extractedData;
+            } catch (parseError) {
+                console.error(`❌ Failed to parse LLM response as JSON for ${fileName}:`, parseError);
+                console.log(`📄 Raw LLM response for ${fileName}:`, response.content);
+                
+                // Try to extract JSON from the response if it's wrapped in markdown
+                const jsonMatch = response.content.match(/```json\s*([\s\S]*?)\s*```/);
+                if (jsonMatch) {
+                    console.log(`🔍 Found JSON wrapped in markdown for: ${fileName}`);
+                    try {
+                        const extractedData = JSON.parse(jsonMatch[1]);
+                        console.log(`✅ Successfully parsed extracted JSON for: ${fileName}`);
+                        return extractedData;
+                    } catch (secondParseError) {
+                        console.error(`❌ Failed to parse extracted JSON for ${fileName}:`, secondParseError);
+                        throw new Error(`LLM response could not be parsed as valid JSON for ${fileName}`);
+                    }
+                }
+                
+                // Try to find any JSON-like content in the response
+                const jsonLikeMatch = response.content.match(/\{[\s\S]*\}/);
+                if (jsonLikeMatch) {
+                    console.log(`🔍 Found JSON-like content for: ${fileName}`);
+                    try {
+                        const extractedData = JSON.parse(jsonLikeMatch[0]);
+                        console.log(`✅ Successfully parsed JSON-like content for: ${fileName}`);
+                        return extractedData;
+                    } catch (thirdParseError) {
+                        console.error(`❌ Failed to parse JSON-like content for ${fileName}:`, thirdParseError);
+                    }
+                }
+                
+                throw new Error(`LLM response could not be parsed as valid JSON for ${fileName}. FULL Response: ${response.content}`);
+            }
 
         } catch (error) {
             console.error('LangChain extraction error:', error);
