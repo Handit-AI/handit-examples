@@ -18,6 +18,9 @@ router.get('/session/:sessionId', FileController.getSessionFiles);
 // Get LangChain processing results endpoint
 router.get('/langchain/:sessionId', FileController.getLangChainResults);
 
+// Get currency normalization results endpoint
+router.get('/normalization/:sessionId', FileController.getCurrencyNormalizationResults);
+
 // Health check for file service
 router.get('/health', (req, res) => {
   res.json({
@@ -27,7 +30,8 @@ router.get('/health', (req, res) => {
     endpoints: {
       upload: 'POST /api/files/upload',
       getSession: 'GET /api/files/session/:sessionId',
-      getLangChainResults: 'GET /api/files/langchain/:sessionId'
+      getLangChainResults: 'GET /api/files/langchain/:sessionId',
+      getNormalizationResults: 'GET /api/files/normalization/:sessionId'
     }
   });
 });

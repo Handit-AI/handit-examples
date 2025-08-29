@@ -24,7 +24,7 @@ multi-currency-invoice/
 ├── services/
 │   ├── HealthService.js       # Business logic for health checks
 │   ├── FileService.js         # File handling and storage
-│   └── LangChainService.js    # AI-powered data extraction with VLLM support
+│   └── ExtractionService.js    # AI-powered data extraction with VLLM support
 ├── assets/                    # File storage directory
 │   └── {session_id}/         # Session-specific directories
 │       ├── files/            # Uploaded files

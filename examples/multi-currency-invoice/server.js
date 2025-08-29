@@ -9,6 +9,7 @@ const morgan = require('morgan');
 // Import routes
 const healthRoutes = require('./routes/healthRoutes');
 const fileRoutes = require('./routes/fileRoutes');
+const currencyRoutes = require('./routes/currencyRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,6 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/health', healthRoutes);
 app.use('/api/files', fileRoutes);
+app.use('/api/currency', currencyRoutes);
 
 // Root route
 app.get('/', (req, res) => {
@@ -31,11 +33,13 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     endpoints: {
       health: '/api/health',
-      files: '/api/files'
+      files: '/api/files',
+      currency: '/api/currency'
     },
     features: {
       healthChecks: 'Comprehensive health monitoring',
-      fileUpload: 'Bulk file upload and storage'
+      fileUpload: 'Bulk file upload and storage',
+      currencyConversion: 'Historical currency conversion with exchange rates'
     }
   });
 });
@@ -61,6 +65,7 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📊 Health check available at: http://localhost:${PORT}/api/health`);
   console.log(`📁 File upload available at: http://localhost:${PORT}/api/files/upload`);
+  console.log(`💱 Currency conversion available at: http://localhost:${PORT}/api/currency`);
   
   // Log environment configuration
   console.log(`🔑 OpenAI API Key configured: ${process.env.OPENAI_API_KEY ? 'Yes' : 'No'}`);

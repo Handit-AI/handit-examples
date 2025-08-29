@@ -4,8 +4,14 @@ const { HumanMessage } = require('langchain/schema');
 const fs = require('fs').promises;
 const path = require('path');
 
-class LangChainService {
-    constructor() {
+//Handit.ai
+const { trackNode } = require('@handit.ai/node');
+
+class ExtractionService {
+    constructor(executionId) {
+        // Store the execution ID for Handit.ai tracking
+        this.executionId = executionId;
+        
         // VLLM-compatible configuration for gpt-5-mini-2025-08-07
         this.llm = new ChatOpenAI({
             openAIApiKey: process.env.OPENAI_API_KEY,
@@ -57,7 +63,7 @@ class LangChainService {
 
             console.log(`🎉 LangChain processing completed successfully for session: ${sessionId}`);
             console.log(`📊 Final result:`, finalResult);
-            
+
             return finalResult;
 
         } catch (error) {
@@ -109,7 +115,7 @@ class LangChainService {
         } catch (error) {
             console.error(`❌ Error processing file ${file.originalName}:`, error);
             console.error(`❌ Error stack:`, error.stack);
-            
+
             const errorResult = {
                 file: file.originalName,
                 success: false,
@@ -139,12 +145,12 @@ class LangChainService {
 
             // Save each file's extracted data to a separate JSON file
             console.log(`💾 Starting to save structured data for ${processingResults.length} files...`);
-            
+
             for (const result of processingResults) {
                 console.log(`📁 Processing result for file: ${result.file}`);
                 console.log(`✅ Success status: ${result.success}`);
                 console.log(`📊 Has extractedData: ${!!result.extractedData}`);
-                
+
                 if (result.success && result.extractedData) {
                     const fileName = path.basename(result.file, path.extname(result.file));
                     const jsonFileName = `${fileName}_extracted_data.json`;
@@ -165,7 +171,7 @@ class LangChainService {
                     console.log(`💾 Saving JSON data for ${result.file} to: ${jsonFilePath}`);
                     console.log(`📊 JSON data structure:`, Object.keys(jsonData));
                     console.log(`📊 Extracted data structure:`, Object.keys(result.extractedData));
-                    
+
                     await fs.writeFile(jsonFilePath, JSON.stringify(jsonData, null, 2), 'utf-8');
                     console.log(`✅ Successfully saved structured data for ${result.file} to ${jsonFilePath}`);
                 } else {
@@ -382,7 +388,7 @@ Example JSON structure:
             console.log(`🔧 Creating prompt template for: ${fileName}`);
             console.log(`📝 System prompt length: ${systemPrompt.length} characters`);
             console.log(`📝 User prompt length: ${userPrompt.length} characters`);
-            
+
             let promptTemplate;
             try {
                 promptTemplate = PromptTemplate.fromTemplate(`
@@ -412,13 +418,13 @@ ${userPrompt}
 
             // Check if this is an image file and create proper multimodal message
             let messages;
-            
+
             if (fileContent.startsWith('[IMAGE_BASE64:')) {
                 // Extract the base64 data from the content
                 const base64Match = fileContent.match(/\[IMAGE_BASE64:(.+)\]/);
                 if (base64Match) {
                     const base64Data = base64Match[1];
-                    
+
                     // Create multimodal message for images using proper LangChain HumanMessage format
                     messages = [
                         new HumanMessage({
@@ -436,7 +442,7 @@ ${userPrompt}
                             ]
                         })
                     ];
-                    
+
                     console.log(`🖼️ Created multimodal message for image: ${fileName}`);
                 } else {
                     // Fallback to text-only if base64 extraction fails
@@ -456,12 +462,37 @@ ${userPrompt}
             // Call the actual LLM for real processing
             console.log(`🤖 Calling LLM for file: ${fileName}`);
             console.log(`📤 Sending prompt to LLM (first 500 chars):`, finalPrompt.substring(0, 500) + '...');
-            
+
             const response = await this.llm.call(messages);
             console.log(`📝 LLM response received for: ${fileName}`);
             console.log(`📄 Response content length: ${response.content.length} characters`);
             console.log(`📄 FULL LLM RESPONSE for ${fileName}:`, response.content);
-            
+
+            // Track the LLM call with Handit.ai
+            let trackingInput = {
+                systemPrompt: systemPrompt,
+                userPrompt: userPrompt
+            };
+
+            // Add image data if this is an image file
+            if (fileContent.startsWith('[IMAGE_BASE64:')) {
+                const base64Match = fileContent.match(/\[IMAGE_BASE64:(.+)\]/);
+                if (base64Match) {
+                    const base64Data = base64Match[1];
+                    
+                    trackingInput.image = `${base64Data}`;
+                }
+            }
+
+            await trackNode({
+                input: trackingInput,
+                output: response.content,
+                nodeName: 'extraction_data',
+                agentName: 'multi_currency_test',
+                nodeType: 'llm',
+                executionId: this.executionId
+            });
+
             // Parse the JSON response from the LLM
             try {
                 console.log(`🔍 Attempting to parse LLM response as JSON for: ${fileName}`);
@@ -472,7 +503,7 @@ ${userPrompt}
             } catch (parseError) {
                 console.error(`❌ Failed to parse LLM response as JSON for ${fileName}:`, parseError);
                 console.log(`📄 Raw LLM response for ${fileName}:`, response.content);
-                
+
                 // Try to extract JSON from the response if it's wrapped in markdown
                 const jsonMatch = response.content.match(/```json\s*([\s\S]*?)\s*```/);
                 if (jsonMatch) {
@@ -486,7 +517,7 @@ ${userPrompt}
                         throw new Error(`LLM response could not be parsed as valid JSON for ${fileName}`);
                     }
                 }
-                
+
                 // Try to find any JSON-like content in the response
                 const jsonLikeMatch = response.content.match(/\{[\s\S]*\}/);
                 if (jsonLikeMatch) {
@@ -499,7 +530,7 @@ ${userPrompt}
                         console.error(`❌ Failed to parse JSON-like content for ${fileName}:`, thirdParseError);
                     }
                 }
-                
+
                 throw new Error(`LLM response could not be parsed as valid JSON for ${fileName}. FULL Response: ${response.content}`);
             }
 
@@ -536,4 +567,4 @@ ${userPrompt}
     }
 }
 
-module.exports = LangChainService;
+module.exports = ExtractionService;
