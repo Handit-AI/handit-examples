@@ -293,7 +293,7 @@ class CurrencyNormalizationService {
                 input: trackingInput,
                 output: JSON.stringify(data, null, 2),
                 nodeName: 'currency_normalization',
-                agentName: 'multi_currency_test',
+                agentName: 'multi_currency',
                 nodeType: 'llm',
                 executionId: this.executionId
             });

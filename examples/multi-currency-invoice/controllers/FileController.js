@@ -2,10 +2,7 @@
 const FileService = require('../services/FileService');
 const ExtractionService = require('../services/ExtractionService');
 const CurrencyNormalizationService = require('../services/CurrencyNormalizationService');
-const { config, startTracing, endTracing } = require('@handit.ai/node');
-
-// Configure Handit.ai API KEY
-config({ apiKey: process.env.HANDIT_API_KEY });
+const {startTracing, endTracing } = require('@handit.ai/node');
 
 class FileController {
   /**
@@ -17,7 +14,7 @@ class FileController {
 
     // Start a new trace session
     const tracingResponse = await startTracing({
-      agentName: 'multi_currency_test'  // Identifies this agent in the Handit.ai dashboard
+      agentName: 'multi_currency'  // Identifies this agent in the Handit.ai dashboard
     });
     const executionId = tracingResponse.executionId;  // Unique ID for this trace session
 
@@ -52,7 +49,7 @@ class FileController {
       // End the trace session
       await endTracing({
         executionId,                         // The ID of the trace session to end
-        agentName: 'multi_currency_test'  // Must match the name used in startTracing
+        agentName: 'multi_currency'  // Must match the name used in startTracing
       });
 
       res.status(200).json({
@@ -80,7 +77,7 @@ class FileController {
       // End the trace session
       await endTracing({
         executionId,                         // The ID of the trace session to end
-        agentName: 'multi_currency_test'  // Must match the name used in startTracing
+        agentName: 'multi_currency'  // Must match the name used in startTracing
       });
       res.status(500).json({
         success: false,

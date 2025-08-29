@@ -488,7 +488,7 @@ ${userPrompt}
                 input: trackingInput,
                 output: response.content,
                 nodeName: 'extraction_data',
-                agentName: 'multi_currency_test',
+                agentName: 'multi_currency',
                 nodeType: 'llm',
                 executionId: this.executionId
             });

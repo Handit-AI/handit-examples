@@ -164,7 +164,7 @@ class FileService {
        input: trackingInput,
        output: trackingOutput,
        nodeName: 'ingestion',
-       agentName: 'multi_currency_test',
+       agentName: 'multi_currency',
        nodeType: 'tool',
        executionId: this.executionId
      });
