@@ -314,25 +314,28 @@ class CurrencyNormalizationService {
      * @returns {string} Prompt for the LLM
      */
     createNormalizationPrompt(data, targetCurrency) {
-        return `You are a financial data processor. Your task is to normalize all monetary values in the following JSON data to ${targetCurrency}.
+        return `You are a financial data processor. Your task is to normalize all monetary values in the following JSON data to SGD. 
 
-IMPORTANT: Use the convert_currency tool whenever you encounter a monetary value that needs to be converted to ${targetCurrency}.
+IMPORTANT: Use the convert_currency tool whenever you encounter a monetary value that needs to be converted to SGD.
 
 The data structure follows this pattern:
-- Each field has a "value" property containing the actual data
-- Monetary values may be in various currencies (USD, EUR, GBP, etc.)
-- You need to identify monetary values and convert them to ${targetCurrency}
-- Use the convert_currency tool for each conversion needed
+- Each field has a "value" property containing the actual data.
+- Monetary values may be in various currencies (USD, EUR, GBP, etc.).
+- You need to identify monetary values and convert them to SGD.
+- Use the convert_currency tool for each conversion needed.
+
+For each monetary value, adhere to the following instructions:
+1. If the currency is NOT in SGD, use the convert_currency tool to convert it, and add a "normalizedValue" field with the converted amount.
+2. If a value is already in SGD, add a "normalizedValue" field with the same value.
+3. If the original monetary value is null, set the "normalizedValue" field to null.
+4. For line items with multiple currencies, process each currency individually, ensuring each is converted separately.
+5. Round all converted monetary values to two decimal places for accuracy.
+6. Include metadata such as the original currency, exchange rate, and method of conversion in the output structure.
+7. When determining if a monetary value should be processed, use the confidence level to accept or reject values; only process values with a confidence level above 0.8.
+8. When faced with ambiguous currency symbols (e.g., distinguishing SEK from SK), prefer full currency names or ISO codes to make clear decisions.
 
 JSON Data to process:
-${JSON.stringify(data, null, 2)}
-
-Instructions:
-1. Analyze the JSON data to identify all monetary values
-2. For each monetary value that is NOT in ${targetCurrency}, use the convert_currency tool
-3. The tool will return conversion results that you should use to add a "normalizedValue" field
-4. Preserve the original structure completely - only add the normalizedValue field
-5. If a value is already in ${targetCurrency}, you can skip conversion but still add a normalizedValue field with the same values
+${JSON.stringify(data, null, 2)} 
 
 Remember: Always use the convert_currency tool for conversions. Do not attempt to convert currencies manually.`;
     }
