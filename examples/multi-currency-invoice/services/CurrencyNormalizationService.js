@@ -314,27 +314,70 @@ class CurrencyNormalizationService {
      * @returns {string} Prompt for the LLM
      */
     createNormalizationPrompt(data, targetCurrency) {
-        return `You are a financial data processor. Your task is to normalize all monetary values in the following JSON data to ${targetCurrency}.
+        return `You are a financial data processor. Your task is to normalize all monetary values in the following JSON data to SGD while maintaining the original structure of the data.
 
-IMPORTANT: Use the convert_currency tool whenever you encounter a monetary value that needs to be converted to ${targetCurrency}.
+### Instructions:
 
-The data structure follows this pattern:
-- Each field has a "value" property containing the actual data
-- Monetary values may be in various currencies (USD, EUR, GBP, etc.)
-- You need to identify monetary values and convert them to ${targetCurrency}
-- Use the convert_currency tool for each conversion needed
+1. **Analyze Confidence Levels:** Only process monetary values with a confidence level of 0.75 or higher. If the confidence level is below this threshold, exclude that value from normalization.
+
+2. **Identify Monetary Values:** Examine the JSON data to identify all monetary values, including those in various currencies (USD, EUR, GBP, SEK, JPY, CAD, etc.).
+
+3. **Conversion Requirement:** For each monetary value that is NOT already in SGD, use the `convert_currency` tool to convert it to SGD. Ensure that each conversion is logged, including the original currency, exchange rate used, and the method of conversion.
+
+4. **Normalized Value Field:** For every monetary value, include a `normalizedValue` field in the output:
+    - If the original value is in SGD, the `normalizedValue` should be the same as the original value.
+    - For values converted from other currencies, the `normalizedValue` should reflect the result of the conversion rounded to two decimal places.
+
+5. **Handling Ambiguities:** If you encounter ambiguous currency codes (e.g., "SK" may refer to "SEK"), apply the following guidelines:
+    - Prefer to use full currency names or ISO codes for clarity.
+    - If discrepancies arise, flag them for review.
+
+6. **Line Items Processing:** Each line item with currency values must be processed individually. Ensure that every monetary value is converted as required, and include the `normalizedValue` field for each.
+
+7. **Log Conversion Issues:** Keep a log of any issues that arise during currency conversion, such as failed conversions or unexpected results, and indicate them in the output.
+
+8. **Preserve JSON Structure:** Ensure that the original JSON structure is preserved while adding the `normalizedValue` fields. The output should maintain clarity and consistency.
+
+### Example of Expected Output Structure:
+
+{
+  "lineItems": [
+    {
+      "description": "Consulting",
+      "amount": "5,000.00",
+      "currency": "SEK",
+      "normalizedValue": "X.XX" // converted value in SGD
+    },
+    {
+      "description": "Software License",
+      "amount": "150,000",
+      "currency": "JPY",
+      "normalizedValue": "X.XX" // converted value in SGD
+    },
+    {
+      "description": "Maintenance",
+      "amount": "1,000.0",
+      "currency": "CAD",
+      "normalizedValue": "X.XX" // converted value in SGD
+    },
+    {
+      "description": "Support",
+      "amount": "750.0",
+      "currency": "SGD",
+      "normalizedValue": "750.0"
+    }
+  ],
+  ...
+}
+
+
+### Important Notes:
+- Always use the `convert_currency` tool for conversions; do not attempt manual conversion.
+- Ensure that all monetary values include a corresponding `normalizedValue` field.
+- Maintain full data integrity while adding normalized values, including flagging any discrepancies encountered.
 
 JSON Data to process:
-${JSON.stringify(data, null, 2)}
-
-Instructions:
-1. Analyze the JSON data to identify all monetary values
-2. For each monetary value that is NOT in ${targetCurrency}, use the convert_currency tool
-3. The tool will return conversion results that you should use to add a "normalizedValue" field
-4. Preserve the original structure completely - only add the normalizedValue field
-5. If a value is already in ${targetCurrency}, you can skip conversion but still add a normalizedValue field with the same values
-
-Remember: Always use the convert_currency tool for conversions. Do not attempt to convert currencies manually.`;
+${JSON.stringify(data, null, 2)}`;
     }
 
     /**
