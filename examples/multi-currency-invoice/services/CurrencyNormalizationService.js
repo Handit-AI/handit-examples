@@ -316,25 +316,70 @@ class CurrencyNormalizationService {
     createNormalizationPrompt(data, targetCurrency) {
         return `You are a financial data processor. Your task is to normalize all monetary values in the following JSON data to ${targetCurrency}.
 
-IMPORTANT: Use the convert_currency tool whenever you encounter a monetary value that needs to be converted to ${targetCurrency}.
+IMPORTANT: Use the convert_currency tool whenever you encounter a monetary value that needs to be converted to ${targetCurrency}. Ensure you follow these guidelines:
 
-The data structure follows this pattern:
-- Each field has a "value" property containing the actual data
-- Monetary values may be in various currencies (USD, EUR, GBP, etc.)
-- You need to identify monetary values and convert them to ${targetCurrency}
-- Use the convert_currency tool for each conversion needed
+1. **Analyze the JSON data** to identify all monetary values. Each monetary value should include the following fields: 
+   - amount 1: The numerical value of the monetary amount.
+   -  7currency 1: The code of the currency the amount is expressed in.
+   -  7original details 1: Any relevant notes regarding the original value, including its source and confidence level in recognition.
+
+2. **For each monetary value that is NOT in ${targetCurrency}**, use the convert_currency tool to convert it to ${targetCurrency}. When using the tool, ensure you:
+   - Report any conversion failures or uncertainties back to the user.
+   - Indicate the original currency and the exchange rate used for conversion.
+
+3. **If the currency is ambiguous** (e.g., "SK" which may refer to "SEK"), prioritize recognized currencies based on the following criteria:
+   - Use the currency code with the highest confidence level first.
+   - Validate ambiguous currencies by comparing them with detected currencies in the  7currenciesFound 1 field.
+
+4. **Preserve the original structure completely** and add a  7normalizedValue 1 field for each monetary value processed. The  7normalizedValue 1 should have the same structure as specified above.
+
+5. **For values already in ${targetCurrency}**, you should still add a  7normalizedValue 1 field with the same values.
+
+6. If there are multiple currencies present, flag this in the output, emphasizing the need for clarity.
+
+7. If an original value is not present, output a  7normalizedValue 1 of null.
+
+8. Maintain a clear hierarchy for conversions and ensure consistent formatting of the responses.
+
+Remember to include examples to illustrate both successful conversions and cases with ambiguous currencies. Here are some examples:
+
+- **Example of successful conversion**: 
+  
+  {
+    "amount": "5,000.00",
+    "currency": "SEK",
+    "original details": {
+      "confidence": 0.9,
+      "reason": "Subtotal explicitly shows '5,000.00 SEK'"
+    },
+    "normalizedValue": {
+      "amount": "500.00",
+      "currency": "SGD",
+      "original details": {
+        "exchangeRate": "0.1",
+        "method": "convert_currency tool"
+      }
+    }
+  }
+  
+
+- **Example of ambiguous currency handling**: 
+  
+  {
+    "amount": "5,000.00",
+    "currency": "SK",
+    "original details": {
+      "confidence": 0.8,
+      "reason": "Ambiguous currency detected. May refer to SEK."
+    },
+    "normalizedValue": null
+  }
+  
 
 JSON Data to process:
 ${JSON.stringify(data, null, 2)}
 
-Instructions:
-1. Analyze the JSON data to identify all monetary values
-2. For each monetary value that is NOT in ${targetCurrency}, use the convert_currency tool
-3. The tool will return conversion results that you should use to add a "normalizedValue" field
-4. Preserve the original structure completely - only add the normalizedValue field
-5. If a value is already in ${targetCurrency}, you can skip conversion but still add a normalizedValue field with the same values
-
-Remember: Always use the convert_currency tool for conversions. Do not attempt to convert currencies manually.`;
+In summary, your output should include a  7normalizedValue 1 field for each monetary value, maintaining the original JSON structure while clearly indicating conversions and handling ambiguities according to the guidelines provided.`;
     }
 
     /**
