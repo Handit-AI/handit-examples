@@ -314,27 +314,46 @@ class CurrencyNormalizationService {
      * @returns {string} Prompt for the LLM
      */
     createNormalizationPrompt(data, targetCurrency) {
-        return `You are a financial data processor. Your task is to normalize all monetary values in the following JSON data to ${targetCurrency}.
+        return `You are a financial data processor. Your task is to normalize all monetary values in the following JSON data to Singapore Dollars (SGD).
 
-IMPORTANT: Use the convert_currency tool whenever you encounter a monetary value that needs to be converted to ${targetCurrency}.
+IMPORTANT: Use the convert_currency tool whenever you encounter a monetary value that needs to be converted to SGD. Ensure you only process values explicitly identified as monetary, ignoring any strings that do not represent monetary amounts.
 
 The data structure follows this pattern:
-- Each field has a "value" property containing the actual data
-- Monetary values may be in various currencies (USD, EUR, GBP, etc.)
-- You need to identify monetary values and convert them to ${targetCurrency}
-- Use the convert_currency tool for each conversion needed
-
-JSON Data to process:
-${JSON.stringify(data, null, 2)}
+- Each field has a "value" property containing the actual data.
+- Monetary values may be in various currencies (USD, EUR, GBP, JPY, CAD, SEK, etc.).
+- Identify and validate all monetary values, assessing the confidence level of currency detection before proceeding with conversions.
+- For each monetary value, add a "normalizedValue" field to preserve the original structure completely, even for values already in SGD. Round converted amounts to two decimal places for consistency.
 
 Instructions:
-1. Analyze the JSON data to identify all monetary values
-2. For each monetary value that is NOT in ${targetCurrency}, use the convert_currency tool
-3. The tool will return conversion results that you should use to add a "normalizedValue" field
-4. Preserve the original structure completely - only add the normalizedValue field
-5. If a value is already in ${targetCurrency}, you can skip conversion but still add a normalizedValue field with the same values
+1. Analyze the JSON data to identify all monetary values.
+2. For each monetary value that is NOT in SGD, use the convert_currency tool to convert it to SGD.
+3. The tool will return conversion results that you should use to add a "normalizedValue" field.
+4. If a currency is identified as potentially incorrect or ambiguous, perform further checks before conversion and document any discrepancies.
+5. Report any errors or fallback values if conversion fails.
+6. Summarize any currency mismatches identified during processing.
 
-Remember: Always use the convert_currency tool for conversions. Do not attempt to convert currencies manually.`;
+Remember: Always use the convert_currency tool for conversions. Do not attempt to convert currencies manually.
+
+Example of the expected JSON output after conversions:
+
+{
+  "lineItems": [
+    {
+      "description": "Consulting",
+      "amount": "5,000.00",
+      "currency": "SK",
+      "normalizedValue": "X.XX"
+    },
+    {
+      "description": "Software License",
+      "amount": "150,000",
+      "currency": "JPY",
+      "normalizedValue": "X.XX"
+    }
+  ]
+}
+
+Incorporate these directives carefully while processing the JSON data.`;
     }
 
     /**
@@ -738,7 +757,7 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
         // Remove currency symbols and codes, keep only numbers, commas, and dots
         const cleanValue = value
             .replace(/[A-Z]{3}/g, '')  // Remove currency codes
-            .replace(/[^\d,.-]/g, '')  // Keep only numbers, commas, dots, and minus
+            .replace(/[^ -]/g, '')  // Keep only numbers, commas, dots, and minus
             .replace(/,/g, '')         // Remove commas
             .trim();
         
