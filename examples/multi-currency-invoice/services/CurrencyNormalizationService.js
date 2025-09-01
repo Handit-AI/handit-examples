@@ -314,27 +314,7 @@ class CurrencyNormalizationService {
      * @returns {string} Prompt for the LLM
      */
     createNormalizationPrompt(data, targetCurrency) {
-        return `You are a financial data processor. Your task is to normalize all monetary values in the following JSON data to ${targetCurrency}.
-
-IMPORTANT: Use the convert_currency tool whenever you encounter a monetary value that needs to be converted to ${targetCurrency}.
-
-The data structure follows this pattern:
-- Each field has a "value" property containing the actual data
-- Monetary values may be in various currencies (USD, EUR, GBP, etc.)
-- You need to identify monetary values and convert them to ${targetCurrency}
-- Use the convert_currency tool for each conversion needed
-
-JSON Data to process:
-${JSON.stringify(data, null, 2)}
-
-Instructions:
-1. Analyze the JSON data to identify all monetary values
-2. For each monetary value that is NOT in ${targetCurrency}, use the convert_currency tool
-3. The tool will return conversion results that you should use to add a "normalizedValue" field
-4. Preserve the original structure completely - only add the normalizedValue field
-5. If a value is already in ${targetCurrency}, you can skip conversion but still add a normalizedValue field with the same values
-
-Remember: Always use the convert_currency tool for conversions. Do not attempt to convert currencies manually.`;
+        return `You are a financial data processor. Your task is to normalize all monetary values in the following JSON data to ${targetCurrency}.\n\nIMPORTANT: Use the convert_currency tool whenever you encounter a monetary value that needs to be converted to ${targetCurrency}. Ensure that all monetary values are treated uniformly, and maintain consistency by adding a 'normalizedValue' field for each monetary entry, even for values already in SGD.\n\nJSON Data to process:\n${JSON.stringify(data, null, 2)}\n\nInstructions:\n1. Analyze the JSON data to identify all monetary values.\n2. For each monetary value that is NOT in ${targetCurrency}, use the convert_currency tool. Prioritize conversions for currencies with higher confidence levels first.\n3. The tool will return conversion results that you should use to add a "normalizedValue" field. Ensure uniqueness in processing and normalization of duplicate monetary values.\n4. Preserve the original structure completely - only add the normalizedValue field.\n5. If a value is already in ${targetCurrency}, add a 'normalizedValue' field with the same value.\n6. Address ambiguous currency symbols by flagging them for review or manual checking before conversion.\n7. Summarize or flag currency mismatches at the end of processing.\n8. Inherit or adjust confidence levels based on conversion certainty.\n9. Add a directive to round converted amounts to two decimal places for consistency.\n10. Process or retain fields with null values in the output.\n11. Double-check conversion results against reliable sources, especially for uncertain cases.\n12. Include an example of the expected JSON output after conversions. \n\nRemember: Always use the convert_currency tool for conversions. Do not attempt to convert currencies manually.`;
     }
 
     /**
@@ -738,7 +718,8 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
         // Remove currency symbols and codes, keep only numbers, commas, and dots
         const cleanValue = value
             .replace(/[A-Z]{3}/g, '')  // Remove currency codes
-            .replace(/[^\d,.-]/g, '')  // Keep only numbers, commas, dots, and minus
+            .replace(/[^
+\d,.-]/g, '')  // Keep only numbers, commas, dots, and minus
             .replace(/,/g, '')         // Remove commas
             .trim();
         
