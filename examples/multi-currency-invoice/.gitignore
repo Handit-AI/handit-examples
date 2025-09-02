@@ -131,3 +131,11 @@ jspm_packages/
 
 # dotenv environment variables file
 .env
+
+# Project assets (do not commit generated/session files)
+# Ignore all contents under assets except the test directory and cover directory
+assets/*
+!assets/test/
+!assets/test/**
+!assets/cover/
+!assets/cover/**

@@ -61,6 +61,23 @@ An AI-powered tool that automatically converts messy, unstructured documents int
 
 [View Example →](examples/unstructured-to-structured)
 
+### Multi-Currency Invoice
+
+This self-improving AI agent takes multi-currency invoices, extracts all data, and automatically normalizes all monetary values to a target currency (header currency) using historical exchange rates based on the invoice issue date. The crazy part? It gets smarter the more you use it.
+
+![Invoice Processing](/examples/multi-currency-invoice/assets/cover/currency.gif)
+
+**Key Features:**
+- **Bulk Uploads**: Upload multiple invoice files per session and store them under `assets/{sessionId}`
+- **AI Extraction**: Multimodal extraction of invoice fields and tables via vLLM
+- **Currency Normalization**: LLM + tool-calls to convert all monetary fields to a header currency
+- **FX Rates**: Latest and historical rates via ExchangeRate-API
+- **Observability, Evaluation, Optimization**: Handit.ai
+
+**Technologies:** Node.js, Express.js, Multer, LangChain, OpenAI, ExchangeRate-API, Handit.ai
+
+[View Example →](examples/multi-currency-invoice)
+
 ## 🚀 Getting Started
 
 Each example includes its own README with detailed setup instructions. Generally, you'll need:

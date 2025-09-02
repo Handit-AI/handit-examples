@@ -30,7 +30,7 @@ class CurrencyNormalizationService {
 
         // Create the currency conversion tool
         this.currencyTool = this.createCurrencyTool();
-        
+
         // Bind the tool to the LLM
         this.llmWithTools = this.llm.bindTools([this.currencyTool]);
     }
@@ -44,9 +44,9 @@ class CurrencyNormalizationService {
             async ({ amount, fromCurrency, toCurrency, date }) => {
                 try {
                     console.log(`🔄 Tool called: Converting ${amount} ${fromCurrency} to ${toCurrency}${date ? ` for date ${date}` : ''}`);
-                    
+
                     const conversionResult = await this.performCurrencyConversion(amount, fromCurrency, toCurrency, date);
-                    
+
                     return JSON.stringify(conversionResult);
                 } catch (error) {
                     console.error(`❌ Tool error: ${error.message}`);
@@ -82,7 +82,7 @@ class CurrencyNormalizationService {
     async performCurrencyConversion(amount, fromCurrency, toCurrency, date) {
         try {
             console.log(`💱 Converting ${amount} ${fromCurrency} to ${toCurrency}${date ? ` for date ${date}` : ''}`);
-            
+
             if (fromCurrency.toUpperCase() === toCurrency.toUpperCase()) {
                 return {
                     convertedAmount: amount,
@@ -97,7 +97,7 @@ class CurrencyNormalizationService {
 
             // Use the real currency converter service
             const conversionResult = await this.currencyConverter.convertCurrency(amount, fromCurrency, toCurrency, date);
-            
+
             // Format the result to match our expected structure
             return {
                 convertedAmount: conversionResult.convertedAmount || conversionResult.amount,
@@ -109,7 +109,7 @@ class CurrencyNormalizationService {
                 method: "api_conversion",
                 apiResponse: conversionResult
             };
-            
+
         } catch (error) {
             console.error(`❌ Currency conversion failed: ${error.message}`);
             throw new Error(`Failed to convert ${amount} ${fromCurrency} to ${toCurrency}: ${error.message}`);
@@ -124,36 +124,36 @@ class CurrencyNormalizationService {
     async normalizeSessionCurrencies(sessionId) {
         try {
             console.log(`🔄 Starting LLM-based currency normalization for session: ${sessionId}`);
-            
+
             const structuredDir = path.join('assets', sessionId, 'structured');
             const outputDir = path.join('assets', sessionId, 'output');
-            
+
             // Ensure output directory exists
             await this.ensureDirectoryExists(outputDir);
-            
+
             // Get all JSON files in structured directory (excluding session_summary)
             const jsonFiles = await this.getJsonFiles(structuredDir);
-            
+
             console.log(`📁 Found ${jsonFiles.length} JSON files to process with LLM`);
-            
+
             const results = [];
             let filesProcessed = 0;
             let filesSkipped = 0;
             let filesNormalized = 0;
-            
+
             for (const filePath of jsonFiles) {
                 try {
                     console.log(`📄 Processing with LLM: ${path.basename(filePath)}`);
-                    
+
                     const normalizedData = await this.normalizeFileWithLLM(filePath);
-                    
+
                     // Save normalized data to output directory
                     const outputPath = path.join(outputDir, path.basename(filePath));
                     await fs.writeFile(outputPath, JSON.stringify(normalizedData, null, 2));
-                    
+
                     // Check if the data was actually normalized or just copied
                     const wasNormalized = this.wasDataNormalized(normalizedData);
-                    
+
                     if (wasNormalized) {
                         filesNormalized++;
                         console.log(`✅ Normalized: ${path.basename(filePath)}`);
@@ -161,7 +161,7 @@ class CurrencyNormalizationService {
                         filesSkipped++;
                         console.log(`⏭️ Skipped (no changes needed): ${path.basename(filePath)}`);
                     }
-                    
+
                     results.push({
                         file: path.basename(filePath),
                         status: 'success',
@@ -170,9 +170,9 @@ class CurrencyNormalizationService {
                         wasNormalized: wasNormalized,
                         reason: wasNormalized ? 'Currency values converted' : 'No conversion needed'
                     });
-                    
+
                     filesProcessed++;
-                    
+
                 } catch (error) {
                     console.error(`❌ Error processing ${path.basename(filePath)}:`, error.message);
                     results.push({
@@ -185,10 +185,10 @@ class CurrencyNormalizationService {
                     });
                 }
             }
-            
+
             console.log(`🎉 LLM-based currency normalization completed for session: ${sessionId}`);
             console.log(`📊 Summary: ${filesProcessed} processed, ${filesNormalized} normalized, ${filesSkipped} skipped`);
-            
+
             return {
                 sessionId,
                 status: 'completed',
@@ -208,7 +208,7 @@ class CurrencyNormalizationService {
                     efficiency: filesSkipped > 0 ? `${Math.round((filesSkipped / jsonFiles.length) * 100)}% of files didn't need normalization` : 'All files required normalization'
                 }
             };
-            
+
         } catch (error) {
             console.error(`❌ LLM-based currency normalization failed for session ${sessionId}:`, error);
             throw new Error(`Failed to normalize currencies with LLM for session ${sessionId}: ${error.message}`);
@@ -225,47 +225,68 @@ class CurrencyNormalizationService {
             // Read the JSON file
             const fileContent = await fs.readFile(filePath, 'utf8');
             const data = JSON.parse(fileContent);
-            
+
             // Extract header currency
             const headerCurrency = this.extractHeaderCurrency(data);
-            
+
             if (!headerCurrency) {
                 console.log(`⚠️ No header currency found in ${path.basename(filePath)}, skipping normalization`);
                 return data;
             }
-            
+
             console.log(`💰 Header currency: ${headerCurrency}`);
-            
+
             // Check if normalization is needed BEFORE calling the LLM
             const needsNormalization = this.checkIfNormalizationNeeded(data, headerCurrency);
-            
+
             if (!needsNormalization) {
                 console.log(`✅ No normalization needed - all values already in ${headerCurrency}, returning original data`);
+
+                // Create the prompt for the LLM
+                const prompt = this.createNormalizationPrompt(data, headerCurrency);
+                
+                // Track the LLM call with Handit.ai
+                let trackingInput = {
+                    systemPrompt: prompt,
+                    userPrompt: "Convert all monetary values to " + headerCurrency,
+                    jsonData: JSON.stringify(data, null, 2)  // Send the JSON data
+                };
+
+                await trackNode({
+                    input: trackingInput,
+                    output: JSON.stringify(data, null, 2),
+                    nodeName: 'currency_normalization',
+                    agentName: 'multi_currency',
+                    nodeType: 'llm',
+                    executionId: this.executionId
+                });
+
+
                 return data;
             }
-            
+
             // Create the prompt for the LLM
             const prompt = this.createNormalizationPrompt(data, headerCurrency);
-            
+
             console.log(`🤖 Sending to LLM for intelligent normalization...`);
-            
+
             // Get LLM response with tool calls
             const llmResponse = await this.llmWithTools.invoke(prompt);
-            
+
             console.log(`📝 LLM Response:`, llmResponse);
-            
+
             // Process tool calls if any
             if (llmResponse.tool_calls && llmResponse.tool_calls.length > 0) {
                 console.log(`🔧 Processing ${llmResponse.tool_calls.length} tool calls...`);
-                
+
                 for (const toolCall of llmResponse.tool_calls) {
                     if (toolCall.name === 'convert_currency') {
                         console.log(`💱 Tool call args:`, toolCall.args);
-                        
+
                         // Execute the tool
                         const toolResult = await this.currencyTool.func(toolCall.args);
                         console.log(`✅ Tool result:`, toolResult);
-                        
+
                         // Parse the result and apply to the data
                         try {
                             const conversionResult = JSON.parse(toolResult);
@@ -299,9 +320,9 @@ class CurrencyNormalizationService {
             });
 
             console.log(`📊 Handit.ai tracking completed for currency normalization`);
-            
+
             return data;
-            
+
         } catch (error) {
             throw new Error(`Failed to normalize file with LLM ${filePath}: ${error.message}`);
         }
@@ -347,7 +368,7 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
         console.log(`🔄 Applying conversion result to data structure...`);
         console.log(`📊 Tool args:`, toolArgs);
         console.log(`📊 Conversion result:`, conversionResult);
-        
+
         try {
             // Parse the conversion result if it's a string
             let result;
@@ -356,32 +377,32 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
             } else {
                 result = conversionResult;
             }
-            
+
             if (result.error) {
                 console.error(`❌ Conversion failed: ${result.error}`);
                 return;
             }
-            
+
             // Find the monetary field that corresponds to this conversion
             // We need to identify which field in the data this conversion belongs to
             const monetaryFields = this.findMonetaryFields(data);
             console.log(`🔍 Found ${monetaryFields.length} monetary fields to check`);
-            
+
             // Try to match the conversion with a field based on the tool arguments
             let conversionApplied = false;
-            
+
             for (const field of monetaryFields) {
                 const fieldValue = this.getFieldValue(data, field.path);
                 if (fieldValue && fieldValue.value) {
                     const extractedAmount = this.extractAmountFromValue(fieldValue.value);
                     const extractedCurrency = this.extractCurrencyFromValue(fieldValue.value);
-                    
+
                     console.log(`🔍 Checking field ${field.path}: amount=${extractedAmount}, currency=${extractedCurrency}`);
-                    
+
                     // Check if this field matches the conversion
-                    if (extractedAmount === toolArgs.amount && 
+                    if (extractedAmount === toolArgs.amount &&
                         extractedCurrency === toolArgs.fromCurrency) {
-                        
+
                         // Apply the normalizedValue to this field
                         fieldValue.normalizedValue = {
                             amount: result.convertedAmount,
@@ -392,26 +413,26 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
                             conversionDate: result.conversionDate,
                             method: result.method
                         };
-                        
+
                         console.log(`✅ Applied conversion to field: ${field.path}`);
                         conversionApplied = true;
                         break;
                     }
                 }
             }
-            
+
             // If we can't find a direct match, try to find by amount only
             if (!conversionApplied) {
                 console.log(`⚠️ No exact match found, trying to find by amount only...`);
-                
+
                 for (const field of monetaryFields) {
                     const fieldValue = this.getFieldValue(data, field.path);
                     if (fieldValue && fieldValue.value) {
                         const extractedAmount = this.extractAmountFromValue(fieldValue.value);
-                        
+
                         if (extractedAmount === toolArgs.amount) {
                             console.log(`🎯 Found field by amount: ${field.path}`);
-                            
+
                             // Apply the normalizedValue to this field
                             fieldValue.normalizedValue = {
                                 amount: result.convertedAmount,
@@ -422,7 +443,7 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
                                 conversionDate: result.conversionDate,
                                 method: result.method
                             };
-                            
+
                             console.log(`✅ Applied conversion to field: ${field.path}`);
                             conversionApplied = true;
                             break;
@@ -430,14 +451,14 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
                     }
                 }
             }
-            
+
             // If still no match, add to conversions metadata
             if (!conversionApplied) {
                 console.log(`⚠️ Could not find field match, adding to conversions metadata`);
                 if (!data._conversions) {
                     data._conversions = [];
                 }
-                
+
                 data._conversions.push({
                     originalArgs: toolArgs,
                     result: result,
@@ -445,7 +466,7 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
                     status: 'unmatched'
                 });
             }
-            
+
         } catch (error) {
             console.error(`❌ Error applying conversion:`, error.message);
         }
@@ -458,14 +479,14 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
      */
     findMonetaryFields(data) {
         const fields = [];
-        
+
         const findFields = (obj, path = '') => {
             if (Array.isArray(obj)) {
                 obj.forEach((item, index) => findFields(item, `${path}[${index}]`));
             } else if (obj && typeof obj === 'object') {
                 for (const [key, value] of Object.entries(obj)) {
                     const currentPath = path ? `${path}.${key}` : key;
-                    
+
                     if (this.isMonetaryValue(value)) {
                         fields.push({
                             path: currentPath,
@@ -479,7 +500,7 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
                 }
             }
         };
-        
+
         findFields(data);
         return fields;
     }
@@ -494,7 +515,7 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
         try {
             const pathParts = path.split('.');
             let current = data;
-            
+
             for (const part of pathParts) {
                 if (part.includes('[')) {
                     // Handle array indices
@@ -506,12 +527,12 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
                 } else {
                     current = current[part];
                 }
-                
+
                 if (current === undefined || current === null) {
                     return null;
                 }
             }
-            
+
             return current;
         } catch (error) {
             console.error(`❌ Error getting field value for path ${path}:`, error.message);
@@ -551,11 +572,11 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
                 for (const [key, value] of Object.entries(obj)) {
                     const currentPath = path ? `${path}.${key}` : key;
                     analysis.totalFields++;
-                    
+
                     if (this.isMonetaryValue(value)) {
                         const originalCurrency = this.extractCurrencyFromValue(value.value);
                         const needsConversion = originalCurrency && originalCurrency.toUpperCase() !== targetCurrency.toUpperCase();
-                        
+
                         analysis.monetaryFields.push({
                             path: currentPath,
                             value: value.value,
@@ -563,7 +584,7 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
                             needsConversion: needsConversion,
                             targetCurrency: targetCurrency
                         });
-                        
+
                         if (needsConversion) {
                             analysis.needsConversion = true;
                         }
@@ -582,9 +603,9 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
             console.log(`🔍 Analyzing root structure...`);
             analyzeObject(data);
         }
-        
+
         console.log(`🔍 Analysis: Found ${analysis.monetaryFields.length} monetary fields, ${analysis.needsConversion ? 'conversion needed' : 'no conversion needed'}`);
-        
+
         return analysis;
     }
 
@@ -595,14 +616,14 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
      */
     extractHeaderCurrency(data) {
         console.log(`🔍 Extracting header currency from data structure...`);
-        
+
         // First, check if we have extractedData structure
         if (data.extractedData) {
             console.log(`📁 Found extractedData structure, searching there...`);
-            
+
             // Look for common currency fields in extractedData
             const currencyFields = ['currency', 'headerCurrency', 'baseCurrency', 'documentCurrency'];
-            
+
             for (const field of currencyFields) {
                 if (data.extractedData[field] && data.extractedData[field].value) {
                     const currency = data.extractedData[field].value.toUpperCase();
@@ -610,14 +631,14 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
                     return currency;
                 }
             }
-            
+
             // Look for currency in nested structures within extractedData
             if (data.extractedData.header && data.extractedData.header.currency && data.extractedData.header.currency.value) {
                 const currency = data.extractedData.header.currency.value.toUpperCase();
                 console.log(`✅ Found header currency: ${currency} in extractedData.header.currency`);
                 return currency;
             }
-            
+
             // Look for currency in document metadata within extractedData
             if (data.extractedData.documentMetadata && data.extractedData.documentMetadata.currency && data.extractedData.documentMetadata.currency.value) {
                 const currency = data.extractedData.documentMetadata.currency.value.toUpperCase();
@@ -625,11 +646,11 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
                 return currency;
             }
         }
-        
+
         // Fallback: look in the root level (for backward compatibility)
         console.log(`🔍 Checking root level for currency fields...`);
         const currencyFields = ['currency', 'headerCurrency', 'baseCurrency', 'documentCurrency'];
-        
+
         for (const field of currencyFields) {
             if (data[field] && data[field].value) {
                 const currency = data[field].value.toUpperCase();
@@ -637,21 +658,21 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
                 return currency;
             }
         }
-        
+
         // Look for currency in nested structures at root level
         if (data.header && data.header.currency && data.header.currency.value) {
             const currency = data.header.currency.value.toUpperCase();
             console.log(`✅ Found header currency: ${currency} in root header.currency`);
             return currency;
         }
-        
+
         // Look for currency in document metadata at root level
         if (data.documentMetadata && data.documentMetadata.currency && data.documentMetadata.currency.value) {
             const currency = data.documentMetadata.currency.value.toUpperCase();
             console.log(`✅ Found header currency: ${currency} in root documentMetadata.currency`);
             return currency;
         }
-        
+
         console.log(`❌ No header currency found in any location`);
         return null;
     }
@@ -663,11 +684,11 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
      */
     isMonetaryValue(value) {
         if (!value || typeof value !== 'object') return false;
-        
+
         // Check if it has a value field that looks like money
         if (value.value !== undefined) {
             const strValue = String(value.value);
-            
+
             // Look for currency symbols or patterns
             const moneyPatterns = [
                 /\$[\d,]+\.?\d*/,           // $123.45, $1,234
@@ -675,10 +696,10 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
                 /[A-Z]{3}\s*[\d,]+\.?\d*/, // USD 123.45, EUR 1,234
                 /[\d,]+\.?\d*/,             // 123.45, 1,234 (if context suggests money)
             ];
-            
+
             return moneyPatterns.some(pattern => pattern.test(strValue));
         }
-        
+
         return false;
     }
 
@@ -689,13 +710,13 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
      */
     extractCurrencyFromValue(value) {
         if (typeof value !== 'string') return null;
-        
+
         // Look for 3-letter currency codes
         const currencyMatch = value.match(/\b([A-Z]{3})\b/);
         if (currencyMatch) {
             return currencyMatch[1];
         }
-        
+
         // Look for currency symbols and map them
         const symbolMap = {
             '$': 'USD',
@@ -717,13 +738,13 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
             '₾': 'GEL',
             '₿': 'BTC'
         };
-        
+
         for (const [symbol, currency] of Object.entries(symbolMap)) {
             if (value.includes(symbol)) {
                 return currency;
             }
         }
-        
+
         return null;
     }
 
@@ -734,14 +755,14 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
      */
     extractAmountFromValue(value) {
         if (typeof value !== 'string') return null;
-        
+
         // Remove currency symbols and codes, keep only numbers, commas, and dots
         const cleanValue = value
             .replace(/[A-Z]{3}/g, '')  // Remove currency codes
             .replace(/[^\d,.-]/g, '')  // Keep only numbers, commas, dots, and minus
             .replace(/,/g, '')         // Remove commas
             .trim();
-        
+
         const amount = parseFloat(cleanValue);
         return isNaN(amount) ? null : amount;
     }
@@ -753,7 +774,7 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
      */
     wasDataNormalized(data) {
         let hasNormalizedValues = false;
-        
+
         const checkForNormalizedValues = (obj) => {
             if (Array.isArray(obj)) {
                 obj.forEach(checkForNormalizedValues);
@@ -768,7 +789,7 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
                 }
             }
         };
-        
+
         checkForNormalizedValues(data);
         return hasNormalizedValues;
     }
@@ -784,7 +805,7 @@ Remember: Always use the convert_currency tool for conversions. Do not attempt t
             const jsonFiles = files
                 .filter(file => file.endsWith('.json') && !file.includes('session_summary'))
                 .map(file => path.join(directory, file));
-            
+
             return jsonFiles;
         } catch (error) {
             throw new Error(`Failed to read directory ${directory}: ${error.message}`);
