@@ -1,292 +1,209 @@
-# Multi-Currency Invoice API
+<p align="center">
+  <!-- shows in LIGHT mode only -->
+  <img src="./assets/cover/handit-small-3.png#gh-light-mode-only" width="400" style="object-fit: cover; object-position: center;" alt="Handit logo" />
+  <!-- shows in DARK mode only -->
+  <img src="./assets/cover/handit-small-1.png#gh-dark-mode-only" width="400" style="object-fit: cover; object-position: center;" alt="Handit logo (dark)" />
+</p>
 
-A simple Express.js API with MVC pattern design featuring health check endpoints, bulk file upload with session management, and AI-powered data extraction using LangChain with parallel processing, comprehensive data extraction, and VLLM support.
+<p align="center">
+  <strong>🔥  Open Source AI Agent with Self-improvement Cpabilities 🔥</strong>
+</p>
 
-## 🏗️ Architecture
+<p align="center">
+  <a href="https://github.com/handit-ai/handit.ai/blob/main/LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-green?style=flat&logo=opensourceinitiative&logoColor=white&labelColor=000000" alt="license">
+  </a>
+  <a href="https://github.com/Handit-AI/handit-examples.git">
+    <img src="https://img.shields.io/github/stars/Handit-AI/handit-examples?style=flat&logo=github&logoColor=white&color=yellow&labelColor=000000" alt="GitHub stars">
+  </a>
+  <a href="https://discord.com/invite/XCVWYCFen6" target="_blank">
+    <img src="https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=flat&logo=discord&logoColor=white&labelColor=000000" alt="Discord">
+  </a>
+</p>
 
-This project follows the **MVC (Model-View-Controller)** pattern:
+<p align="center">
+  <a href="https://docs.handit.ai/quickstart">🚀 Quick Start</a> •
+  <a href="https://docs.handit.ai/">📋 Core Features</a> •
+  <a href="https://docs.handit.ai/">📚 Docs</a> •
+  <a href="https://calendly.com/cristhian-handit/30min">📅 Schedule a Call</a>
+</p>
 
-- **Models**: Business logic and data handling (services)
-- **Views**: API responses (JSON)
-- **Controllers**: Request handling and response formatting
-- **Routes**: URL endpoint definitions
+---
+
+# Multi-Currency Invoice
+
+Self-improving AI agent that ingests multi-currency invoices, extracts all data, and automatically normalizes monetary values to a target currency (header currency) using latest or historical FX rates based on invoice date.
+
+![Invoice Processing](./assets/cover/currency.gif)
+
+## 🏗️ Architecture Overview
+
+This project uses an Express.js MVC structure with Handit.ai observability and AI-powered processing:
+
+![Architecture](./assets/cover/grafo_multicurrency.png)
+
+### 🔄 Workflow Stages
+
+#### 1. Ingestion & Session
+- Upload multiple files (images/PDFs) with `multer`
+- Files stored under `assets/{session_id}/files/`
+
+#### 2. AI Extraction (LangChain)
+- Multimodal extraction of fields, tables, amounts, and currencies
+- Parallel processing for faster results
+- Structured JSON saved to `assets/{session_id}/structured/`
+
+#### 3. Currency Normalization (LLM + Tools)
+- Detect header currency and amounts in other currencies
+- Convert values to header currency using ExchangeRate-API (latest/historical)
+- Save normalized outputs to `assets/{session_id}/output/`
+
+#### 4. Self-Improvement
+- **Observability**
+   - Every interaction with this AI agent is monitored by handit
+- **Failure Detection**
+   - Handit automatically identifies errors in any of our LLMs — like when a monetary value was not normalized correctly (Really important for this AI agent)
+- **Automated Fix Generation**
+   - If a failure is detected, Handit automatically fixes our prompts for us
 
 ## 📁 Project Structure
 
 ```
 multi-currency-invoice/
 ├── controllers/
-│   ├── HealthController.js    # Health check logic
-│   └── FileController.js      # File upload and LangChain processing
+│   ├── HealthController.js
+│   └── FileController.js
 ├── routes/
-│   ├── healthRoutes.js        # Health endpoint routes
-│   └── fileRoutes.js          # File upload and LangChain routes
+│   ├── healthRoutes.js
+│   ├── fileRoutes.js
+│   └── currencyRoutes.js
 ├── services/
-│   ├── HealthService.js       # Business logic for health checks
-│   ├── FileService.js         # File handling and storage
-│   └── ExtractionService.js    # AI-powered data extraction with VLLM support
-├── assets/                    # File storage directory
-│   └── {session_id}/         # Session-specific directories
-│       ├── files/            # Uploaded files
-│       └── structured/       # Extracted data in JSON format
-├── server.js                  # Main application entry point
-├── package.json               # Dependencies and scripts
-├── config.env.example         # Environment variables template
-└── README.md                  # This file
+│   ├── HealthService.js
+│   ├── FileService.js
+│   ├── ExtractionService.js
+│   ├── CurrencyConverterService.js
+│   └── CurrencyNormalizationService.js
+├── assets/
+│   └── {session_id}/
+│       ├── files/
+│       ├── structured/
+│       └── output/
+├── server.js
+├── package.json
+├── .env.example
+└── README.md
 ```
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
-
-- Node.js (v14 or higher)
-- npm or yarn
-- OpenAI API key for LangChain integration OR VLLM endpoint for local models
+- Node.js 18+
+- npm
+- API Keys: `HANDIT_API_KEY`, `OPENAI_API_KEY` and  `EXCHANGE_RATE_API_KEY` for historical rates
 
 ### Installation
-
-1. Navigate to the project directory:
+1.  **Clone and Navigate**
    ```bash
+   git clone https://github.com/Handit-AI/handit-examples.git
    cd examples/multi-currency-invoice
    ```
-
-2. Install dependencies:
+2. **Install**
    ```bash
    npm install
    ```
-
-3. Set up environment variables:
+3. **Configure Env**
    ```bash
-   cp config.env.example .env
-   # Edit .env with your API keys and preferred model
+   cp .env.example .env
+   # Edit .env with your keys (HANDIT, OPENAI, optional EXCHANGE_RATE_API_KEY)
    ```
-
-4. Start the server:
+4. **Run**
    ```bash
-   # Development mode with auto-reload
+   # Development (nodemon)
    npm run dev
    
-   # Production mode
+   # Production
    npm start
    ```
 
-The server will start on port 3000 by default.
+Service runs on `http://localhost:3000` by default.
 
-## 🔍 API Endpoints
+## 📖 API Usage
 
-### Health Check Endpoints
-
-#### 1. Basic Health Check
-- **URL**: `GET /api/health`
-- **Description**: Basic service health status
-
-#### 2. Detailed Health Check
-- **URL**: `GET /api/health/detailed`
-- **Description**: Comprehensive health information including system metrics
-
-#### 3. Custom Health Check
-- **URL**: `GET /api/health/check?include=basic,detailed&timeout=5000`
-- **Description**: Customizable health check with query parameters
-
-### File Upload & AI Processing Endpoints
-
-#### 1. Bulk File Upload with AI Processing
-- **URL**: `POST /api/files/upload`
-- **Description**: Upload multiple files and automatically process them with LangChain for comprehensive data extraction
-- **Form Data**:
-  - `files`: Array of files (max 10 files, 50MB each)
-  - `session_id`: Optional session identifier (auto-generated if not provided)
-- **Response**:
-  ```json
-  {
-    "success": true,
-    "message": "Files uploaded and processed successfully",
-    "sessionId": "session_1234567890",
-    "totalFiles": 3,
-    "files": [...],
-    "storagePath": "assets/session_1234567890/files/",
-    "langChainProcessing": {
-      "status": "completed",
-      "extractedData": {...},
-      "processingCompletedAt": "2024-01-01T00:00:00.000Z",
-      "structuredDataPath": "assets/session_1234567890/structured/"
-    }
-  }
-  ```
-
-#### 2. Get Session Files
-- **URL**: `GET /api/files/session/:sessionId`
-- **Description**: Retrieve information about files in a specific session
-
-#### 3. Get LangChain Processing Results
-- **URL**: `GET /api/files/langchain/:sessionId`
-- **Description**: Get AI processing results and extracted data for a session
-
-### Root Endpoint
-- **URL**: `GET /`
-- **Description**: API information and available endpoints
-
-## 🤖 AI-Powered Data Extraction
-
-The API now includes an **enhanced LangChain service** that automatically processes uploaded documents with parallel processing, comprehensive data extraction, and VLLM support:
-
-### **What LangChain Extracts:**
-- **Document Type**: Invoice, receipt, purchase order, contract, statement, quote, estimate, etc.
-- **Vendor Information**: Company name, address, contact details
-- **Customer Information**: Client details, addresses, contact information
-- **Financial Data**: Amounts, currencies, dates, payment terms
-- **Line Items**: Detailed breakdown with quantities, prices, descriptions
-- **Tax Information**: Tax amounts, rates, types
-- **Additional Charges**: Shipping, handling, discounts, processing fees
-- **Table Data**: Any structured information from tables, grids, or forms
-- **Key-Value Pairs**: All important data fields from documents
-- **Custom Fields**: Document-specific information discovered by the AI
-- **Dynamic Fields**: Fields that the LLM discovers and creates based on content
-
-### **Enhanced System Prompt:**
-The AI is configured as an expert OCR and data extraction specialist with expertise in:
-1. **Document Analysis**: Analyze any type of financial document and identify its structure
-2. **Dynamic Field Discovery**: Discover and extract ALL relevant fields, not just predefined ones
-3. **Table and Structure Detection**: Identify tables, grids, line items, and any structured layouts
-4. **Multi-Format Support**: Handle invoices, receipts, POs, contracts, statements, and any financial document
-5. **Flexible Extraction**: Adapt your extraction to the specific document type and format
-6. **Comprehensive Coverage**: Extract every piece of information you can find
-
-### **Processing Features:**
-- **Parallel Processing**: All invoices processed simultaneously for faster results
-- **Flexible Field Extraction**: AI discovers and creates fields based on document content
-- **Comprehensive Extraction**: Captures every piece of information possible
-- **Table Detection**: Automatically identifies and extracts table data
-- **Multi-Currency Support**: Handles various currencies and exchange rates
-- **High Confidence**: 85-100% confidence levels in extraction
-- **Structured Output**: Consistent JSON format for all extractions
-- **VLLM Support**: Works with local/self-hosted models for privacy and cost control
-
-### **Processing Flow:**
-1. **File Upload** → Files saved to session directory
-2. **File Content Reading** → Actual file content extracted (text, base64 for images/PDFs)
-3. **Parallel Processing** → All files processed simultaneously with LangChain
-4. **Flexible Extraction** → AI discovers fields and creates custom structures
-5. **JSON Storage** → Structured data saved to `assets/{session_id}/structured/`
-6. **Response** → Complete results with extracted data and storage paths
-
-## 📁 File Storage Structure
-
-Files and extracted data are organized by session:
-
-```
-assets/
-├── session_1234567890/
-│   ├── files/                    # Original uploaded files
-│   │   ├── invoice.pdf
-│   │   ├── receipt.jpg
-│   │   └── document.docx
-│   └── structured/               # Extracted data in JSON format
-│       ├── invoice_extracted_data.json
-│       ├── receipt_extracted_data.json
-│       ├── document_extracted_data.json
-│       └── session_summary_session_1234567890.json
-├── session_0987654321/
-│   ├── files/
-│   └── structured/
-```
-
-### **JSON File Structure:**
-Each extracted document gets its own JSON file with:
-- **Metadata**: File info, processing time, session details
-- **Extracted Data**: All extracted information in structured format
-- **Custom Fields**: Fields discovered by the AI that don't fit standard categories
-- **Confidence Levels**: Processing confidence for each field
-- **Processing Notes**: Details about the extraction process
-
-## 🚀 VLLM Support
-
-The API now supports **VLLM (Very Large Language Model)** for local model deployment:
-
-### **Benefits of VLLM:**
-- **Privacy**: Process documents locally without sending data to external APIs
-- **Cost Control**: No per-token charges for external API calls
-- **Custom Models**: Use your own fine-tuned models for specific document types
-- **Offline Processing**: Work without internet connectivity
-- **Customization**: Modify models for your specific use case
-
-### **VLLM Configuration:**
+### Health
 ```bash
-# .env
-VLLM_ENDPOINT=http://localhost:8000/v1
-OPENAI_MODEL=your_local_model_name
+curl http://localhost:3000/api/health
+curl http://localhost:3000/api/health/detailed
+curl "http://localhost:3000/api/health/check?include=basic,detailed,performance&timeout=5000"
 ```
 
-### **VLLM Setup:**
-1. **Install VLLM**: `pip install vllm`
-2. **Start Server**: `python -m vllm.entrypoints.openai.api_server --model your_model_name`
-3. **Configure API**: Set `VLLM_ENDPOINT` in your `.env` file
-
-## 🛠️ Development
-
-### Available Scripts
-
-- `npm start`: Start the production server
-- `npm run dev`: Start the development server with nodemon (auto-reload)
-
-### Adding New Endpoints
-
-1. **Create a Service** in the `services/` directory
-2. **Create a Controller** in the `controllers/` directory
-3. **Create Routes** in the `routes/` directory
-4. **Register Routes** in `server.js`
-
-### Example: Adding a New Service
-
-```javascript
-// services/ExampleService.js
-class ExampleService {
-  static async doSomething() {
-    // Business logic here
-    return { message: "Success" };
-  }
-}
-
-module.exports = ExampleService;
+### Upload & Process
+```bash
+curl -X POST "http://localhost:3000/api/files/upload" \
+  -F "session_id=test-01" \
+  -F "files=@./assets/test/multicurrency.png"
 ```
+
+### Session Data
+```bash
+curl http://localhost:3000/api/files/session/test-01
+curl http://localhost:3000/api/files/langchain/test-01
+curl http://localhost:3000/api/files/normalization/test-01
+```
+
+### Currency
+```bash
+# Latest conversion
+curl -X POST http://localhost:3000/api/currency/convert \
+  -H "Content-Type: application/json" \
+  -d '{"amount":100,"fromCurrency":"USD","toCurrency":"EUR"}'
+
+# Historical conversion (requires EXCHANGE_RATE_API_KEY)
+curl -X POST http://localhost:3000/api/currency/convert/historical \
+  -H "Content-Type: application/json" \
+  -d '{"amount":100,"fromCurrency":"USD","toCurrency":"EUR","date":"2023-12-05"}'
+
+# Rates
+curl "http://localhost:3000/api/currency/rate?fromCurrency=USD&toCurrency=EUR"
+curl "http://localhost:3000/api/currency/rate/historical?fromCurrency=USD&toCurrency=EUR&date=2023-12-05"
+curl "http://localhost:3000/api/currency/rates?baseCurrency=USD&symbols=[\"EUR\",\"GBP\"]"
+curl "http://localhost:3000/api/currency/rates/historical?baseCurrency=USD&date=2023-12-05"
+```
+
+## 🤖 How It Works
+
+### Extraction (LangChain + OpenAI)
+- Reads actual file content (text or base64 for images/PDFs)
+- Multimodal prompts to discover fields, tables, line items
+- Returns clean JSON; stored per-file in `structured/`
+
+### Normalization (LLM Tools + ExchangeRate-API)
+- Detects monetary fields and their currencies
+- Converts non-header currencies to header currency
+- Uses latest or historical FX depending on provided date
+- Outputs saved to `output/`
 
 ## 🔧 Configuration
 
-The application can be configured using environment variables:
+Environment variables:
+- `PORT` (default: 3000)
+- `HANDIT_API_KEY` (required to start server)
+- `OPENAI_API_KEY` and `OPENAI_MODEL` (default: gpt-5-mini-2025-08-07)
+- `EXCHANGE_RATE_API_KEY` (enables historical rates)
 
-- `PORT`: Server port (default: 3000)
-- `NODE_ENV`: Environment (default: development)
-- `OPENAI_API_KEY`: Your OpenAI API key for LangChain integration
-- `OPENAI_MODEL`: OpenAI model to use (default: gpt-5-mini-2025-08-07)
-- `VLLM_ENDPOINT`: VLLM server endpoint for local models (optional)
+## 🔒 Security & Monitoring
+- Helmet, CORS, input validation
+- Handit.ai tracing: ingestion, LLM calls, normalization steps
+- Health endpoints for readiness and diagnostics
 
-## 📊 Monitoring
 
-The health endpoints provide comprehensive monitoring capabilities:
+**Missing API keys**
+- Ensure `.env` contains `HANDIT_API_KEY`, `OPENAI_API_KEY`, `EXCHANGE_RATE_API_KEY`.
 
-- Service status and uptime
-- System resource usage (memory, CPU)
-- Response time metrics
-- Environment information
-
-## 🚨 Error Handling
-
-The API includes comprehensive error handling:
-
-- 404 for non-existent endpoints
-- 500 for internal server errors
-- Structured error responses with timestamps
-
-## 🔒 Security
-
-Built-in security features:
-
-- Helmet.js for security headers
-- CORS configuration
-- Input validation and sanitization
-- File type restrictions
-- Local processing option with VLLM for sensitive documents
+## 📚 Resources
+- **Handit.ai**: https://www.handit.ai/
+- **Docs**: https://docs.handit.ai/
+- **Dashboard**: https://dashboard.handit.ai/
+- **Discord**: https://discord.com/invite/XCVWYCFen6
 
 ## 📝 License
-
-MIT License - see LICENSE file for details.
+MIT License — see [LICENSE](/LICENSE).
