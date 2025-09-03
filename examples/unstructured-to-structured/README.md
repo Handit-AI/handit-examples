@@ -1,33 +1,20 @@
 
-<p align="center">
-  <!-- shows in LIGHT mode only -->
-  <img src="./assets/cover/handit-small-3.png#gh-light-mode-only" width="400" style="object-fit: cover; object-position: center;" alt="Handit logo" />
-  <!-- shows in DARK mode only -->
-  <img src="./assets/cover/handit-small-1.png#gh-dark-mode-only" width="400" style="object-fit: cover; object-position: center;" alt="Handit logo (dark)" />
-</p>
+
 
 <p align="center">
   <strong>🔥 Open Source AI Agent with Self-improvement Cpabilities 🔥</strong>
 </p>
 
 <p align="center">
-  <a href="https://github.com/handit-ai/handit.ai/blob/main/LICENSE">
+  <a href="https://github.com/handit-ai/handit-examples/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-green?style=flat&logo=opensourceinitiative&logoColor=white&labelColor=000000" alt="license">
-  </a>
-  <a href="https://github.com/Handit-AI/handit-examples.git">
-    <img src="https://img.shields.io/github/stars/Handit-AI/handit-examples?style=flat&logo=github&logoColor=white&color=yellow&labelColor=000000" alt="GitHub stars">
   </a>
   <a href="https://discord.com/invite/XCVWYCFen6" target="_blank">
     <img src="https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=flat&logo=discord&logoColor=white&labelColor=000000" alt="Discord">
   </a>
 </p>
 
-<p align="center">
-  <a href="https://docs.handit.ai/quickstart">🚀 Quick Start</a> •
-  <a href="https://docs.handit.ai/">📋 Core Features</a> •
-  <a href="https://docs.handit.ai/">📚 Docs</a> •
-  <a href="https://calendly.com/cristhian-handit/30min">📅 Schedule a Call</a>
-</p>
+
 
 ---
 
@@ -79,23 +66,14 @@ Let’s understand the architecture of our AI agent at a very high level:
 - **Output**: Multiple CSV tables (general, items, addresses, etc.)
 - **Key**: Intelligent table structure planning for complex nested data
 
-**How does this AI agent gets better over time?**
 
-Here is the secret weapon: [Handit.ai](https://www.handit.ai/)
-
-1. **Observability**
-   - Every interaction with our AI agent is monitored by handit  
-2. **Failure Detection**
-   - Handit automatically identifies errors in any of our LLMs — like when a CSV file doesn’t contain the right content (Really important for this AI agent)
-3. **Automated Fix Generation**
-   - If a failure is detected, Handit automatically fixes our prompts for us
 
 
 ## 📁 Project Structure
 
 ```
 unstructured-to-structured/
-├── 📄 main.py                    # FastAPI server with Handit.ai integration
+├── 📄 main.py                    # FastAPI server
 ├── 📋 requirements.txt           # Python dependencies
 ├── 🏗️ graph/                    # LangGraph workflow components
 │   ├── 📊 graph.py              # Main workflow orchestration
@@ -109,8 +87,7 @@ unstructured-to-structured/
 │       ├── 🔍 document_inference.py
 │       ├── 📋 document_data_extraction.py
 │       └── 🎯 generation.py
-├── 🔌 services/                  # External service integrations
-│   └── 📡 handit_service.py     # Handit.ai observability service
+
 ├── 📁 assets/                   # Input/output directories
 │   ├── 📸 cover/                # Project assets
 │   ├── 📊 csv/                  # Generated CSV outputs
@@ -124,7 +101,7 @@ unstructured-to-structured/
 ### Prerequisites
 - **Python**: 3.8 or higher
 - **OpenAI API Key**: For LLM processing
-- **Handit.ai API Key**: For observability, evaluation and self-improvement
+
 
 ### Installation
 
@@ -154,16 +131,13 @@ unstructured-to-structured/
    **Environment Variables Explained:**
    - `OPENAI_API_KEY`: Your OpenAI API key for accessing GPT models
    - `OPENAI_MODEL`: The specific OpenAI model to use (default: gpt-4o-mini)
-   - `HANDIT_API_KEY`: Your Handit.ai API key for observability, evaluation and self-improvement
+
 
 5. **Start the Server**
    ```bash
    python main.py
    ```
-6. **Visit Handit Dashboard**
-   - **Agent Tracing**: Monitor full observability at [https://dashboard.handit.ai/ag-tracing](https://dashboard.handit.ai/ag-tracing)
-   - **Evaluation Hub**: Set up and manage your evaluations at [https://dashboard.handit.ai/evaluation-hub](https://dashboard.handit.ai/evaluation-hub)
-   - **Optimization**: View and compare prompt versions at [https://dashboard.handit.ai/prompt-versions](https://dashboard.handit.ai/prompt-versions)
+
 
 The API will be available at `http://localhost:8000`
 
@@ -321,13 +295,7 @@ We welcome contributions! Here's how to help:
 
 ### Common Issues
 
-#### 1. **Handit.ai Configuration Error**
-```bash
-❌ HANDIT_API_KEY not found in environment variables
-```
-**Solution**: Add `HANDIT_API_KEY` to your `.env` file
-
-#### 2. **OpenAI API Key Error**
+#### 1. **OpenAI API Key Error**
 ```bash
 ❌ OPENAI_API_KEY not found
 ```
@@ -350,10 +318,7 @@ Enable detailed logging by setting log level to DEBUG in `main.py`.
 
 ## 📚 Resources & Documentation
 
-### Handit.ai Resources
-- **[Handit.ai Platform](https://www.handit.ai/)** - Autonomous AI engineering
-- **[Documentation](https://docs.handit.ai/)** - Complete platform guide
-- **[Dashboard](https://dashboard.handit.ai/)** - Start using Handit for free
+
 - **[Community](https://discord.com/invite/XCVWYCFen6)** - Join our Discord
 
 
@@ -366,9 +331,7 @@ This project is licensed under the MIT License - see the [LICENSE](/LICENSE) fil
 
 ## 🆘 Need Help?
 
-- **📚 Documentation**: [docs.handit.ai](https://docs.handit.ai/)
 - **💬 Community**: [Discord](https://discord.com/invite/XCVWYCFen6)
-- **📅 Schedule Call**: [Calendly](https://calendly.com/cristhian-handit/30min)
 - **🐛 Issues**: [GitHub Issues](https://github.com/Handit-AI/handit-examples/issues)
 
 **Questions?** Open an issue or start a discussion. We're here to help! 🚀

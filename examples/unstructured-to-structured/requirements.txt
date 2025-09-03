@@ -11,7 +11,7 @@ openai>=1.40.0
 langgraph>=0.2.0
 langchain-core>=0.2.0
 langchain-openai>=0.1.0
-handit-sdk>=1.16.0
+
 
 # Data Processing
 pandas>=2.0.0

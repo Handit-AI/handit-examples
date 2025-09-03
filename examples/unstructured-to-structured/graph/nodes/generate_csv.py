@@ -17,7 +17,7 @@ Key Features:
 - Automatic CSV file generation
 - Fallback processing for robustness
 - Comprehensive logging and error handling
-- Integration with Handit.ai for tracking and monitoring
+
 - Support for various data structures and formats
 
 Processing Flow:
@@ -26,7 +26,7 @@ Processing Flow:
 3. Parse and validate AI-generated plans
 4. Convert data to tabular format
 5. Generate and save CSV files
-6. Track operations and return results
+6. Return results
 """
 
 import json
@@ -38,8 +38,7 @@ from graph.state import GraphState
 from graph.chains.generation import csv_generation_planner
 # Get system and user prompts from the chain
 from graph.chains.generation import get_system_prompt, get_user_prompt
-# Handit.ai
-from services.handit_service import tracker
+
 
 logger = logging.getLogger(__name__)
 
@@ -122,7 +121,7 @@ def generate_csv(state: GraphState) -> Dict[str, Any]:
         3. Response Parsing: Handle various LLM response formats
         4. Table Generation: Convert planned structures to actual tables
         5. CSV Export: Save tables as CSV files
-        6. Tracking: Monitor operations with Handit.ai
+
     """
     logger.info("🔄 Starting table generation...")
     
@@ -131,9 +130,7 @@ def generate_csv(state: GraphState) -> Dict[str, Any]:
         session_id = state.get("session_id")
         structured_json_paths = state.get("structured_json_paths", [])
 
-        # App name and execution ID for Handit.ai observability
-        agent_name = state.get("agent_name")
-        execution_id = state.get("execution_id")
+
         
         # Validate that structured JSON data is available for processing
         if not structured_json_paths:
@@ -231,24 +228,7 @@ def generate_csv(state: GraphState) -> Dict[str, Any]:
         generated_files = _save_tables_to_csv(tables, output_dir)
         logger.info(f"💾 Generated {len(generated_files)} CSV files")
         
-        # Step 5: Track operations and prepare return results
-        
-        # Prepare tracking input with complete JSON data for Handit.ai monitoring
-        tracking_input = {
-            "systemPrompt": get_system_prompt(),
-            "userPrompt": get_user_prompt(),
-            "documents_inventory": all_json_data
-        }
-        
-        # Track the CSV generation operation for observability and debugging
-        tracker.track_node(
-            input=tracking_input,
-            output={"tables": tables, "plan": plan, "generated_files": generated_files},
-            node_name="generate_csv",
-            agent_name=agent_name,
-            node_type="llm",
-            execution_id=execution_id
-        )
+        # Step 5: Prepare return results
 
         logger.info("✅ Table generation completed")
         

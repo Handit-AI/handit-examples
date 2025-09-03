@@ -13,7 +13,7 @@ Key Features:
 - AI-powered data extraction using inferred schemas
 - Structured JSON output with field mapping and validation
 - Comprehensive error handling and logging
-- Integration with Handit.ai for tracking and monitoring
+
 - Support for various file formats and encodings
 
 Processing Flow:
@@ -22,7 +22,7 @@ Processing Flow:
 3. Multimodal message construction for AI processing
 4. Schema-based data extraction using AI models
 5. Structured JSON output generation and storage
-6. Tracking and monitoring integration
+
 """
 
 from typing import Any, Dict
@@ -37,8 +37,7 @@ from graph.state import GraphState
 # Get system and user prompts from the chain
 from graph.chains.document_data_extraction import get_system_prompt, get_user_prompt
 
-# Handit.ai
-from services.handit_service import tracker
+
 
 def read_document_content(file_path: str) -> str:
     """
@@ -101,7 +100,7 @@ def document_data_capture(state: GraphState) -> Dict[str, Any]:
     2. Processes each document using AI-powered extraction
     3. Maps document content to the inferred schema
     4. Generates structured JSON outputs
-    5. Integrates with tracking and monitoring systems
+
     
     The function handles various document types including images, PDFs, and text
     files, ensuring robust processing with comprehensive error handling.
@@ -122,9 +121,7 @@ def document_data_capture(state: GraphState) -> Dict[str, Any]:
     session_id = state.get("session_id")
     document_paths = state.get("unstructured_paths", [])
 
-    # App name and execution ID for Handit.ai Observability
-    agent_name = state.get("agent_name")
-    execution_id = state.get("execution_id")
+
     
     # Validate that documents are provided for processing
     if not document_paths:
@@ -256,55 +253,7 @@ def document_data_capture(state: GraphState) -> Dict[str, Any]:
             structured_json_paths.append(str(output_path))
             print(f"💾 Saved structured data to: {output_path}")
             
-            # Process images for tracking and monitoring purposes
-            # This prepares image data for Handit.ai integration
-            image_attachments = []
-            print(f"🔍 Processing images for document: {Path(document_path).name} (extension: {extension})")
-            
-            if extension in ['.png', '.jpg', '.jpeg', '.gif', '.bmp']:
-                try:
-                    with open(document_path, 'rb') as f:
-                        image_bytes = f.read()
-                    
-                    # Convert to base64 and create data URL (format that Handit.ai expects)
-                    base64_data = base64.b64encode(image_bytes).decode('utf-8')
-                    mime_type = f"image/{extension[1:]}" if extension[1:] != "jpg" else "image/jpeg"
-                    data_url = f"data:{mime_type};base64,{base64_data}"
-                    
-                    image_attachments.append(data_url)
-                    print(f"📸 Added image for tracking: {Path(document_path).name} ({len(data_url)} chars)")
-                    print(f"📸 Image MIME type: {mime_type}")
-                    print(f"📸 Base64 length: {len(base64_data)}")
-                    
-                except Exception as e:
-                    print(f"❌ Error processing image for tracking: {str(e)}")
-            else:
-                print(f"📄 No image processing needed for file type: {extension}")
-            
-            print(f"🖼️ Total images in this cycle: {len(image_attachments)}")
-            print(f"🖼️ Total len of this document: {len(data_url)}")
-            
-            # Prepare tracking input in the correct Handit.ai format
-            # This includes system prompts, user prompts, schema, and document data
-            tracking_input = {
-                "systemPrompt": get_system_prompt(),
-                "userPrompt": get_user_prompt(),
-                "schema_json": schema_json_text,
-                "document": data_url,
-            }
-            
-            print(f"📤 Sending tracking data to Handit.ai:")
-            print(f"   - Document: {Path(document_path).name}")
-            
-            # Track the processing operation with Handit.ai for monitoring and debugging
-            tracker.track_node(
-                 input=tracking_input,
-                 output=result_dict,
-                 node_name="document_data_capture",
-                 agent_name=agent_name,
-                 node_type="llm",
-                 execution_id=execution_id
-            )
+
             
         except Exception as e:
             # Comprehensive error handling for any processing failures
