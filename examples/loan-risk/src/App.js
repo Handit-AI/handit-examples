@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTheme, useChat } from './hooks';
 import { Header, WelcomeSection, MessageList } from './components';
 import './App.css';
@@ -10,18 +10,54 @@ const App = () => {
     inputValue,
     setInputValue,
     isLoading,
-    isRecording,
+    selectedFiles,
     messagesEndRef,
     inputRef,
+    fileInputRef,
     handleSubmit,
     handleKeyPress,
-    toggleRecording,
+    handleFileSelect,
+    removeFile,
+    openFileDialog,
     clearChat
   } = useChat();
 
+  const [isDragOver, setIsDragOver] = useState(false);
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+    
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length > 0) {
+      const syntheticEvent = {
+        target: { files: files }
+      };
+      handleFileSelect(syntheticEvent);
+    }
+  };
+
   return (
-    <div className="app">
-      <Header 
+    <div 
+      className="app"
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
+      <Header
         theme={theme}
         toggleTheme={toggleTheme}
         onClearChat={clearChat}
@@ -34,10 +70,13 @@ const App = () => {
             setInputValue={setInputValue}
             onSubmit={handleSubmit}
             onKeyPress={handleKeyPress}
-            onToggleRecording={toggleRecording}
-            isRecording={isRecording}
             isLoading={isLoading}
             inputRef={inputRef}
+            fileInputRef={fileInputRef}
+            onFileSelect={handleFileSelect}
+            onOpenFileDialog={openFileDialog}
+            selectedFiles={selectedFiles}
+            onRemoveFile={removeFile}
           />
         ) : (
           <MessageList

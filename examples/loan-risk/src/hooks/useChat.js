@@ -4,9 +4,10 @@ const useChat = () => {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState([]);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -51,13 +52,28 @@ const useChat = () => {
     }
   };
 
-  const toggleRecording = () => {
-    setIsRecording(!isRecording);
-    // Voice recording logic would go here
-  };
-
   const clearChat = () => {
     setMessages([]);
+    setSelectedFiles([]);
+  };
+
+  const handleFileSelect = (event) => {
+    const files = Array.from(event.target.files);
+    setSelectedFiles(prev => [...prev, ...files]);
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const removeFile = (index) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const openFileDialog = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   return {
@@ -65,12 +81,15 @@ const useChat = () => {
     inputValue,
     setInputValue,
     isLoading,
-    isRecording,
+    selectedFiles,
     messagesEndRef,
     inputRef,
+    fileInputRef,
     handleSubmit,
     handleKeyPress,
-    toggleRecording,
+    handleFileSelect,
+    removeFile,
+    openFileDialog,
     clearChat
   };
 };

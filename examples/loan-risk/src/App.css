@@ -12,6 +12,30 @@
   --message-ai-bg: rgba(255, 255, 255, 0.1);
   --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   --gradient: linear-gradient(135deg, #212121 0%, #1a1a1a 100%);
+  
+  /* File Preview Dark Theme */
+  --file-preview-bg: #2d2d2d;
+  --file-preview-border: #404040;
+  --file-preview-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --file-preview-divider: #404040;
+  --file-preview-text-secondary: #9ca3af;
+  --file-preview-text-tertiary: #6b7280;
+  --file-preview-hover-bg: #3a3a3a;
+  --file-thumbnail-bg: #2d2d2d;
+  --file-thumbnail-border: #404040;
+  --file-thumbnail-hover-border: #525252;
+  --file-thumbnail-hover-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --file-thumbnail-image-bg: #1a1a1a;
+  --file-thumbnail-image-border: #404040;
+  --file-thumbnail-icon-color: #6b7280;
+  --file-thumbnail-text-primary: #ffffff;
+  --file-thumbnail-text-secondary: #9ca3af;
+  --file-thumbnail-hover-bg: #3a3a3a;
+  --file-thumbnail-btn-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --file-preview-scrollbar-track: #1a1a1a;
+  --file-preview-scrollbar-thumb: #525252;
+  --file-preview-scrollbar-thumb-hover: #6b7280;
+  
 }
 
 [data-theme="light"] {
@@ -27,6 +51,30 @@
   --message-ai-bg: rgba(0, 0, 0, 0.05);
   --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   --gradient: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  
+  /* File Preview Light Theme */
+  --file-preview-bg: #ffffff;
+  --file-preview-border: #e5e7eb;
+  --file-preview-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --file-preview-divider: #f3f4f6;
+  --file-preview-text-secondary: #6b7280;
+  --file-preview-text-tertiary: #9ca3af;
+  --file-preview-hover-bg: #f9fafb;
+  --file-thumbnail-bg: #ffffff;
+  --file-thumbnail-border: #e5e7eb;
+  --file-thumbnail-hover-border: #d1d5db;
+  --file-thumbnail-hover-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --file-thumbnail-image-bg: #f9fafb;
+  --file-thumbnail-image-border: #f3f4f6;
+  --file-thumbnail-icon-color: #9ca3af;
+  --file-thumbnail-text-primary: #111827;
+  --file-thumbnail-text-secondary: #6b7280;
+  --file-thumbnail-hover-bg: #f9fafb;
+  --file-thumbnail-btn-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --file-preview-scrollbar-track: #f9fafb;
+  --file-preview-scrollbar-thumb: #d1d5db;
+  --file-preview-scrollbar-thumb-hover: #9ca3af;
+  
 }
 
 /* Reset and base styles */

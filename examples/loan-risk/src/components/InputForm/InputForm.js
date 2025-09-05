@@ -6,17 +6,31 @@ const InputForm = ({
   setInputValue,
   onSubmit,
   onKeyPress,
-  onToggleRecording,
-  isRecording,
   isLoading,
   inputRef,
+  fileInputRef,
+  onFileSelect,
+  onOpenFileDialog,
   placeholder = "Ask anything",
   className = ""
 }) => {
   return (
     <form onSubmit={onSubmit} className={`input-form ${className}`}>
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        onChange={onFileSelect}
+        style={{ display: 'none' }}
+        accept="*/*"
+      />
       <div className="input-container">
-        <button type="button" className="attach-button">
+        <button 
+          type="button" 
+          className="attach-button"
+          onClick={onOpenFileDialog}
+          title="Attach files"
+        >
           <span className="material-icons">add</span>
         </button>
         <input
@@ -29,23 +43,13 @@ const InputForm = ({
           className="message-input"
           disabled={isLoading}
         />
-        <div className="input-actions">
-          <button
-            type="button"
-            className={`voice-button ${isRecording ? 'recording' : ''}`}
-            onClick={onToggleRecording}
-            disabled={isLoading}
-          >
-            <span className="material-icons">mic</span>
-          </button>
-          <button
-            type="button"
-            className="wave-button"
-            disabled={isLoading}
-          >
-            <span className="material-icons">graphic_eq</span>
-          </button>
-        </div>
+        <button
+          type="submit"
+          className="send-button"
+          disabled={isLoading || !inputValue.trim()}
+        >
+          <span className="material-icons">send</span>
+        </button>
       </div>
     </form>
   );
