@@ -1,0 +1,44 @@
+/* Messages Container */
+.messages-container {
+  width: 100%;
+  max-width: 1000px;
+  max-height: 75vh;
+  overflow-y: auto;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Scrollbar Styling */
+.messages-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages-container::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: 3px;
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+  background: var(--text-secondary);
+  border-radius: 3px;
+  opacity: 0.5;
+}
+
+.messages-container::-webkit-scrollbar-thumb:hover {
+  opacity: 0.8;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .messages-container {
+    max-width: 900px;
+  }
+}
+
+@media (max-width: 768px) {
+  .messages-container {
+    max-width: 100%;
+  }
+}

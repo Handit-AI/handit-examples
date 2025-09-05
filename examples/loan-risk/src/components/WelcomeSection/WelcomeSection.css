@@ -1,0 +1,39 @@
+/* Welcome Section */
+.welcome-section {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  max-width: 1000px;
+  width: 100%;
+}
+
+.welcome-title {
+  font-size: 36px;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: color 0.3s ease;
+  margin-bottom: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .welcome-section {
+    gap: 32px;
+  }
+  
+  .welcome-title {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-title {
+    font-size: 24px;
+  }
+}

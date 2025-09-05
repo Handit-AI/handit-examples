@@ -1,0 +1,132 @@
+/* Input Form */
+.input-form {
+  width: 100%;
+}
+
+.input-form.centered-input-form {
+  max-width: 800px;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  background: var(--input-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 28px;
+  padding: 12px 20px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  min-height: 56px;
+}
+
+.input-container:focus-within {
+  border-color: var(--text-accent);
+  box-shadow: 0 0 0 3px rgba(16, 163, 127, 0.1);
+}
+
+.attach-button {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.attach-button:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.message-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 17px;
+  padding: 12px 0;
+  resize: none;
+  transition: color 0.3s ease;
+  font-weight: 400;
+}
+
+.message-input::placeholder {
+  color: var(--text-secondary);
+  font-weight: 300;
+}
+
+.input-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+}
+
+.voice-button,
+.wave-button {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.voice-button:hover,
+.wave-button:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.voice-button.recording {
+  color: #ef4444;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.material-icons {
+  font-size: 20px;
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .input-form.centered-input-form {
+    max-width: 700px;
+  }
+}
+
+@media (max-width: 768px) {
+  .input-form.centered-input-form {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .input-container {
+    padding: 8px 16px;
+    min-height: 52px;
+  }
+  
+  .message-input {
+    font-size: 16px;
+  }
+}
