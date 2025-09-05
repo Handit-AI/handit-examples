@@ -475,6 +475,13 @@ async def root():
 
 if __name__ == "__main__":
     import uvicorn
+
+# ADD THESE IMPORTS at the top of your file
+from handit_ai import configure, tracing
+import os
+
+# ADD THIS CONFIGURATION at the top of your file
+configure(HANDIT_API_KEY=os.getenv("HANDIT_API_KEY"))
     
     # Validate Handit.ai configuration before starting server
     # This ensures the server only runs with proper observability setup
