@@ -1,38 +1,3 @@
-"""
-FastAPI Server for Unstructured to Structured Document Processing
-
-This module provides a REST API server that orchestrates the complete document
-processing pipeline using LangGraph workflows and Handit.ai observability.
-
-The server handles:
-- Document file uploads (images, PDFs, text files)
-- Session management for batch processing
-- Integration with Handit.ai for tracing and monitoring
-- LangGraph workflow execution for AI-powered document processing
-- Comprehensive error handling and validation
-
-Key Features:
-- FastAPI-based REST API with CORS support
-- Handit.ai integration for observability and debugging
-- LangGraph workflow orchestration
-- File upload and session management
-- Comprehensive logging and error handling
-- Health check and monitoring endpoints
-
-Architecture:
-- FastAPI server with middleware for logging and CORS
-- Handit.ai validation before server startup
-- LangGraph workflow integration for document processing
-- Session-based file organization and processing
-- Comprehensive error handling with user-friendly messages
-
-Dependencies:
-- FastAPI: Web framework for building APIs
-- LangGraph: Workflow orchestration
-- Handit.ai: Observability and monitoring
-- Python standard library for file operations and logging
-"""
-
 from fastapi import FastAPI, Request, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -48,6 +13,10 @@ from dotenv import load_dotenv
 from pprint import pprint
 from graph.graph import app as langgraph_app
 from services.handit_service import tracker
+from handit_ai import configure, tracing
+import os
+
+configure(HANDIT_API_KEY=os.getenv("HANDIT_API_KEY"))
 
 # Load environment variables from .env file
 load_dotenv()
@@ -310,6 +279,7 @@ async def health_check():
     return response
 
 @app.post("/bulk-unstructured-to-structured", response_model=BulkProcessingResponse)
+@tracing(agent="bulk-unstructured-to-structured")
 async def bulk_unstructured_to_structured(
     session_id: str = Form(...),
     files: List[UploadFile] = File(...)
