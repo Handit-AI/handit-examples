@@ -49,8 +49,13 @@ from pprint import pprint
 from graph.graph import app as langgraph_app
 from services.handit_service import tracker
 
+from handit_ai import configure, tracing
+import os
+
 # Load environment variables from .env file
 load_dotenv()
+
+configure(HANDIT_API_KEY=os.getenv("HANDIT_API_KEY"))
 
 # Configure logging with emojis for better readability
 # This provides structured logging with timestamps and log levels
@@ -310,6 +315,7 @@ async def health_check():
     return response
 
 @app.post("/bulk-unstructured-to-structured", response_model=BulkProcessingResponse)
+@tracing(agent="bulk-unstructured-to-structured")
 async def bulk_unstructured_to_structured(
     session_id: str = Form(...),
     files: List[UploadFile] = File(...)
