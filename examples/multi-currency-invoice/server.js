@@ -7,12 +7,15 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 
 // Import Handit.ai for validation
-const { config} = require('@handit.ai/node');
+const { config } = require('@handit.ai/node');
+import { configure, startTracing, endTracing } from '@handit.ai/handit-ai';
 
 // Import routes
 const healthRoutes = require('./routes/healthRoutes');
 const fileRoutes = require('./routes/fileRoutes');
 const currencyRoutes = require('./routes/currencyRoutes');
+
+configure({ HANDIT_API_KEY: process.env.HANDIT_API_KEY });
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -130,3 +133,15 @@ try {
 }
 
 module.exports = app;
+
+async function bulkUnstructuredToStructured(data) {
+  startTracing({ agent: "bulk-unstructured-to-structured" });
+  try {
+    // Your existing code logic here
+    // For example:
+    const structuredData = await processData(data);
+    return structuredData;
+  } finally {
+    endTracing();
+  }
+}
