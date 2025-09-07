@@ -36,6 +36,13 @@
   --file-preview-scrollbar-thumb: #525252;
   --file-preview-scrollbar-thumb-hover: #6b7280;
   
+  /* AI Sidebar Dark Theme */
+  --ai-sidebar-bg: #212121;
+  --ai-sidebar-border: rgba(255, 255, 255, 0.1);
+  --ai-sidebar-header-bg: #1a1a1a;
+  --ai-sidebar-hover: rgba(255, 255, 255, 0.05);
+  --ai-rule-bg: rgba(255, 255, 255, 0.03);
+  
 }
 
 [data-theme="light"] {
@@ -74,6 +81,13 @@
   --file-preview-scrollbar-track: #f9fafb;
   --file-preview-scrollbar-thumb: #d1d5db;
   --file-preview-scrollbar-thumb-hover: #9ca3af;
+  
+  /* AI Sidebar Light Theme */
+  --ai-sidebar-bg: #ffffff;
+  --ai-sidebar-border: rgba(0, 0, 0, 0.1);
+  --ai-sidebar-header-bg: #f8f9fa;
+  --ai-sidebar-hover: rgba(0, 0, 0, 0.05);
+  --ai-rule-bg: rgba(0, 0, 0, 0.03);
   
 }
 
