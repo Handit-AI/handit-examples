@@ -36,6 +36,12 @@
   --file-preview-scrollbar-thumb: #525252;
   --file-preview-scrollbar-thumb-hover: #6b7280;
   
+  /* AI Accordion Dark Theme */
+  --ai-accordion-bg: rgba(255, 255, 255, 0.03);
+  --ai-accordion-border: rgba(255, 255, 255, 0.08);
+  --ai-accordion-hover: rgba(255, 255, 255, 0.05);
+  --ai-rule-bg: rgba(255, 255, 255, 0.03);
+  
 }
 
 [data-theme="light"] {
@@ -74,6 +80,12 @@
   --file-preview-scrollbar-track: #f9fafb;
   --file-preview-scrollbar-thumb: #d1d5db;
   --file-preview-scrollbar-thumb-hover: #9ca3af;
+  
+  /* AI Accordion Light Theme */
+  --ai-accordion-bg: rgba(0, 0, 0, 0.03);
+  --ai-accordion-border: rgba(0, 0, 0, 0.08);
+  --ai-accordion-hover: rgba(0, 0, 0, 0.05);
+  --ai-rule-bg: rgba(0, 0, 0, 0.03);
   
 }
 
