@@ -17,7 +17,8 @@ const WelcomeSection = ({
 }) => {
   return (
     <div className="welcome-section">
-      <h2 className="welcome-title">What can I help with?</h2>
+      <h2 className="welcome-title">Apply for a loan</h2>
+      <p className="welcome-description">Upload your ID, payslip, and bank statement to apply for a loan in seconds</p>
       <FilePreview 
         files={selectedFiles}
         onRemoveFile={onRemoveFile}

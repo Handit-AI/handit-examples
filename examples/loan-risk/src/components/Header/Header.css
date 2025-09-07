@@ -6,11 +6,27 @@
   right: 0;
   z-index: 1000;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   padding: 16px 24px;
   background: var(--bg-primary);
   border-bottom: 1px solid var(--border-color);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.5px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
 }
 
 .header-right {
@@ -66,5 +82,15 @@
 @media (max-width: 768px) {
   .header {
     padding: 12px 16px;
+  }
+  
+  .header-title {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-title {
+    font-size: 18px;
   }
 }

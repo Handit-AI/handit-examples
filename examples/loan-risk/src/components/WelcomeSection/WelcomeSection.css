@@ -18,7 +18,17 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   transition: color 0.3s ease;
-  margin-bottom: 20px;
+  margin-top: -150px;
+  margin-bottom: 0;
+}
+
+.welcome-description {
+  font-size: 18px;
+  line-height: 1.2;
+  color: var(--text-secondary);
+  margin: -8px 0 32px 0;
+  font-weight: 400;
+  max-width: 600px;
 }
 
 /* Responsive */
@@ -29,11 +39,23 @@
   
   .welcome-title {
     font-size: 28px;
+    margin-top: -100px;
+  }
+  
+  .welcome-description {
+    font-size: 16px;
   }
 }
 
 @media (max-width: 480px) {
   .welcome-title {
     font-size: 24px;
+    margin-top: -80px;
+  }
+  
+  .welcome-description {
+    font-size: 15px;
+    max-width: 100%;
+    padding: 0 20px;
   }
 }
