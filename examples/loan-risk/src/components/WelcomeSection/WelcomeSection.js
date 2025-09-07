@@ -31,6 +31,7 @@ const WelcomeSection = ({
         fileInputRef={fileInputRef}
         onFileSelect={onFileSelect}
         onOpenFileDialog={onOpenFileDialog}
+        selectedFiles={selectedFiles}
         placeholder="Ask anything"
         className="centered-input-form"
       />

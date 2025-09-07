@@ -1,11 +1,15 @@
 /* Header */
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   display: flex;
   justify-content: flex-end;
   align-items: center;
   padding: 16px 24px;
-  background: var(--bg-tertiary);
-  backdrop-filter: blur(10px);
+  background: var(--bg-primary);
   border-bottom: 1px solid var(--border-color);
 }
 

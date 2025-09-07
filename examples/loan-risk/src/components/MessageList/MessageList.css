@@ -2,7 +2,7 @@
 .chat-container {
   display: flex;
   flex-direction: column;
-  height: 80vh;
+  min-height: 80vh;
   max-width: 1000px;
   width: 100%;
 }
@@ -11,8 +11,9 @@
 .messages-container {
   width: 100%;
   flex: 1;
-  overflow-y: auto;
+  overflow-y: visible;
   padding: 20px;
+  padding-bottom: 100px; /* Space for fixed input */
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -21,28 +22,17 @@
 
 /* Chat Input Section */
 .chat-input-section {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1000px;
   padding: 20px;
+  z-index: 100;
 }
 
-/* Scrollbar Styling */
-.messages-container::-webkit-scrollbar {
-  width: 6px;
-}
-
-.messages-container::-webkit-scrollbar-track {
-  background: var(--bg-tertiary);
-  border-radius: 3px;
-}
-
-.messages-container::-webkit-scrollbar-thumb {
-  background: var(--text-secondary);
-  border-radius: 3px;
-  opacity: 0.5;
-}
-
-.messages-container::-webkit-scrollbar-thumb:hover {
-  opacity: 0.8;
-}
+/* Use global scrollbar - no local scrollbar needed */
 
 /* Responsive */
 @media (max-width: 1024px) {

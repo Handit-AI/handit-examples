@@ -92,6 +92,39 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Global scrollbar styling - right side of entire screen */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-secondary) var(--bg-tertiary);
+}
+
+html::-webkit-scrollbar {
+  width: 12px;
+}
+
+html::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+  margin: 0;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: var(--text-secondary);
+  border-radius: 6px;
+  opacity: 0.7;
+  border: 2px solid var(--bg-primary);
+  min-height: 50px;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  opacity: 1;
+  background: var(--text-primary);
+}
+
+html::-webkit-scrollbar-corner {
+  background: var(--bg-primary);
+}
+
 .app {
   min-height: 100vh;
   display: flex;
@@ -110,14 +143,16 @@ body {
   align-items: center;
   padding: 40px 24px;
   width: 100%;
-  min-height: calc(100vh - 70px); /* Full height minus header */
+  min-height: 100vh;
+  padding-top: 90px; /* Add padding for fixed header */
 }
 
 /* Chat mode - centered container */
 .main-content:has(.chat-container) {
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   padding: 20px;
+  padding-top: 90px; /* Ensure proper spacing with fixed header */
 }
 
 /* Welcome section styles moved to WelcomeSection component */
@@ -132,12 +167,20 @@ body {
 @media (max-width: 768px) {
   .main-content {
     padding: 20px 16px;
-    min-height: calc(100vh - 50px);
+    padding-top: 80px; /* Adjust for smaller header on mobile */
+  }
+  
+  .main-content:has(.chat-container) {
+    padding-top: 80px;
   }
 }
 
 @media (max-width: 480px) {
   .main-content {
-    min-height: calc(100vh - 40px);
+    padding-top: 70px; /* Further adjust for smallest screens */
+  }
+  
+  .main-content:has(.chat-container) {
+    padding-top: 70px;
   }
 }

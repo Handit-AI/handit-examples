@@ -87,6 +87,16 @@
   align-self: center;
 }
 
+/* Send button when files are attached - same style as text */
+.send-button.has-files {
+  background: var(--text-accent);
+}
+
+.send-button.has-files:hover:not(:disabled) {
+  background: #0d8a6b;
+  transform: scale(1.05);
+}
+
 .send-button:hover:not(:disabled) {
   background: #0d8a6b;
   transform: scale(1.05);

@@ -47,6 +47,7 @@ const MessageList = ({
           fileInputRef={fileInputRef}
           onFileSelect={onFileSelect}
           onOpenFileDialog={onOpenFileDialog}
+          selectedFiles={selectedFiles}
           placeholder="Ask anything"
           className="chat-input-form"
         />

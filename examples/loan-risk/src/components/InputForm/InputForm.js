@@ -10,6 +10,7 @@ const InputForm = ({
   fileInputRef,
   onFileSelect,
   onOpenFileDialog,
+  selectedFiles = [],
   placeholder = "Ask anything",
   className = ""
 }) => {
@@ -51,6 +52,15 @@ const InputForm = ({
     setInputValue(e.target.value);
     adjustTextareaHeight();
   };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (inputValue.trim() && !isLoading) {
+        onSubmit(e);
+      }
+    }
+  };
   return (
     <form onSubmit={onSubmit} className={`input-form ${className}`}>
       <input
@@ -77,6 +87,7 @@ const InputForm = ({
           }}
           value={inputValue}
           onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className="message-input"
           disabled={isLoading}
@@ -84,8 +95,8 @@ const InputForm = ({
         />
         <button
           type="submit"
-          className="send-button"
-          disabled={isLoading || !inputValue.trim()}
+          className={`send-button ${selectedFiles.length > 0 ? 'has-files' : ''}`}
+          disabled={isLoading || (!inputValue.trim() && selectedFiles.length === 0)}
         >
           <span className="material-icons">send</span>
         </button>
