@@ -1,0 +1,33 @@
+# Core Framework
+flask
+flask-cors
+
+# AI & LLM
+openai
+langchain
+langchain-openai
+langchain-core
+langgraph
+
+# Document Processing
+pypdf
+pdf2image
+Pillow
+
+# Data Processing
+pandas
+numpy
+python-dateutil
+
+# Validation & Serialization
+pydantic
+python-multipart
+
+# Utilities
+python-dotenv
+rapidfuzz
+
+# Development
+pytest
+pytest-asyncio
+black
