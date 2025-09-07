@@ -7,7 +7,6 @@ const WelcomeSection = ({
   inputValue, 
   setInputValue, 
   onSubmit, 
-  onKeyPress, 
   isLoading, 
   inputRef,
   fileInputRef,
@@ -27,7 +26,6 @@ const WelcomeSection = ({
         inputValue={inputValue}
         setInputValue={setInputValue}
         onSubmit={onSubmit}
-        onKeyPress={onKeyPress}
         isLoading={isLoading}
         inputRef={inputRef}
         fileInputRef={fileInputRef}

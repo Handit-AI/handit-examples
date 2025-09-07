@@ -10,6 +10,7 @@ const App = () => {
     inputValue,
     setInputValue,
     isLoading,
+    isStreaming,
     selectedFiles,
     messagesEndRef,
     inputRef,
@@ -69,7 +70,6 @@ const App = () => {
             inputValue={inputValue}
             setInputValue={setInputValue}
             onSubmit={handleSubmit}
-            onKeyPress={handleKeyPress}
             isLoading={isLoading}
             inputRef={inputRef}
             fileInputRef={fileInputRef}
@@ -82,7 +82,17 @@ const App = () => {
           <MessageList
             messages={messages}
             isLoading={isLoading}
+            isStreaming={isStreaming}
             messagesEndRef={messagesEndRef}
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            onSubmit={handleSubmit}
+            inputRef={inputRef}
+            fileInputRef={fileInputRef}
+            onFileSelect={handleFileSelect}
+            onOpenFileDialog={openFileDialog}
+            selectedFiles={selectedFiles}
+            onRemoveFile={removeFile}
           />
         )}
       </main>

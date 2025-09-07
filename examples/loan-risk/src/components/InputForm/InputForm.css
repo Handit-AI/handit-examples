@@ -36,6 +36,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  align-self: center;
 }
 
 .attach-button:hover {
@@ -52,8 +54,14 @@
   font-size: 17px;
   padding: 12px 0;
   resize: none;
-  transition: color 0.3s ease;
+  transition: height 0.2s ease;
   font-weight: 400;
+  min-height: 24px;
+  max-height: 120px;
+  overflow-y: hidden;
+  font-family: inherit;
+  line-height: 1.5;
+  box-sizing: border-box;
 }
 
 .message-input::placeholder {
@@ -75,6 +83,8 @@
   margin-left: 12px;
   min-width: 40px;
   min-height: 40px;
+  flex-shrink: 0;
+  align-self: center;
 }
 
 .send-button:hover:not(:disabled) {

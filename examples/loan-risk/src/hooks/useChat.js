@@ -4,6 +4,7 @@ const useChat = () => {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
@@ -17,13 +18,47 @@ const useChat = () => {
     scrollToBottom();
   }, [messages]);
 
+  const simulateStreaming = async (fullText) => {
+    const words = fullText.split(' ');
+    let currentText = '';
+    
+    for (let i = 0; i < words.length; i++) {
+      currentText += (i > 0 ? ' ' : '') + words[i];
+      
+      setMessages(prev => {
+        const newMessages = [...prev];
+        const lastMessage = newMessages[newMessages.length - 1];
+        if (lastMessage && lastMessage.sender === 'ai' && lastMessage.isStreaming) {
+          lastMessage.text = currentText;
+        }
+        return newMessages;
+      });
+      
+      // Random delay between 50-150ms per word
+      await new Promise(resolve => setTimeout(resolve, Math.random() * 100 + 50));
+    }
+    
+    // Mark streaming as complete
+    setMessages(prev => {
+      const newMessages = [...prev];
+      const lastMessage = newMessages[newMessages.length - 1];
+      if (lastMessage && lastMessage.sender === 'ai' && lastMessage.isStreaming) {
+        lastMessage.isStreaming = false;
+      }
+      return newMessages;
+    });
+    
+    setIsStreaming(false);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!inputValue.trim() || isLoading) return;
+    if (!inputValue.trim() || isLoading || isStreaming) return;
 
+    const userInput = inputValue;
     const userMessage = {
       id: Date.now(),
-      text: inputValue,
+      text: userInput,
       sender: 'user',
       timestamp: new Date().toLocaleTimeString()
     };
@@ -32,25 +67,28 @@ const useChat = () => {
     setInputValue('');
     setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const aiMessage = {
-        id: Date.now() + 1,
-        text: `I understand you're asking about "${inputValue}". How can I help you with that?`,
-        sender: 'ai',
-        timestamp: new Date().toLocaleTimeString()
-      };
-      setMessages(prev => [...prev, aiMessage]);
-      setIsLoading(false);
-    }, 1500);
+    // Show typing indicator for a brief moment before streaming
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    // Create AI message placeholder
+    const aiMessage = {
+      id: Date.now() + 1,
+      text: '',
+      sender: 'ai',
+      timestamp: new Date().toLocaleTimeString(),
+      isStreaming: true
+    };
+
+    setMessages(prev => [...prev, aiMessage]);
+    setIsLoading(false);
+    setIsStreaming(true);
+
+    // Simulate streaming response
+    const fullResponse = `I understand you're asking about "${userInput}". This is a simulated streaming response where text appears word by word to create a more realistic chat experience. How can I help you with that?`;
+    
+    await simulateStreaming(fullResponse);
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit(e);
-    }
-  };
 
   const clearChat = () => {
     setMessages([]);
@@ -81,12 +119,12 @@ const useChat = () => {
     inputValue,
     setInputValue,
     isLoading,
+    isStreaming,
     selectedFiles,
     messagesEndRef,
     inputRef,
     fileInputRef,
     handleSubmit,
-    handleKeyPress,
     handleFileSelect,
     removeFile,
     openFileDialog,

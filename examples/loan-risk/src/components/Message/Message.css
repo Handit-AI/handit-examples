@@ -41,6 +41,17 @@
   font-weight: 400;
 }
 
+.streaming-cursor {
+  animation: blink 1s infinite;
+  color: var(--text-accent);
+  font-weight: bold;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
 .message-time {
   font-size: 13px;
   opacity: 0.7;

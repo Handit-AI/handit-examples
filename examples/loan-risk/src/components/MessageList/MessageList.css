@@ -1,13 +1,27 @@
+/* Chat Container */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  max-width: 1000px;
+  width: 100%;
+}
+
 /* Messages Container */
 .messages-container {
   width: 100%;
-  max-width: 1000px;
-  max-height: 75vh;
+  flex: 1;
   overflow-y: auto;
-  padding: 20px 0;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 24px;
+  min-height: 0;
+}
+
+/* Chat Input Section */
+.chat-input-section {
+  padding: 20px;
 }
 
 /* Scrollbar Styling */
@@ -32,13 +46,36 @@
 
 /* Responsive */
 @media (max-width: 1024px) {
-  .messages-container {
+  .chat-container {
     max-width: 900px;
   }
 }
 
 @media (max-width: 768px) {
-  .messages-container {
+  .chat-container {
     max-width: 100%;
+    height: 85vh;
+  }
+  
+  .messages-container {
+    padding: 16px;
+  }
+  
+  .chat-input-section {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-container {
+    height: 90vh;
+  }
+  
+  .messages-container {
+    padding: 12px;
+  }
+  
+  .chat-input-section {
+    padding: 12px;
   }
 }

@@ -113,6 +113,13 @@ body {
   min-height: calc(100vh - 70px); /* Full height minus header */
 }
 
+/* Chat mode - centered container */
+.main-content:has(.chat-container) {
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
 /* Welcome section styles moved to WelcomeSection component */
 
 /* Message styles moved to Message component */

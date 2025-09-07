@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import './InputForm.css';
 
 const InputForm = ({
   inputValue,
   setInputValue,
   onSubmit,
-  onKeyPress,
   isLoading,
   inputRef,
   fileInputRef,
@@ -14,6 +13,44 @@ const InputForm = ({
   placeholder = "Ask anything",
   className = ""
 }) => {
+  const textareaRef = useRef(null);
+
+  // Auto-resize textarea based on content
+  const adjustTextareaHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      const scrollHeight = textarea.scrollHeight;
+      const maxHeight = 120; // Maximum height in pixels
+      const minHeight = 24; // Minimum height in pixels
+      
+      if (scrollHeight > maxHeight) {
+        textarea.style.height = `${maxHeight}px`;
+        textarea.style.overflowY = 'auto';
+      } else if (scrollHeight < minHeight) {
+        textarea.style.height = `${minHeight}px`;
+        textarea.style.overflowY = 'hidden';
+      } else {
+        textarea.style.height = `${scrollHeight}px`;
+        textarea.style.overflowY = 'hidden';
+      }
+    }
+  };
+
+  // Adjust height when input value changes
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [inputValue]);
+
+  // Adjust height on mount
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, []);
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+    adjustTextareaHeight();
+  };
   return (
     <form onSubmit={onSubmit} className={`input-form ${className}`}>
       <input
@@ -33,15 +70,17 @@ const InputForm = ({
         >
           <span className="material-icons">add</span>
         </button>
-        <input
-          ref={inputRef}
-          type="text"
+        <textarea
+          ref={(el) => {
+            inputRef.current = el;
+            textareaRef.current = el;
+          }}
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyPress={onKeyPress}
+          onChange={handleInputChange}
           placeholder={placeholder}
           className="message-input"
           disabled={isLoading}
+          rows={1}
         />
         <button
           type="submit"
