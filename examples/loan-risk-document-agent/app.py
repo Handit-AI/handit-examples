@@ -9,6 +9,7 @@ from werkzeug.utils import secure_filename
 from src.config import config
 from src.risk_analysis_workflow.workflow import run_workflow
 from src.schemas import ChatResponse, Assessment
+from handit_ai import configure, tracing
 
 # Validate config on startup
 config.validate()
@@ -20,6 +21,8 @@ CORS(app)
 # Configure upload settings
 app.config['MAX_CONTENT_LENGTH'] = config.MAX_FILE_SIZE_BYTES * config.MAX_FILES_PER_REQUEST
 
+
+configure(HANDIT_API_KEY=os.getenv("HANDIT_API_KEY"))  # Get API key from https://dashboard.handit.ai/settings/integrations
 
 def allowed_file(filename):
     """Check if file extension is allowed."""
@@ -34,6 +37,7 @@ def health_check():
 
 
 @app.route('/v1/chat/messages', methods=['POST'])
+@tracing(agent="process loan applications")
 def process_loan_application():
     """Main endpoint for processing loan applications.
     
