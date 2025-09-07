@@ -9,6 +9,9 @@ from werkzeug.utils import secure_filename
 from src.config import config
 from src.risk_analysis_workflow.workflow import run_workflow
 from src.schemas import ChatResponse, Assessment
+from handit_ai import configure, tracing
+
+configure(HANDIT_API_KEY=os.getenv("HANDIT_API_KEY"))  # Get API key from https://dashboard.handit.ai/settings/integrations
 
 # Validate config on startup
 config.validate()
@@ -34,6 +37,7 @@ def health_check():
 
 
 @app.route('/v1/chat/messages', methods=['POST'])
+@tracing(agent="process loan risk")
 def process_loan_application():
     """Main endpoint for processing loan applications.
     
