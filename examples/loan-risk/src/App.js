@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTheme, useChat } from './hooks';
-import { Header, WelcomeSection, MessageList } from './components';
+import { Header, WelcomeSection, MessageList, MenuPanel } from './components';
 import './App.css';
 
 const App = () => {
@@ -24,6 +24,11 @@ const App = () => {
   } = useChat();
 
   const [isDragOver, setIsDragOver] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const handleSidebarToggle = (sidebarOpen) => {
+    setIsSidebarOpen(sidebarOpen);
+  };
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -53,11 +58,13 @@ const App = () => {
 
   return (
     <div 
-      className="app"
+      className={`app ${isSidebarOpen ? 'sidebar-open' : ''}`}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
+      <MenuPanel onSidebarToggle={handleSidebarToggle} />
+      
       <Header
         theme={theme}
         toggleTheme={toggleTheme}

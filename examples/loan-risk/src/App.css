@@ -156,9 +156,17 @@ html::-webkit-scrollbar-corner {
   justify-content: center;
   align-items: center;
   padding: 40px 24px;
-  width: 100%;
+  width: calc(100% - 60px); /* Adjust width to account for menu panel */
   min-height: 100vh;
   padding-top: 90px; /* Add padding for fixed header */
+  margin-left: 60px; /* Add margin for menu panel */
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+/* When sidebar is open, push content */
+.app.sidebar-open .main-content {
+  margin-left: 400px; /* Just sidebar width (it replaces the menu panel) */
+  width: calc(100% - 400px); /* Adjust width for sidebar */
 }
 
 /* Chat mode - centered container */
@@ -167,12 +175,54 @@ html::-webkit-scrollbar-corner {
   align-items: center;
   padding: 20px;
   padding-top: 90px; /* Ensure proper spacing with fixed header */
+  margin-left: 60px; /* Add margin for menu panel */
+  width: calc(100% - 60px); /* Adjust width to account for menu panel */
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+/* When sidebar is open, push chat content */
+.app.sidebar-open .main-content:has(.chat-container) {
+  margin-left: 400px; /* Just sidebar width (it replaces the menu panel) */
+  width: calc(100% - 400px); /* Adjust width for sidebar */
 }
 
 /* Welcome section styles moved to WelcomeSection component */
 
 /* Message styles moved to Message component */
 
+/* Chat Input Section - Responsive to main-content width */
+.chat-input-section {
+  position: fixed;
+  bottom: 0;
+  left: calc(50% + 30px); /* Offset by half menu panel width (60px/2) */
+  transform: translateX(-50%);
+  width: calc(100% - 60px); /* Match main-content width */
+  max-width: 1000px; /* Maximum width constraint */
+  padding: 20px; /* Same padding as messages-container */
+  z-index: 100;
+  transition: left 0.3s ease, width 0.3s ease, max-width 0.3s ease;
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+/* When sidebar is open, push chat input and use main-content width */
+.app.sidebar-open .chat-input-section {
+  left: calc(50% + 200px); /* Offset by half sidebar width (400px/2) */
+  width: calc(100% - 400px); /* Match main-content width when sidebar open */
+  max-width: 1000px; /* Maximum width constraint */
+}
+
+/* Input form should fill the entire chat view area */
+.chat-input-section .input-form.chat-input-form {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.chat-input-section .input-form.chat-input-form .input-container {
+  width: 100%; /* Fill the entire chat area width */
+  max-width: none; /* Remove max-width to match full chat view */
+  margin: 0;
+}
 
 /* Input form styles moved to InputForm component */
 
@@ -182,19 +232,77 @@ html::-webkit-scrollbar-corner {
   .main-content {
     padding: 20px 16px;
     padding-top: 80px; /* Adjust for smaller header on mobile */
+    margin-left: 50px; /* Adjust for smaller menu panel */
+    width: calc(100% - 50px); /* Adjust width for smaller menu panel */
   }
   
   .main-content:has(.chat-container) {
     padding-top: 80px;
+    margin-left: 50px;
+    width: calc(100% - 50px); /* Adjust width for smaller menu panel */
+  }
+  
+  /* When sidebar is open on tablet */
+  .app.sidebar-open .main-content {
+    margin-left: 350px; /* Just sidebar width (it replaces the menu panel) */
+    width: calc(100% - 350px); /* Adjust width for sidebar */
+  }
+  
+  .app.sidebar-open .main-content:has(.chat-container) {
+    margin-left: 350px; /* Just sidebar width (it replaces the menu panel) */
+    width: calc(100% - 350px); /* Adjust width for sidebar */
+  }
+  
+  /* Chat input responsive to main-content width on tablet */
+  .chat-input-section {
+    left: calc(50% + 25px); /* Offset by half tablet menu panel width (50px/2) */
+    width: calc(100% - 50px); /* Match main-content width on tablet */
+    max-width: 100%; /* No max-width constraint on tablet */
+    padding: 16px; /* Match tablet messages-container padding */
+  }
+  
+  .app.sidebar-open .chat-input-section {
+    left: calc(50% + 175px); /* Offset by half sidebar width (350px/2) */
+    width: calc(100% - 350px); /* Match main-content width when sidebar open on tablet */
+    max-width: 100%; /* No max-width constraint on tablet */
   }
 }
 
 @media (max-width: 480px) {
   .main-content {
     padding-top: 70px; /* Further adjust for smallest screens */
+    margin-left: 45px; /* Adjust for smallest menu panel */
+    width: calc(100% - 45px); /* Adjust width for smallest menu panel */
   }
   
   .main-content:has(.chat-container) {
     padding-top: 70px;
+    margin-left: 45px;
+    width: calc(100% - 45px); /* Adjust width for smallest menu panel */
+  }
+  
+  /* When sidebar is open on mobile - full width */
+  .app.sidebar-open .main-content {
+    margin-left: 100vw; /* Hide content when sidebar is full width */
+    width: 0; /* Hide content when sidebar is full width */
+  }
+  
+  .app.sidebar-open .main-content:has(.chat-container) {
+    margin-left: 100vw; /* Hide content when sidebar is full width */
+    width: 0; /* Hide content when sidebar is full width */
+  }
+  
+  /* Chat input responsive to main-content width on mobile */
+  .chat-input-section {
+    left: calc(50% + 22.5px); /* Offset by half mobile menu panel width (45px/2) */
+    width: calc(100% - 45px); /* Match main-content width on mobile */
+    max-width: 100%; /* No max-width constraint on mobile */
+    padding: 4px !important; /* Reduced padding for mobile to minimize pink space */
+  }
+  
+  .app.sidebar-open .chat-input-section {
+    left: 100vw; /* Hide chat input when sidebar is full width */
+    width: 0; /* Hide chat input when sidebar is full width */
+    max-width: 0; /* Hide chat input when sidebar is full width */
   }
 }

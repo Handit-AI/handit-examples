@@ -2,7 +2,7 @@
 .header {
   position: fixed;
   top: 0;
-  left: 0;
+  left: 60px; /* Add margin for menu panel */
   right: 0;
   z-index: 1000;
   display: flex;
@@ -11,6 +11,12 @@
   padding: 16px 24px;
   background: var(--bg-primary);
   border-bottom: 1px solid var(--border-color);
+  transition: left 0.3s ease;
+}
+
+/* When sidebar is open, push header */
+.app.sidebar-open .header {
+  left: 400px; /* Just sidebar width (it replaces the menu panel) */
 }
 
 .header-left {
@@ -82,15 +88,30 @@
 @media (max-width: 768px) {
   .header {
     padding: 12px 16px;
+    left: 50px; /* Adjust for smaller menu panel */
   }
   
   .header-title {
     font-size: 20px;
   }
+  
+  /* When sidebar is open on tablet */
+  .app.sidebar-open .header {
+    left: 350px; /* Just sidebar width (it replaces the menu panel) */
+  }
 }
 
 @media (max-width: 480px) {
+  .header {
+    left: 45px; /* Adjust for smallest menu panel */
+  }
+  
   .header-title {
     font-size: 18px;
+  }
+  
+  /* When sidebar is open on mobile - hide header */
+  .app.sidebar-open .header {
+    left: 100vw; /* Hide header when sidebar is full width */
   }
 }

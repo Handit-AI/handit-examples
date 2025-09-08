@@ -7,6 +7,8 @@
   gap: 40px;
   max-width: 1000px;
   width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .welcome-title {
@@ -31,157 +33,6 @@
   max-width: 600px;
 }
 
-/* AI Sidebar */
-.ai-sidebar {
-  position: fixed;
-  top: 0;
-  left: -400px;
-  width: 400px;
-  height: 100vh;
-  background: var(--ai-sidebar-bg, var(--bg-primary));
-  border-right: 1px solid var(--ai-sidebar-border, var(--border-color));
-  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
-  transition: left 0.3s ease;
-  z-index: 1000;
-  overflow-y: auto;
-}
-
-.ai-sidebar.open {
-  left: 0;
-}
-
-.ai-sidebar-content {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.ai-sidebar-header {
-  padding: 20px;
-  border-bottom: 1px solid var(--ai-sidebar-border, var(--border-color));
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--ai-sidebar-header-bg, var(--bg-secondary));
-}
-
-.ai-sidebar-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin: 0;
-}
-
-.ai-sidebar-close {
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.ai-sidebar-close:hover {
-  background: var(--ai-sidebar-hover, rgba(255, 255, 255, 0.05));
-  color: var(--text-primary);
-}
-
-.ai-sidebar-close .material-icons {
-  font-size: 20px;
-}
-
-.ai-sidebar-body {
-  padding: 20px;
-  flex: 1;
-  overflow-y: auto;
-}
-
-/* Sidebar Toggle Button */
-.ai-sidebar-toggle {
-  position: fixed;
-  top: 100px;
-  left: 20px;
-  width: 40px;
-  height: 40px;
-  background: transparent;
-  border: 1px solid var(--ai-sidebar-border, var(--border-color));
-  border-radius: 8px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
-  z-index: 999;
-}
-
-.ai-sidebar-toggle:hover {
-  background: var(--ai-sidebar-hover, rgba(255, 255, 255, 0.05));
-  color: var(--text-primary);
-  border-color: var(--text-accent);
-  transform: scale(1.05);
-}
-
-.ai-sidebar-toggle .material-icons {
-  font-size: 20px;
-}
-
-.ai-assessment-text {
-  font-size: 16px;
-  line-height: 1.5;
-  color: var(--text-secondary);
-  margin: 0 0 16px 0;
-  font-weight: 400;
-}
-
-.ai-rules-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 12px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.ai-rules-list li {
-  font-size: 15px;
-  line-height: 1.4;
-  color: var(--text-primary);
-  margin: 8px 0;
-  padding: 8px 12px;
-  background: var(--ai-rule-bg, rgba(255, 255, 255, 0.03));
-  border-radius: 6px;
-  border-left: 3px solid var(--text-accent);
-}
-
-.risk-high {
-  color: #ff6b6b;
-  font-weight: 600;
-}
-
-.risk-fraud {
-  color: #ffa726;
-  font-weight: 600;
-}
-
-.risk-invalid {
-  color: #f44336;
-  font-weight: 600;
-}
-
-.ai-assessment-conclusion {
-  font-size: 14px;
-  line-height: 1.3;
-  color: var(--text-secondary);
-  margin: 0;
-  font-weight: 300;
-  opacity: 0.8;
-}
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -197,46 +48,6 @@
   .welcome-description {
     font-size: 16px;
   }
-  
-  .ai-sidebar {
-    width: 350px;
-  }
-  
-  .ai-sidebar-header {
-    padding: 16px;
-  }
-  
-  .ai-sidebar-title {
-    font-size: 16px;
-  }
-  
-  .ai-sidebar-body {
-    padding: 16px;
-  }
-  
-  .ai-sidebar-toggle {
-    width: 36px;
-    height: 36px;
-    left: 15px;
-    top: 90px;
-  }
-  
-  .ai-sidebar-toggle .material-icons {
-    font-size: 18px;
-  }
-  
-  .ai-assessment-text {
-    font-size: 14px;
-  }
-  
-  .ai-rules-list li {
-    font-size: 14px;
-    padding: 6px 10px;
-  }
-  
-  .ai-assessment-conclusion {
-    font-size: 13px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -249,50 +60,5 @@
     font-size: 15px;
     max-width: 100%;
     padding: 0 20px;
-  }
-  
-  .ai-sidebar {
-    width: 100vw;
-    left: -100vw;
-  }
-  
-  .ai-sidebar.open {
-    left: 0;
-  }
-  
-  .ai-sidebar-header {
-    padding: 12px;
-  }
-  
-  .ai-sidebar-title {
-    font-size: 14px;
-  }
-  
-  .ai-sidebar-body {
-    padding: 12px;
-  }
-  
-  .ai-sidebar-toggle {
-    width: 32px;
-    height: 32px;
-    left: 10px;
-    top: 80px;
-  }
-  
-  .ai-sidebar-toggle .material-icons {
-    font-size: 16px;
-  }
-  
-  .ai-assessment-text {
-    font-size: 13px;
-  }
-  
-  .ai-rules-list li {
-    font-size: 12px;
-    padding: 4px 6px;
-  }
-  
-  .ai-assessment-conclusion {
-    font-size: 12px;
   }
 }
