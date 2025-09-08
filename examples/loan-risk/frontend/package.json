@@ -1,7 +1,7 @@
 {
-  "name": "chatgpt-interface",
+  "name": "loan-risk-interface",
   "version": "1.0.0",
-  "description": "Modern ChatGPT-like interface built with React",
+  "description": "Interface built with React for loan risk assessment",
   "main": "index.js",
   "scripts": {
     "start": "react-scripts start",
