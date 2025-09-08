@@ -1,0 +1,61 @@
+/* Welcome Section */
+.welcome-section {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  max-width: 1000px;
+  width: 100%;
+}
+
+.welcome-title {
+  font-size: 36px;
+  font-weight: 500;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: color 0.3s ease;
+  margin-top: -150px;
+  margin-bottom: 0;
+}
+
+.welcome-description {
+  font-size: 18px;
+  line-height: 1.2;
+  color: var(--text-secondary);
+  margin: -8px 0 32px 0;
+  font-weight: 400;
+  max-width: 600px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .welcome-section {
+    gap: 32px;
+  }
+  
+  .welcome-title {
+    font-size: 28px;
+    margin-top: -100px;
+  }
+  
+  .welcome-description {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-title {
+    font-size: 24px;
+    margin-top: -80px;
+  }
+  
+  .welcome-description {
+    font-size: 15px;
+    max-width: 100%;
+    padding: 0 20px;
+  }
+}
