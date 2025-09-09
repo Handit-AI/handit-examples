@@ -26,7 +26,7 @@ const MenuPanel = ({ onSidebarToggle }) => {
       {/* Sidebar content - only visible when open */}
       <div className="ai-sidebar-content">
         <div className="ai-sidebar-header">
-          <h3 className="ai-sidebar-title">¿Cómo funciona?</h3>
+          <h3 className="ai-sidebar-title">How does it work?</h3>
           <button className="ai-sidebar-close" onClick={toggleSidebar}>
             <span className="material-icons">close</span>
           </button>
