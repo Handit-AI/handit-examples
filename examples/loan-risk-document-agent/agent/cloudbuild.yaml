@@ -1,0 +1,67 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - '--no-cache'
+      - '-t'
+      - >-
+        $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+      - .
+      - '-f'
+      - examples/loan-risk-document-agent/Dockerfile
+    id: Build
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - >-
+        $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+    id: Push
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    args:
+      - run
+      - services
+      - update
+      - $_SERVICE_NAME
+      - '--set-secrets'
+      - 'OPENAI_API_KEY=OPENAI_API_KEY:latest'
+      - '--set-env-vars'
+      - 'FLASK_ENV=production'
+      - '--set-env-vars'
+      - 'FLASK_DEBUG=false'
+      - '--network=default'
+      - '--subnet=default'
+      - '--platform=managed'
+      - '--memory=4Gi'
+      - '--cpu=2'
+      - '--timeout=1800'
+      - '--concurrency=10'
+      - '--min-instances=0'
+      - '--max-instances=10'
+      - >-
+        --image=$_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+      - >-
+        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID
+      - '--region=$_DEPLOY_REGION'
+      - '--quiet'
+    id: Deploy
+    entrypoint: gcloud
+images:
+  - >-
+    $_AR_HOSTNAME/$PROJECT_ID/cloud-run-source-deploy/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+options:
+  substitutionOption: ALLOW_LOOSE
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'
+substitutions:
+  _PLATFORM: managed
+  _SERVICE_NAME: loan-risk-document-agent
+  _DEPLOY_REGION: us-central1
+  _AR_HOSTNAME: us-central1-docker.pkg.dev
+  _LOGS_BUCKET: logs-handit
+  _HISTORY_BUCKET: logs-history-handit
+  _HANDIT_API_URL: https://handit-api-oss-299768392189.us-central1.run.app
+  _TRIGGER_ID: your-trigger-id-here
+tags:
+  - gcp-cloud-build-deploy-cloud-run
+  - gcp-cloud-build-deploy-cloud-run-managed
+  - loan-risk-document-agent

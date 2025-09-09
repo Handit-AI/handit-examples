@@ -1,0 +1,68 @@
+/* Chat Container */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 80vh;
+  max-width: 1000px;
+  width: 100%;
+}
+
+/* Messages Container */
+.messages-container {
+  width: 100%;
+  flex: 1;
+  overflow-y: auto; /* Allow scrolling */
+  padding: 20px;
+  padding-bottom: 80px; /* Reduced space for chat input */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-height: 0;
+}
+
+/* Chat Input Section - Responsive styles moved to App.css */
+
+/* Use global scrollbar - no local scrollbar needed */
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .chat-container {
+    max-width: 900px;
+  }
+}
+
+@media (max-width: 768px) {
+  .chat-container {
+    max-width: 100%;
+    height: calc(100vh - 180px); /* Account for header and input */
+    min-height: 60vh;
+  }
+  
+  .messages-container {
+    padding: 16px;
+    padding-bottom: 60px; /* Reduced space for chat input on tablet */
+  }
+  
+  /* Chat input responsive styles moved to App.css */
+}
+
+@media (max-width: 480px) {
+  .chat-container {
+    height: calc(100vh - 200px); /* Account for header and input on mobile */
+    min-height: 50vh;
+  }
+  
+  .messages-container {
+    padding: 12px !important;
+    padding-bottom: 10px !important; /* Much less space for chat input on mobile */
+  }
+  
+  /* Chat input responsive styles moved to App.css */
+}
+
+/* Additional mobile breakpoint for smaller screens */
+@media (max-width: 600px) {
+  .messages-container {
+    padding-bottom: 10px !important; /* Ensure mobile spacing */
+  }
+}

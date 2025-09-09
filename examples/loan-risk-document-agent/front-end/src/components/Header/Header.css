@@ -1,0 +1,117 @@
+/* Header */
+.header {
+  position: fixed;
+  top: 0;
+  left: 60px; /* Add margin for menu panel */
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+  transition: left 0.3s ease;
+}
+
+/* When sidebar is open, push header */
+.app.sidebar-open .header {
+  left: 400px; /* Just sidebar width (it replaces the menu panel) */
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.5px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+.header-button {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-button:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.material-icons {
+  font-size: 20px;
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header {
+    padding: 12px 16px;
+    left: 50px; /* Adjust for smaller menu panel */
+  }
+  
+  .header-title {
+    font-size: 20px;
+  }
+  
+  /* When sidebar is open on tablet */
+  .app.sidebar-open .header {
+    left: 350px; /* Just sidebar width (it replaces the menu panel) */
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    left: 45px; /* Adjust for smallest menu panel */
+  }
+  
+  .header-title {
+    font-size: 18px;
+  }
+  
+  /* When sidebar is open on mobile - hide header */
+  .app.sidebar-open .header {
+    left: 100vw; /* Hide header when sidebar is full width */
+  }
+}
