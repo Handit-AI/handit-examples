@@ -166,12 +166,32 @@ If the problem persists, please contact support.`;
     console.log('Sending message:', message);
     console.log('Files:', files.map(f => ({ name: f.name, size: f.size, type: f.type })));
     
+    // Validate files before sending
+    const ALLOWED_EXTENSIONS = ['pdf', 'png', 'jpg', 'jpeg', 'csv'];
+    const MAX_FILE_SIZE_MB = 10;
+    const MAX_FILES = 6;
+    
+    if (files.length > MAX_FILES) {
+      throw new Error(`Too many files. Maximum ${MAX_FILES} allowed`);
+    }
+    
+    for (const file of files) {
+      const extension = file.name.split('.').pop()?.toLowerCase();
+      if (!ALLOWED_EXTENSIONS.includes(extension)) {
+        throw new Error(`File ${file.name} has unsupported format. Allowed: ${ALLOWED_EXTENSIONS.join(', ')}`);
+      }
+      
+      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+        throw new Error(`File ${file.name} exceeds maximum size of ${MAX_FILE_SIZE_MB}MB`);
+      }
+    }
+    
     const formData = new FormData();
     formData.append('messages', JSON.stringify([{ role: 'user', content: message }]));
     
-    // Add files to form data
+    // Add files to form data - backend expects 'files' key, not 'files[]'
     files.forEach(file => {
-      formData.append('files[]', file);
+      formData.append('files', file);
     });
     
     formData.append('options', JSON.stringify({
@@ -185,10 +205,13 @@ If the problem persists, please contact support.`;
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      console.error('API Error:', response.status, errorText);
+      throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
+    console.log('API Response:', data);
     
     // Format the response based on the API structure
     const assessment = data.assessment;
