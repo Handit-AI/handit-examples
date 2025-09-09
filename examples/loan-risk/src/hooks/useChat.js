@@ -162,6 +162,10 @@ If the problem persists, please contact support.`;
   const callLoanRiskAPI = async (message, files) => {
     const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
     
+    console.log('API Base URL:', API_BASE_URL);
+    console.log('Sending message:', message);
+    console.log('Files:', files.map(f => ({ name: f.name, size: f.size, type: f.type })));
+    
     const formData = new FormData();
     formData.append('messages', JSON.stringify([{ role: 'user', content: message }]));
     
