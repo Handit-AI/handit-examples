@@ -15,6 +15,7 @@ const WelcomeSection = ({
   selectedFiles,
   onRemoveFile
 }) => {
+
   return (
     <div className="welcome-section">
       <h2 className="welcome-title">Apply for a loan</h2>

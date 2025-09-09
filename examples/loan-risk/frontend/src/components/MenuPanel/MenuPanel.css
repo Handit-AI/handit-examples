@@ -1,0 +1,268 @@
+/* AI Sidebar - Same component as menu panel */
+.ai-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 60px; /* Start as menu panel width */
+  height: 100vh;
+  background: var(--ai-sidebar-bg, var(--bg-primary));
+  border-right: 1px solid var(--ai-sidebar-border, var(--border-color));
+  transition: width 0.3s ease;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.ai-sidebar.open {
+  width: 400px; /* Expand to full sidebar width */
+  overflow-y: auto;
+}
+
+.ai-sidebar-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+/* Show sidebar content when open */
+.ai-sidebar.open .ai-sidebar-content {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.ai-sidebar-header {
+  padding: 16px 24px; /* Match main header padding */
+  border-bottom: 1px solid var(--ai-sidebar-border, var(--border-color));
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--ai-sidebar-header-bg, var(--bg-secondary));
+}
+
+.ai-sidebar-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.ai-sidebar-close {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ai-sidebar-close:hover {
+  background: var(--ai-sidebar-hover, rgba(255, 255, 255, 0.05));
+  color: var(--text-primary);
+}
+
+.ai-sidebar-close .material-icons {
+  font-size: 20px;
+}
+
+.ai-sidebar-body {
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Menu Panel - Now integrated with sidebar */
+.menu-panel {
+  display: none; /* Hide separate menu panel */
+}
+
+/* Hamburger button inside sidebar */
+.menu-panel-toggle {
+  position: absolute;
+  top: 20px;
+  left: 10px;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  z-index: 1001;
+}
+
+/* Hide hamburger button when sidebar is open */
+.ai-sidebar.open .menu-panel-toggle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.menu-panel-toggle:hover {
+  background: var(--ai-sidebar-hover, rgba(255, 255, 255, 0.05));
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+.menu-panel-toggle .material-icons {
+  font-size: 22px;
+}
+
+.ai-assessment-text {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0 0 16px 0;
+  font-weight: 400;
+}
+
+.ai-rules-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ai-rules-list li {
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--text-primary);
+  margin: 8px 0;
+  padding: 8px 12px;
+  background: var(--ai-rule-bg, rgba(255, 255, 255, 0.03));
+  border-radius: 6px;
+  border-left: 3px solid var(--text-accent);
+}
+
+.risk-high {
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+.risk-fraud {
+  color: #ffa726;
+  font-weight: 600;
+}
+
+.risk-invalid {
+  color: #f44336;
+  font-weight: 600;
+}
+
+.ai-assessment-conclusion {
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--text-secondary);
+  margin: 0;
+  font-weight: 300;
+  opacity: 0.8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .menu-panel {
+    width: 50px;
+    padding-top: 15px;
+  }
+  
+  .menu-panel-toggle {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .menu-panel-toggle .material-icons {
+    font-size: 20px;
+  }
+  
+  .ai-sidebar {
+    width: 50px; /* Start as tablet menu panel width */
+  }
+  
+  .ai-sidebar.open {
+    width: 350px; /* Expand to tablet sidebar width */
+  }
+  
+  .ai-sidebar-header {
+    padding: 12px 16px; /* Match tablet header padding */
+  }
+  
+  .ai-sidebar-title {
+    font-size: 16px;
+  }
+  
+  .ai-sidebar-body {
+    padding: 16px;
+  }
+  
+  .ai-assessment-text {
+    font-size: 14px;
+  }
+  
+  .ai-rules-list li {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+  
+  .ai-assessment-conclusion {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu-panel {
+    width: 45px;
+    padding-top: 10px;
+  }
+  
+  .menu-panel-toggle {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .menu-panel-toggle .material-icons {
+    font-size: 18px;
+  }
+  
+  .ai-sidebar {
+    width: 45px; /* Start as mobile menu panel width */
+  }
+  
+  .ai-sidebar.open {
+    width: 100vw; /* Full width on mobile */
+  }
+  
+  .ai-sidebar-header {
+    padding: 12px 16px; /* Match mobile header padding */
+  }
+  
+  .ai-sidebar-title {
+    font-size: 14px;
+  }
+  
+  .ai-sidebar-body {
+    padding: 12px;
+  }
+  
+  .ai-assessment-text {
+    font-size: 13px;
+  }
+  
+  .ai-rules-list li {
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+  
+  .ai-assessment-conclusion {
+    font-size: 12px;
+  }
+}
