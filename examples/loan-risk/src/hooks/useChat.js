@@ -4,9 +4,9 @@ const useChat = () => {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: `# Welcome to Loan Risk AI 🤖
+      text: `# Welcome to QuickLoan 🤖
 
-I'm your AI-powered loan risk assessment assistant. I can analyze your financial documents to provide a comprehensive risk evaluation for your loan application.
+I'm your AI-powered loan application assistant. I can analyze your financial documents to provide a comprehensive assessment for your loan application.
 
 ## What I can do:
 - **Document Classification**: Identify ID documents, payslips, and bank statements
@@ -269,9 +269,9 @@ ${assessment.extracted ? Object.entries(assessment.extracted).map(([key, value])
     setMessages([
       {
         id: 1,
-        text: `# Welcome to Loan Risk AI 🤖
+        text: `# Welcome to QuickLoan 🤖
 
-I'm your AI-powered loan risk assessment assistant. I can analyze your financial documents to provide a comprehensive risk evaluation for your loan application.
+I'm your AI-powered loan application assistant. I can analyze your financial documents to provide a comprehensive assessment for your loan application.
 
 ## What I can do:
 - **Document Classification**: Identify ID documents, payslips, and bank statements

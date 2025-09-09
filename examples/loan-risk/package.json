@@ -1,7 +1,7 @@
 {
-  "name": "loan-risk-interface",
+  "name": "quickloan-interface",
   "version": "1.0.0",
-  "description": "Interface built with React for loan risk assessment",
+  "description": "Interface built with React for QuickLoan application",
   "main": "index.js",
   "scripts": {
     "start": "react-scripts start",

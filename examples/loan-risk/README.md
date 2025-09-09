@@ -1,4 +1,4 @@
-# Loan Risk AI
+# QuickLoan
 
 A modern, responsive loan application interface built with React and best practices. Upload your ID, payslip, and bank statement to apply for a loan in seconds.
 
@@ -6,10 +6,10 @@ A modern, responsive loan application interface built with React and best practi
 
 - **Modern UI/UX**: Sleek interface with gradient backgrounds and smooth animations
 - **File Upload Support**: Drag-and-drop file uploads with image previews
-- **Real-time Chat**: Interactive messaging with AI loan risk assessment
+- **Real-time Chat**: Interactive messaging with AI loan application assessment
 - **Markdown Support**: Rich text formatting with syntax highlighting for code blocks
 - **Responsive Design**: Optimized for desktop, tablet, and mobile devices
-- **Fixed Header**: Clickable "Loan Risk AI" title for easy navigation
+- **Fixed Header**: Clickable "QuickLoan" title for easy navigation
 - **File Attachment Display**: Horizontal file previews in chat messages
 - **Image Preview Modal**: Full-screen image viewing with minimalist design
 - **Accessibility**: Proper ARIA labels and keyboard navigation
@@ -36,7 +36,7 @@ A modern, responsive loan application interface built with React and best practi
 
 ### Core Components
 - **App.js**: Main application component with drag-and-drop functionality
-- **Header**: Fixed header with clickable "Loan Risk AI" title
+- **Header**: Fixed header with clickable "QuickLoan" title
 - **WelcomeSection**: Landing page with loan application call-to-action
 - **MessageList**: Chat interface with pinned input at bottom
 - **Message**: Individual message component with file display and Markdown support
@@ -78,7 +78,7 @@ This frontend connects to the Loan Risk Document Agent backend API. Make sure yo
 
 **API Endpoint**: `POST /v1/chat/messages`
 - Accepts multipart form data with messages and files
-- Returns loan risk assessment results
+- Returns loan application assessment results
 - Supports PDF, PNG, JPG, JPEG, CSV file formats
 
 ## Technologies Used
@@ -95,7 +95,7 @@ This frontend connects to the Loan Risk Document Agent backend API. Make sure yo
 
 - **Loan Application Interface**: Streamlined process for loan applications
 - **File Upload & Preview**: Support for multiple file types with thumbnails
-- **AI Chat Integration**: Interactive chat for loan risk assessment
+- **AI Chat Integration**: Interactive chat for loan application assessment
 - **Markdown Support**: Rich text formatting in chat messages
 - **Code Block Highlighting**: Syntax highlighting with copy-to-clipboard functionality
 - **Image Preview Modal**: Full-screen image viewing with minimalist controls
@@ -145,7 +145,7 @@ src/
 1. **Start Application**: Navigate to the welcome page
 2. **Upload Documents**: Drag and drop or select ID, payslip, and bank statement
 3. **Submit Application**: Click send to process your loan application
-4. **Chat Interface**: Interact with the AI for loan risk assessment
+4. **Chat Interface**: Interact with the AI for loan application assessment
 5. **View Results**: Review AI responses with rich Markdown formatting
 
 ## File Support

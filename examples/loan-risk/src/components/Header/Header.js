@@ -10,7 +10,7 @@ const Header = ({ theme, toggleTheme, onClearChat }) => {
   return (
     <header className="header">
       <div className="header-left">
-        <h1 className="header-title" onClick={handleTitleClick}>Loan Risk AI</h1>
+        <h1 className="header-title" onClick={handleTitleClick}>QuickLoan</h1>
       </div>
       <div className="header-right">
         <button 
