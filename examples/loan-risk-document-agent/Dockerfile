@@ -11,13 +11,13 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
-COPY requirements.txt .
+COPY examples/loan-risk-document-agent/requirements.txt .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
-COPY . .
+COPY examples/loan-risk-document-agent/ .
 
 # Create non-root user and required directories
 RUN useradd -m -u 1000 appuser && \
@@ -25,7 +25,7 @@ RUN useradd -m -u 1000 appuser && \
     chown -R appuser:appuser /app /tmp
 
 # Create startup script to handle service account credentials
-COPY --chown=appuser:appuser startup.sh /app/startup.sh
+COPY --chown=appuser:appuser examples/loan-risk-document-agent/startup.sh /app/startup.sh
 RUN chmod +x /app/startup.sh
 
 USER appuser
