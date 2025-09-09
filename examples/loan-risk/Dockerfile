@@ -5,13 +5,13 @@ FROM node:18-alpine as build
 WORKDIR /app
 
 # Copy package files
-COPY package*.json ./
+COPY examples/loan-risk/package*.json ./
 
 # Install dependencies
 RUN npm ci --only=production
 
 # Copy source code
-COPY . .
+COPY examples/loan-risk/ .
 
 # Build the React app
 RUN npm run build
@@ -20,7 +20,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copy custom nginx config
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY examples/loan-risk/nginx.conf /etc/nginx/nginx.conf
 
 # Copy built React app from build stage
 COPY --from=build /app/build /usr/share/nginx/html
