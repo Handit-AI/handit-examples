@@ -10,10 +10,7 @@ const MessageList = ({
   isLoading, 
   isStreaming,
   messagesEndRef,
-  inputValue,
-  setInputValue,
   onSubmit,
-  inputRef,
   fileInputRef,
   onFileSelect,
   onOpenFileDialog,
@@ -39,16 +36,12 @@ const MessageList = ({
           onRemoveFile={onRemoveFile}
         />
         <InputForm
-          inputValue={inputValue}
-          setInputValue={setInputValue}
           onSubmit={onSubmit}
           isLoading={isLoading}
-          inputRef={inputRef}
           fileInputRef={fileInputRef}
           onFileSelect={onFileSelect}
           onOpenFileDialog={onOpenFileDialog}
           selectedFiles={selectedFiles}
-          placeholder="Ask anything"
           className="chat-input-form"
         />
       </div>

@@ -140,3 +140,30 @@
     font-size: 16px;
   }
 }
+
+/* File-only input styles */
+.input-container.file-only {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.file-input-placeholder {
+  flex: 1;
+  padding: 12px 0;
+  display: flex;
+  align-items: center;
+  min-height: 24px;
+}
+
+.file-count {
+  color: var(--text-accent);
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.placeholder-text {
+  color: var(--text-secondary);
+  font-size: 16px;
+  font-style: italic;
+}

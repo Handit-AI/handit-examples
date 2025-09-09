@@ -7,16 +7,12 @@ const App = () => {
   const { theme, toggleTheme } = useTheme();
   const {
     messages,
-    inputValue,
-    setInputValue,
     isLoading,
     isStreaming,
     selectedFiles,
     messagesEndRef,
-    inputRef,
     fileInputRef,
     handleSubmit,
-    handleKeyPress,
     handleFileSelect,
     removeFile,
     openFileDialog,
@@ -74,11 +70,8 @@ const App = () => {
       <main className="main-content">
         {messages.length === 0 ? (
           <WelcomeSection
-            inputValue={inputValue}
-            setInputValue={setInputValue}
             onSubmit={handleSubmit}
             isLoading={isLoading}
-            inputRef={inputRef}
             fileInputRef={fileInputRef}
             onFileSelect={handleFileSelect}
             onOpenFileDialog={openFileDialog}
@@ -91,10 +84,7 @@ const App = () => {
             isLoading={isLoading}
             isStreaming={isStreaming}
             messagesEndRef={messagesEndRef}
-            inputValue={inputValue}
-            setInputValue={setInputValue}
             onSubmit={handleSubmit}
-            inputRef={inputRef}
             fileInputRef={fileInputRef}
             onFileSelect={handleFileSelect}
             onOpenFileDialog={openFileDialog}

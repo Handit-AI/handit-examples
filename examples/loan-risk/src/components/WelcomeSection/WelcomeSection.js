@@ -4,11 +4,8 @@ import FilePreview from '../FilePreview/FilePreview';
 import './WelcomeSection.css';
 
 const WelcomeSection = ({ 
-  inputValue, 
-  setInputValue, 
   onSubmit, 
   isLoading, 
-  inputRef,
   fileInputRef,
   onFileSelect,
   onOpenFileDialog,
@@ -25,16 +22,12 @@ const WelcomeSection = ({
         onRemoveFile={onRemoveFile}
       />
       <InputForm
-        inputValue={inputValue}
-        setInputValue={setInputValue}
         onSubmit={onSubmit}
         isLoading={isLoading}
-        inputRef={inputRef}
         fileInputRef={fileInputRef}
         onFileSelect={onFileSelect}
         onOpenFileDialog={onOpenFileDialog}
         selectedFiles={selectedFiles}
-        placeholder="Ask anything"
         className="centered-input-form"
       />
     </div>

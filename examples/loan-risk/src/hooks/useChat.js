@@ -28,12 +28,10 @@ Ready to assess your loan application? Please upload your documents below! 📄`
       isStreaming: false
     }
   ]);
-  const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const messagesEndRef = useRef(null);
-  const inputRef = useRef(null);
   const fileInputRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -79,42 +77,65 @@ Ready to assess your loan application? Please upload your documents below! 📄`
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if ((!inputValue.trim() && selectedFiles.length === 0) || isLoading || isStreaming) return;
+    if (selectedFiles.length === 0 || isLoading || isStreaming) return;
 
-    const userInput = inputValue || "Please assess my loan application";
     const attachedFiles = [...selectedFiles];
     const userMessage = {
       id: Date.now(),
-      text: userInput,
+      text: `📄 Uploaded ${attachedFiles.length} document${attachedFiles.length > 1 ? 's' : ''} for loan assessment`,
       sender: 'user',
       timestamp: new Date().toLocaleTimeString(),
       files: attachedFiles
     };
 
     setMessages(prev => [...prev, userMessage]);
-    setInputValue('');
     setSelectedFiles([]); // Clear selected files after sending
     setIsLoading(true);
 
-    // Show typing indicator for a brief moment before streaming
-    await new Promise(resolve => setTimeout(resolve, 800));
-
-    // Create AI message placeholder
-    const aiMessage = {
+    // Create loading message immediately
+    const loadingMessage = {
       id: Date.now() + 1,
-      text: '',
+      text: `## 🔍 Assessing Your Loan Application
+
+**Processing your documents...**
+
+- 📋 Classifying document types
+- 🔍 Extracting key information  
+- ✅ Validating identity documents
+- 🔗 Cross-referencing data across documents
+- 🛡️ Running fraud detection checks
+- 📊 Calculating risk score
+
+*This may take a few moments while our AI analyzes your documents...*`,
       sender: 'ai',
       timestamp: new Date().toLocaleTimeString(),
-      isStreaming: true
+      isStreaming: false,
+      isLoading: true
     };
 
-    setMessages(prev => [...prev, aiMessage]);
+    setMessages(prev => [...prev, loadingMessage]);
     setIsLoading(false);
-    setIsStreaming(true);
 
     try {
       // Call the backend API
-      const response = await callLoanRiskAPI(userInput, attachedFiles);
+      const response = await callLoanRiskAPI("Please assess my loan application", attachedFiles);
+      
+      // Replace the loading message with the actual response
+      setMessages(prev => {
+        const newMessages = [...prev];
+        const loadingIndex = newMessages.findIndex(msg => msg.isLoading);
+        if (loadingIndex !== -1) {
+          newMessages[loadingIndex] = {
+            ...newMessages[loadingIndex],
+            text: '',
+            isStreaming: true,
+            isLoading: false
+          };
+        }
+        return newMessages;
+      });
+      
+      setIsStreaming(true);
       await simulateStreaming(response);
       
       // Add follow-up message
@@ -296,13 +317,10 @@ Ready to assess your loan application? Please upload your documents below! 📄`
 
   return {
     messages,
-    inputValue,
-    setInputValue,
     isLoading,
     isStreaming,
     selectedFiles,
     messagesEndRef,
-    inputRef,
     fileInputRef,
     handleSubmit,
     handleFileSelect,
