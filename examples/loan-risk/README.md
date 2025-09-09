@@ -55,12 +55,31 @@ A modern, responsive loan application interface built with React and best practi
    npm install
    ```
 
-2. Start the development server:
+2. Configure API URL:
+   Create a `.env` file in the root directory:
+   ```bash
+   # For local development
+   REACT_APP_API_URL=http://localhost:5000
+   
+   # For production (replace with your deployed backend URL)
+   # REACT_APP_API_URL=https://loan-risk-document-agent-xxxxx-uc.a.run.app
+   ```
+
+3. Start the development server:
    ```bash
    npm start
    ```
 
-3. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+4. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+## Backend Integration
+
+This frontend connects to the Loan Risk Document Agent backend API. Make sure your backend is running and accessible at the configured API URL.
+
+**API Endpoint**: `POST /v1/chat/messages`
+- Accepts multipart form data with messages and files
+- Returns loan risk assessment results
+- Supports PDF, PNG, JPG, JPEG, CSV file formats
 
 ## Technologies Used
 

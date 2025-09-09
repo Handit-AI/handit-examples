@@ -1,7 +1,33 @@
 import { useState, useRef, useEffect } from 'react';
 
 const useChat = () => {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([
+    {
+      id: 1,
+      text: `# Welcome to Loan Risk AI 🤖
+
+I'm your AI-powered loan risk assessment assistant. I can analyze your financial documents to provide a comprehensive risk evaluation for your loan application.
+
+## What I can do:
+- **Document Classification**: Identify ID documents, payslips, and bank statements
+- **Data Extraction**: Extract key information from your documents
+- **Identity Validation**: Verify document completeness and expiry dates
+- **Cross-Document Analysis**: Check consistency across multiple documents
+- **Fraud Detection**: Identify potential fraud signals and financial risks
+- **Risk Scoring**: Calculate a final risk score and tier (LOW/MEDIUM/HIGH)
+
+## How to get started:
+1. **Upload your documents** using the file attachment button
+2. **Supported formats**: PDF, PNG, JPG, JPEG, CSV
+3. **Required documents**: ID, payslip, bank statement
+4. **Click send** and I'll analyze everything for you
+
+Ready to assess your loan application? Please upload your documents below! 📄`,
+      sender: 'ai',
+      timestamp: new Date().toLocaleTimeString(),
+      isStreaming: false
+    }
+  ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
@@ -55,7 +81,7 @@ const useChat = () => {
     e.preventDefault();
     if ((!inputValue.trim() && selectedFiles.length === 0) || isLoading || isStreaming) return;
 
-    const userInput = inputValue;
+    const userInput = inputValue || "Please assess my loan application";
     const attachedFiles = [...selectedFiles];
     const userMessage = {
       id: Date.now(),
@@ -86,122 +112,139 @@ const useChat = () => {
     setIsLoading(false);
     setIsStreaming(true);
 
-    // Generate response with Markdown examples
-    const markdownExamples = [
-      `## Response to: "${userInput}"
+    try {
+      // Call the backend API
+      const response = await callLoanRiskAPI(userInput, attachedFiles);
+      await simulateStreaming(response);
+      
+      // Add follow-up message
+      setTimeout(() => {
+        const followUpMessage = {
+          id: Date.now() + 2,
+          text: `## Ready for Another Assessment? 🔄
 
-I understand your question! Here are some examples of what I can help you with using **Markdown formatting**:
+If you'd like to submit additional documents or get a new assessment, simply upload your files again and I'll analyze them for you.
 
-### Code Examples
-\`\`\`javascript
-function processData(input) {
-  return input.map(item => ({
-    ...item,
-    processed: true,
-    timestamp: new Date()
-  }));
-}
-\`\`\`
+**Supported documents:**
+- Identity documents (passport, driver's license, national ID)
+- Income documents (payslips, salary statements)
+- Financial documents (bank statements, transaction histories)
 
-### Data Tables
-| Feature | Status | Description |
-|---------|--------|-------------|
-| Markdown | ✅ | Full support |
-| Code Highlighting | ✅ | Syntax highlighting |
-| Tables | ✅ | Responsive tables |
-| Lists | ✅ | Ordered & unordered |
+Upload your documents below to get started! 📄`,
+          sender: 'ai',
+          timestamp: new Date().toLocaleTimeString(),
+          isStreaming: false
+        };
+        setMessages(prev => [...prev, followUpMessage]);
+      }, 2000);
 
-### Key Points
-- **Bold text** for emphasis
-- *Italic text* for subtle emphasis
-- \`inline code\` for technical terms
-- [Links](https://example.com) for references
+    } catch (error) {
+      console.error('Error calling API:', error);
+      const errorMessage = `## Error Processing Your Request ❌
 
-> **Note:** This is a simulated response with streaming text to demonstrate the chat interface capabilities.
+I encountered an issue while processing your documents. This could be due to:
 
-How else can I assist you?`,
+- **Network connectivity issues**
+- **Backend service temporarily unavailable**
+- **Invalid file formats**
 
-      `## Analysis: "${userInput}"
+**Please try again:**
+1. Check your internet connection
+2. Ensure your files are in supported formats (PDF, PNG, JPG, JPEG, CSV)
+3. Try uploading your documents again
 
-Great question! Let me break this down with some **structured information**:
+If the problem persists, please contact support.`;
 
-### Overview
-Your query involves several important aspects that I can help clarify.
+      await simulateStreaming(errorMessage);
+    }
+  };
 
-### Technical Details
-\`\`\`python
-def analyze_query(query):
-    """Process and analyze user queries"""
-    keywords = extract_keywords(query)
-    context = determine_context(keywords)
-    return generate_response(context)
-\`\`\`
-
-### Implementation Steps
-1. **First**, identify the core requirements
-2. **Then**, break down into smaller tasks
-3. **Finally**, implement and test
-
-### Resources
-- [Documentation](https://docs.example.com)
-- [API Reference](https://api.example.com)
-- [Community Forum](https://community.example.com)
-
-> **Tip:** Feel free to ask for more specific details about any of these points!`,
-
-      `## Solution for: "${userInput}"
-
-Here's a comprehensive approach to your question:
-
-### Quick Answer
-The solution involves **three main components**:
-
-1. **Setup** - Initial configuration
-2. **Implementation** - Core functionality  
-3. **Testing** - Validation and verification
-
-### Code Implementation
-\`\`\`typescript
-interface SolutionConfig {
-  enabled: boolean;
-  timeout: number;
-  retries: number;
-}
-
-class SolutionProcessor {
-  constructor(private config: SolutionConfig) {}
-  
-  async process(input: string): Promise<string> {
-    // Implementation details here
-    return processedInput;
-  }
-}
-\`\`\`
-
-### Configuration Options
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| \`enabled\` | boolean | true | Enable processing |
-| \`timeout\` | number | 5000 | Timeout in ms |
-| \`retries\` | number | 3 | Max retry attempts |
-
-### Next Steps
-- Review the configuration
-- Test with sample data
-- Monitor performance metrics
-
-**Need more details?** Just ask!`
-    ];
-
-    // Select a random example
-    const randomExample = markdownExamples[Math.floor(Math.random() * markdownExamples.length)];
+  const callLoanRiskAPI = async (message, files) => {
+    const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
     
-    await simulateStreaming(randomExample);
+    const formData = new FormData();
+    formData.append('messages', JSON.stringify([{ role: 'user', content: message }]));
+    
+    // Add files to form data
+    files.forEach(file => {
+      formData.append('files[]', file);
+    });
+    
+    formData.append('options', JSON.stringify({
+      country: 'US',
+      currency: 'USD'
+    }));
+
+    const response = await fetch(`${API_BASE_URL}/v1/chat/messages`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    // Format the response based on the API structure
+    const assessment = data.assessment;
+    const assistantMessage = data.assistant_message;
+    
+    return `## Loan Risk Assessment Results 📊
+
+${assistantMessage}
+
+### Risk Analysis Summary
+- **Risk Score**: ${assessment.risk_score}/100
+- **Risk Tier**: ${assessment.risk_tier}
+- **Document Types Identified**: ${Object.values(assessment.doc_types).join(', ')}
+
+### Risk Factors
+${assessment.reasons.length > 0 ? assessment.reasons.map(reason => `- ${reason}`).join('\n') : '- No significant risk factors identified'}
+
+### Detailed Checks
+${assessment.checks.map(check => 
+  `- **${check.check_id}**: ${check.passed ? '✅ Passed' : '❌ Failed'} (${check.severity} severity)${check.details ? ` - ${check.details}` : ''}`
+).join('\n')}
+
+### Extracted Information
+${assessment.extracted ? Object.entries(assessment.extracted).map(([key, value]) => 
+  `- **${key}**: ${typeof value === 'object' ? JSON.stringify(value, null, 2) : value}`
+).join('\n') : 'No additional information extracted'}
+
+---
+*Assessment completed at ${new Date().toLocaleString()}*`;
   };
 
 
   const clearChat = () => {
-    setMessages([]);
+    setMessages([
+      {
+        id: 1,
+        text: `# Welcome to Loan Risk AI 🤖
+
+I'm your AI-powered loan risk assessment assistant. I can analyze your financial documents to provide a comprehensive risk evaluation for your loan application.
+
+## What I can do:
+- **Document Classification**: Identify ID documents, payslips, and bank statements
+- **Data Extraction**: Extract key information from your documents
+- **Identity Validation**: Verify document completeness and expiry dates
+- **Cross-Document Analysis**: Check consistency across multiple documents
+- **Fraud Detection**: Identify potential fraud signals and financial risks
+- **Risk Scoring**: Calculate a final risk score and tier (LOW/MEDIUM/HIGH)
+
+## How to get started:
+1. **Upload your documents** using the file attachment button
+2. **Supported formats**: PDF, PNG, JPG, JPEG, CSV
+3. **Required documents**: ID, payslip, bank statement
+4. **Click send** and I'll analyze everything for you
+
+Ready to assess your loan application? Please upload your documents below! 📄`,
+        sender: 'ai',
+        timestamp: new Date().toLocaleTimeString(),
+        isStreaming: false
+      }
+    ]);
     setSelectedFiles([]);
   };
 
