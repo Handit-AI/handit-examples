@@ -6,6 +6,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 
+from handit_ai import configure, tracing
+
 from src.config import config
 from src.risk_analysis_workflow.workflow import run_workflow
 from src.schemas import ChatResponse, Assessment
@@ -20,20 +22,20 @@ CORS(app)
 # Configure upload settings
 app.config['MAX_CONTENT_LENGTH'] = config.MAX_FILE_SIZE_BYTES * config.MAX_FILES_PER_REQUEST
 
+configure(HANDIT_API_KEY=os.getenv("HANDIT_API_KEY"))  # Get API key from https://dashboard.handit.ai/settings/integrations
 
 def allowed_file(filename):
     """Check if file extension is allowed."""
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in config.ALLOWED_EXTENSIONS
 
-
 @app.route('/health', methods=['GET'])
 def health_check():
     """Health check endpoint."""
     return jsonify({"status": "healthy", "service": "loan-risk-agent"}), 200
 
-
 @app.route('/v1/chat/messages', methods=['POST'])
+@tracing(agent="process_loan_application")
 def process_loan_application():
     """Main endpoint for processing loan applications.
     
@@ -131,7 +133,6 @@ def process_loan_application():
             "error": "Internal server error",
             "details": str(e) if app.debug else None
         }), 500
-
 
 @app.route('/v1/documents/classify', methods=['POST'])
 def classify_document():
